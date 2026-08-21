@@ -1,0 +1,1913 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INPERU Producciones - Cotizador e Impresiones de Libros</title>
+    <meta name="description" content="Sistema de Cotización e Imprenta Digital para INPERU Producciones.">
+    <meta name="theme-color" content="#061215">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#3bb0bd',
+                            500: '#28838d', /* INPERU Teal Primary */
+                            600: '#1f6f78',
+                            700: '#195c64',
+                            800: '#134950',
+                            900: '#0d3238',
+                            950: '#06171a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #061215; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #061215; }
+        ::-webkit-scrollbar-thumb { background: #134950; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #195c64; }
+        button, input, select { -webkit-tap-highlight-color: transparent; }
+    </style>
+</head>
+<body class="bg-[#061215] text-slate-100 min-h-screen flex flex-col selection:bg-teal-500 selection:text-white">
+
+    <header class="bg-[#0a1a1f]/90 backdrop-blur-md border-b border-teal-900/40 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            
+            <!-- Tipografía limpia INPERU PRODUCCIONES -->
+            <div class="flex items-center gap-3">
+                <div class="leading-none flex flex-col">
+                    <span class="text-xl sm:text-2xl text-[#28838d] font-black tracking-[0.18em]">INPERU</span>
+                    <span class="text-[10px] sm:text-[11px] text-teal-300 font-bold tracking-[0.25em] mt-1">PRODUCCIONES</span>
+                </div>
+                <div class="hidden md:block border-l border-teal-900/60 pl-3 py-0.5">
+                    <p class="text-xs text-teal-200/70 font-medium">Sistema de Cotización e Imprenta</p>
+                    <div class="flex items-center gap-2 mt-0.5">
+                        <span class="text-[10px] text-slate-400 font-mono">v4.3</span>
+                        <span id="cloud-status-badge" class="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.2 rounded bg-amber-950/60 text-amber-300 border border-amber-800/40">
+                            <i class="fa-solid fa-database text-[9px]"></i> Local
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navegación por pestañas -->
+            <nav class="flex items-center gap-1 bg-[#061215]/80 p-1.5 rounded-xl border border-teal-900/50">
+                <button onclick="switchTab('quoter')" id="tab-btn-quoter" class="px-3.5 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 bg-[#28838d] text-white shadow-md shadow-teal-900/40">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span>Cotizador</span>
+                </button>
+                <button onclick="switchTab('catalog')" id="tab-btn-catalog" class="px-3.5 sm:px-4 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-teal-200 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-book-bookmark"></i>
+                    <span>Catálogo (<span id="catalog-count">0</span>)</span>
+                </button>
+                <button onclick="switchTab('config')" id="tab-btn-config" class="px-3.5 sm:px-4 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-teal-200 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span>Costos Base</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <section id="tab-quoter" class="space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Form Inputs -->
+                <div class="lg:col-span-5 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 sm:p-6 shadow-xl space-y-5">
+                    <div class="flex items-center justify-between border-b border-teal-900/40 pb-3">
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-book text-teal-400"></i> Parámetros de Cotización
+                        </h2>
+                        <span class="text-xs text-teal-300/60 font-semibold">Inperu System</span>
+                    </div>
+
+                    <!-- Nombre del libro -->
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Nombre / Título del Libro *</label>
+                        <input type="text" id="quote-title" placeholder="Ej. El Principito - Edición Anillada" value="Manual de Anatomía Humana"
+                            class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400 transition-colors">
+                    </div>
+
+                    <!-- Cantidad de Ejemplares (Lote / Pedido) y % Imprevistos -->
+                    <div class="grid grid-cols-2 gap-4 bg-teal-950/30 border border-teal-800/40 p-3.5 rounded-xl">
+                        <div>
+                            <label class="block text-xs font-bold text-teal-300 mb-1">
+                                <i class="fa-solid fa-layer-group text-teal-400 mr-1"></i> Cant. Ejemplares *
+                            </label>
+                            <div class="relative">
+                                <input type="number" id="quote-order-qty" min="1" value="1" oninput="onParametersChange()"
+                                    class="w-full bg-[#061215] border border-teal-500/50 rounded-xl px-3 py-2 text-sm text-white font-extrabold text-center focus:outline-none focus:border-teal-300">
+                                <span class="absolute right-2.5 top-2 text-[10px] text-slate-400 font-semibold">unid</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-amber-300 mb-1">
+                                <i class="fa-solid fa-percent text-amber-400 mr-1"></i> % Imprevistos
+                            </label>
+                            <div class="relative">
+                                <input type="number" id="quote-contingency-pct" step="1" min="0" value="15" oninput="onParametersChange()"
+                                    class="w-full bg-[#061215] border border-amber-500/50 rounded-xl px-3 py-2 text-sm text-amber-300 font-extrabold text-center focus:outline-none focus:border-amber-400">
+                                <span class="absolute right-2.5 top-2 text-[10px] text-amber-400 font-bold">%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cantidad de Páginas & Modo -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Cantidad de Páginas *</label>
+                            <div class="relative">
+                                <input type="number" id="quote-pages" min="1" value="150" oninput="onParametersChange()"
+                                    class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white font-bold focus:outline-none focus:border-teal-400">
+                                <span class="absolute right-3 top-2.5 text-xs text-slate-500">págs</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Modo Impresión *</label>
+                            <select id="quote-print-mode" onchange="onParametersChange()"
+                                class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400">
+                                <option value="doble" selected>Doble Faz (2 págs/hoja)</option>
+                                <option value="simple">Simple Faz (1 pág/hoja)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Hojas Calculadas Resultantes -->
+                    <div class="bg-teal-950/40 border border-teal-800/40 rounded-xl p-3 flex items-center justify-between text-xs">
+                        <span class="text-teal-300 font-medium"><i class="fa-solid fa-file-lines mr-1.5"></i> Hojas Físicas por Ejemplar:</span>
+                        <span id="calc-sheets-badge" class="font-bold text-teal-200 text-sm bg-teal-900/60 px-2.5 py-0.5 rounded-lg border border-teal-700/50">75 Hojas</span>
+                    </div>
+
+                    <!-- Formato y Tipo de Impresora -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Tamaño / Formato</label>
+                            <select id="quote-format" onchange="onParametersChange()"
+                                class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400">
+                                <option value="A5" selected>A5 (37.5 A4 / 1 foto / 1 tapa)</option>
+                                <option value="A4">A4 (75 A4 / 2 fotos / 2 tapas)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Equipo / Impresora</label>
+                            <select id="quote-printer" onchange="onParametersChange()"
+                                class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400">
+                                <option value="canon" selected>Canon G3100 / G1110 (0.55 m/hoja)</option>
+                                <option value="epson">Epson L14150 (0.36 m/hoja)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Tipo de Tinta y Modo de Color -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Tipo de Tinta</label>
+                            <select id="quote-ink-type" onchange="onParametersChange()"
+                                class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400">
+                                <option value="standard" selected>Tinta Estándar</option>
+                                <option value="eternity">Tinta Epson Eternity</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Tono de Impresión</label>
+                            <select id="quote-color-mode" onchange="onParametersChange()"
+                                class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400">
+                                <option value="bw" selected>Blanco y Negro (50% tinta)</option>
+                                <option value="color">Full Color (100% tinta)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Ficha Catálogo -->
+                    <div class="border-t border-teal-900/40 pt-4 space-y-3">
+                        <span class="text-xs font-semibold text-teal-300/80 uppercase tracking-wider block">Ficha de Biblioteca INPERU</span>
+                        
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Descripción corta o Autor</label>
+                            <input type="text" id="quote-description" placeholder="Ej. Anillado espiral, tapa dura transparente..." value="Anillado espiral plástico, tapa transparente y contratapa opaca."
+                                class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-teal-400">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Detalles de Entrega / Especificaciones</label>
+                            <input type="text" id="quote-deliverables" placeholder="Ej. Se entrega con hojas de 80g, espiral 17mm..." value="Se entrega impreso en hojas de 80g, espiral plástico, tapas de polipropileno y laminado 35u."
+                                class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-teal-200 focus:outline-none focus:border-teal-400">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Imagen de Portada (Opcional)</label>
+                            <div class="flex items-center gap-3">
+                                <label class="cursor-pointer bg-teal-950/60 hover:bg-teal-900/60 border border-teal-700/50 text-xs text-teal-200 px-3 py-2 rounded-xl transition-colors flex items-center gap-2">
+                                    <i class="fa-solid fa-upload"></i>
+                                    <span>Subir Foto</span>
+                                    <input type="file" id="quote-cover-input" accept="image/*" onchange="handleCoverUpload(event)" class="hidden">
+                                </label>
+                                <div id="cover-preview-container" class="h-10 w-10 rounded-lg bg-[#061215] border border-teal-900/60 overflow-hidden flex items-center justify-center text-slate-600 text-xs">
+                                    <i class="fa-solid fa-image"></i>
+                                </div>
+                                <button type="button" onclick="resetCoverImage()" class="text-xs text-slate-500 hover:text-red-400">Quitar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-teal-900/40 pt-4">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label class="text-xs font-semibold text-teal-300">Precio Final Venta Unitario ($)</label>
+                            <span class="text-[11px] text-slate-400">Edita el precio o deja el redondeado</span>
+                        </div>
+                        <div class="relative">
+                            <span class="absolute left-3.5 top-2.5 text-slate-400 font-bold">$</span>
+                            <input type="number" id="quote-custom-price" step="50" oninput="onCustomPriceInput()"
+                                class="w-full bg-teal-950/50 border border-teal-500/50 rounded-xl pl-8 pr-3.5 py-2 text-base font-extrabold text-emerald-400 focus:outline-none focus:border-emerald-400">
+                        </div>
+                    </div>
+
+                    <!-- Botón Guardar en Catálogo -->
+                    <button onclick="saveCurrentQuoteToCatalog()" class="w-full bg-gradient-to-r from-[#28838d] to-teal-600 hover:from-teal-600 hover:to-teal-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-teal-950/50 transition-all flex items-center justify-center gap-2 text-sm">
+                        <i class="fa-solid fa-bookmark"></i>
+                        <span>Guardar Libro en Catálogo INPERU</span>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-7 space-y-5">
+                    
+                    <!-- Resumen Ejecutivo Superior -->
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-4 text-center">
+                            <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold block mb-1">Costo Directo Insumos + Luz</span>
+                            <span id="res-costo-total" class="text-base sm:text-lg font-black text-rose-400">$0.00</span>
+                            <span id="res-costo-batch-sub" class="text-[10px] text-slate-500 block mt-0.5">x1 un: $0.00</span>
+                        </div>
+                        <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-4 text-center">
+                            <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold block mb-1">Precio Venta Total</span>
+                            <span id="res-venta-total" class="text-base sm:text-lg font-black text-emerald-400">$0.00</span>
+                            <span id="res-venta-batch-sub" class="text-[10px] text-slate-500 block mt-0.5">x1 un: $0.00</span>
+                        </div>
+                        <div class="bg-[#0a1a1f] border border-teal-500/30 bg-teal-950/30 rounded-2xl p-4 text-center">
+                            <span class="text-[10px] uppercase tracking-wider text-teal-300 font-semibold block mb-1">Ganancia Real Neta</span>
+                            <span id="res-ganancia-total" class="text-base sm:text-lg font-black text-teal-300">$0.00</span>
+                            <span id="res-ganancia-batch-sub" class="text-[10px] text-teal-400/70 block mt-0.5">x1 un: $0.00</span>
+                        </div>
+                    </div>
+
+                    <!-- Panel de Insumos y Stock Necesarios para el Pedido -->
+                    <div id="stock-requirements-panel" class="bg-gradient-to-r from-[#0a1a1f] via-[#0a1a1f] to-teal-950/40 border border-teal-500/30 rounded-2xl p-4 shadow-xl space-y-3">
+                        <div class="flex items-center justify-between border-b border-teal-900/40 pb-2">
+                            <h4 class="text-xs font-bold text-teal-300 flex items-center gap-2">
+                                <i class="fa-solid fa-boxes-stacked text-amber-400"></i> Stock & Insumos Requeridos (<span id="stock-batch-qty-label" class="text-amber-300">1</span> ejemplares)
+                            </h4>
+                            <span id="stock-batch-time-badge" class="text-[11px] bg-[#061215] text-teal-300 px-2 py-0.5 rounded-md font-mono border border-teal-900/60">0 min impresión</span>
+                        </div>
+
+                        <div id="stock-materials-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
+                            <!-- Dynamic Material Stock Badges -->
+                        </div>
+                    </div>
+
+                    <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 shadow-xl space-y-4">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-teal-900/40 pb-3">
+                            <div>
+                                <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-list-check text-teal-400"></i> Desglose por Ejemplar (Cantidades Editables)
+                                </h3>
+                                <p class="text-[11px] text-slate-400">Modifica cualquier cantidad directamente para ajustar la cotización unitaria.</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="resetBreakdownQuantitiesToAuto()" class="text-[11px] bg-[#061215] hover:bg-teal-950 text-teal-300 border border-teal-500/30 px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1">
+                                    <i class="fa-solid fa-rotate-left"></i> Restablecer Cantidades
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-left">
+                                <thead class="bg-[#061215] text-teal-300/80 border-b border-teal-900/60 uppercase font-semibold">
+                                    <tr>
+                                        <th class="px-3 py-2">Concepto / Insumo</th>
+                                        <th class="px-3 py-2 text-right">Valor Unid. ($)</th>
+                                        <th class="px-3 py-2 text-center w-28">Cant. (Editable)</th>
+                                        <th class="px-3 py-2 text-right">Subtotal ($)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="quote-breakdown-tbody" class="divide-y divide-teal-950/60 text-slate-300">
+                                    <!-- Dynamic rows with inputs -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Subtotales de Impuestos y Hojas corregidos -->
+                        <div class="bg-[#061215]/80 rounded-xl p-3 space-y-1.5 border border-teal-900/60 text-xs">
+                            <div class="flex justify-between text-slate-400">
+                                <span>Costo Directo (Insumos + Luz + Amortizaciones) [x1]:</span>
+                                <span id="res-subtotal-base" class="font-mono text-rose-400 font-bold">$0.00</span>
+                            </div>
+                            <div class="flex justify-between text-slate-400">
+                                <span>Honorarios Impresión + Imprevistos (<span id="res-lbl-tax-pct">15%</span>) [Pasan a Ganancia]:</span>
+                                <span id="res-impuestos" class="font-mono text-amber-400">$0.00</span>
+                            </div>
+                            <div class="border-t border-teal-900/60 pt-1.5 flex justify-between font-semibold text-slate-300">
+                                <span>Valor Venta Final por Página / Carilla:</span>
+                                <span id="res-val-pina-real" class="font-mono text-teal-300">$0.00</span>
+                            </div>
+                            <div class="flex justify-between font-bold text-slate-200">
+                                <span>Valor Venta Final por Hoja del Libro (<span id="res-lbl-mode-type">Doble Faz</span>):</span>
+                                <span id="res-val-hoja-libro" class="font-mono text-teal-400">$0.00</span>
+                            </div>
+                            <div class="flex justify-between text-xs text-teal-200/80">
+                                <span>Valor Venta Final por Hoja A4 Físicamente Utilizada:</span>
+                                <span id="res-val-hoja-a4" class="font-mono text-emerald-400">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-catalog" class="space-y-6 hidden">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 shadow-lg">
+                <div>
+                    <h2 class="text-base font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-book-bookmark text-teal-400"></i> Biblioteca de Libros INPERU
+                    </h2>
+                    <p class="text-xs text-teal-200/60">Los costos y precios de venta se recalculan automáticamente con tus Costos Base actuales.</p>
+                </div>
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                    <input type="text" id="catalog-search" placeholder="Buscar por título..." oninput="renderCatalog()"
+                        class="bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-teal-400 w-full sm:w-64">
+                </div>
+            </div>
+
+            <!-- Grid de Libros -->
+            <div id="catalog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Book Cards dynamic JS -->
+            </div>
+        </section>
+
+        <section id="tab-config" class="space-y-6 hidden">
+            <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-base font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-teal-400"></i> Configuración de Costos e Insumos Base
+                    </h2>
+                    <p class="text-xs text-teal-200/60">Aquí están guardados todos tus datos de planillas INPERU. Puedes modificarlos en cualquier momento.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="resetMasterConfigToDefaults()" class="text-xs bg-teal-600/30 hover:bg-teal-600/50 text-teal-200 px-3.5 py-2 rounded-xl transition-colors border border-teal-500/40 flex items-center gap-1.5 font-semibold">
+                        <i class="fa-solid fa-rotate-left"></i> Restablecer Datos Originales
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Tabla de Insumos Materiales -->
+                <div class="lg:col-span-6 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 space-y-4 shadow-xl">
+                    <h3 class="text-sm font-bold text-white flex items-center gap-2 border-b border-teal-900/40 pb-2">
+                        <i class="fa-solid fa-boxes-packing text-amber-400"></i> Materiales & Insumos Base
+                    </h3>
+
+                    <div class="space-y-3 text-xs">
+                        <!-- Hoja 80g -->
+                        <div class="p-3 bg-[#061215] rounded-xl border border-teal-900/60 space-y-2">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="font-bold text-white">Hoja 80g</span>
+                                <span id="lbl-unit-paper" class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2 py-0.5 rounded-lg">$16.40 / hoja</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                <div>
+                                    <label class="text-slate-400 block mb-0.5">Precio Paquete ($)</label>
+                                    <input type="number" id="cfg-paper-price" oninput="saveMasterConfigFromUI()"
+                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none focus:border-teal-400">
+                                </div>
+                                <div>
+                                    <label class="text-slate-400 block mb-0.5">Cant. Hojas Paquete</label>
+                                    <input type="number" id="cfg-paper-packsheets" oninput="saveMasterConfigFromUI()"
+                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none focus:border-teal-400">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tinta Standard -->
+                        <div class="p-3 bg-[#061215] rounded-xl border border-teal-900/60 space-y-2">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="font-bold text-white">Tinta Estándar (4 Colores)</span>
+                                <span id="lbl-unit-ink-std" class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2 py-0.5 rounded-lg">$4.57 / pág</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 text-[11px]">
+                                <div>
+                                    <label class="text-slate-400 block mb-0.5">Precio Juego ($)</label>
+                                    <input type="number" id="cfg-ink-standard-price" oninput="saveMasterConfigFromUI()"
+                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="text-slate-400 block mb-0.5">Divisor Botellas</label>
+                                    <input type="number" id="cfg-ink-standard-bottles" oninput="saveMasterConfigFromUI()"
+                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="text-slate-400 block mb-0.5">Rendimiento Págs</label>
+                                    <input type="number" id="cfg-ink-standard-yield" oninput="saveMasterConfigFromUI()"
+                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tinta Epson Eternity -->
+                        <div class="p-3 bg-[#061215] rounded-xl border border-teal-900/60 space-y-2">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="font-bold text-white">Tinta Epson Eternity Pigmentada</span>
+                                <span id="lbl-unit-ink-ete" class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2 py-0.5 rounded-lg">$11.43 / pág</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 text-[11px]">
+                                <div>
+                                    <label class="text-slate-400 block mb-0.5">Precio Juego ($)</label>
+                                    <input type="number" id="cfg-ink-eternity-price" oninput="saveMasterConfigFromUI()"
+                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="text-slate-400 block mb-0.5">Divisor Botellas</label>
+                                    <input type="number" id="cfg-ink-eternity-bottles" oninput="saveMasterConfigFromUI()"
+                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="text-slate-400 block mb-0.5">Rendimiento Págs</label>
+                                    <input type="number" id="cfg-ink-eternity-yield" oninput="saveMasterConfigFromUI()"
+                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tapas Plásticas -->
+                        <div class="p-3 bg-[#061215] rounded-xl border border-teal-900/60 space-y-2">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="font-bold text-white">Tapas Plásticas A4</span>
+                                <span id="lbl-unit-tapas" class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2 py-0.5 rounded-lg">$600.00 / unidad</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                <div>
+                                    <label class="text-slate-400 block mb-0.5">Precio Paquete ($)</label>
+                                    <input type="number" id="cfg-tapas-price" oninput="saveMasterConfigFromUI()"
+                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="text-slate-400 block mb-0.5">Cant. Unidades Paquete</label>
+                                    <input type="number" id="cfg-tapas-packqty" oninput="saveMasterConfigFromUI()"
+                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Papel Fotográfico -->
+                        <div class="p-3 bg-[#061215] rounded-xl border border-teal-900/60 space-y-2">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="font-bold text-white">Papel Fotográfico 230g A4</span>
+                                <span id="lbl-unit-photo" class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2 py-0.5 rounded-lg">$135.00 / hoja</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                <div>
+                                    <label class="text-slate-400 block mb-0.5">Precio Paquete ($)</label>
+                                    <input type="number" id="cfg-photo-price" oninput="saveMasterConfigFromUI()"
+                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="text-slate-400 block mb-0.5">Cant. Hojas Paquete</label>
+                                    <input type="number" id="cfg-photo-packqty" oninput="saveMasterConfigFromUI()"
+                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Laminado -->
+                        <div class="p-3 bg-[#061215] rounded-xl border border-teal-900/60 flex items-center justify-between gap-3">
+                            <div>
+                                <span class="font-bold text-white block">Laminado 35 micrones</span>
+                                <span class="text-[11px] text-slate-500">Costo Unitario Por Libro</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-slate-400">$</span>
+                                <input type="number" id="cfg-laminate-price" oninput="saveMasterConfigFromUI()"
+                                    class="w-24 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-emerald-400 font-bold focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 space-y-4 shadow-xl">
+                    <div class="flex items-center justify-between border-b border-teal-900/40 pb-2">
+                        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-ring text-teal-400"></i> Tabla de Espirales (Editables)
+                        </h3>
+                        <button onclick="addNewSpiralRow()" class="text-xs bg-teal-600/30 hover:bg-teal-600/50 text-teal-300 border border-teal-500/40 px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1">
+                            <i class="fa-solid fa-plus"></i> Agregar Espiral
+                        </button>
+                    </div>
+
+                    <div class="overflow-y-auto max-h-[420px] border border-teal-900/60 rounded-xl">
+                        <table class="w-full text-xs text-left">
+                            <thead class="bg-[#061215] text-teal-300/80 sticky top-0 border-b border-teal-900/60">
+                                <tr>
+                                    <th class="px-3 py-2">Diámetro (mm)</th>
+                                    <th class="px-3 py-2">Límite Máx. Hojas</th>
+                                    <th class="px-3 py-2 text-right">Precio Unid. ($)</th>
+                                    <th class="px-2 py-2 text-center">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="config-spirals-tbody" class="divide-y divide-teal-950/60">
+                                <!-- Dynamic editable spiral rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-12 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 space-y-4 shadow-xl">
+                    <h3 class="text-sm font-bold text-white flex items-center gap-2 border-b border-teal-900/40 pb-2">
+                        <i class="fa-solid fa-gears text-teal-400"></i> Tiempos, Luz, Honorarios e Imprevistos Base
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <!-- Canon Amort -->
+                        <div class="bg-[#061215] p-4 rounded-xl border border-teal-900/60 space-y-3">
+                            <h4 class="font-bold text-teal-300 border-b border-teal-900/60 pb-1 flex justify-between items-center">
+                                <span>Canon G3100 / G1110</span>
+                            </h4>
+                            
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-400">Velocidad:</span>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" step="0.01" id="cfg-printer-canon-speed" oninput="saveMasterConfigFromUI()"
+                                        class="w-16 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-bold text-white">
+                                    <span class="text-slate-500">min/hoja</span>
+                                </div>
+                            </div>
+
+                            <!-- Impresora Equip. -->
+                            <div class="space-y-1 pt-1 border-t border-teal-950">
+                                <div class="flex justify-between items-center text-slate-300 font-semibold">
+                                    <span>Equipamiento Canon:</span>
+                                    <span id="lbl-amort-canon-eq" class="font-mono text-emerald-400">$1.4269/min</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                    <div>
+                                        <label class="text-slate-500 block">Costo ($)</label>
+                                        <input type="number" id="cfg-canon-machine-cost" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
+                                    </div>
+                                    <div>
+                                        <label class="text-slate-500 block">Min. Totales</label>
+                                        <input type="number" id="cfg-canon-machine-minutes" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Cabezal Canon -->
+                            <div class="space-y-1 pt-1 border-t border-teal-950">
+                                <div class="flex justify-between items-center text-slate-300 font-semibold">
+                                    <span>Cabezal:</span>
+                                    <span id="lbl-amort-canon-head" class="font-mono text-emerald-400">$1.5982/min</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                    <div>
+                                        <label class="text-slate-500 block">Costo ($)</label>
+                                        <input type="number" id="cfg-canon-head-cost" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
+                                    </div>
+                                    <div>
+                                        <label class="text-slate-500 block">Min. Totales</label>
+                                        <input type="number" id="cfg-canon-head-minutes" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Almohadillas Canon -->
+                            <div class="space-y-1 pt-1 border-t border-teal-950">
+                                <div class="flex justify-between items-center text-slate-300 font-semibold">
+                                    <span>Almohadillas:</span>
+                                    <span id="lbl-amort-canon-pads" class="font-mono text-emerald-400">$0.0428/min</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                    <div>
+                                        <label class="text-slate-500 block">Costo ($)</label>
+                                        <input type="number" id="cfg-canon-pads-cost" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
+                                    </div>
+                                    <div>
+                                        <label class="text-slate-500 block">Min. Totales</label>
+                                        <input type="number" id="cfg-canon-pads-minutes" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Epson Amort -->
+                        <div class="bg-[#061215] p-4 rounded-xl border border-teal-900/60 space-y-3">
+                            <h4 class="font-bold text-teal-300 border-b border-teal-900/60 pb-1">Epson L14150</h4>
+                            
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-400">Velocidad:</span>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" step="0.01" id="cfg-printer-epson-speed" oninput="saveMasterConfigFromUI()"
+                                        class="w-16 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-bold text-white">
+                                    <span class="text-slate-500">min/hoja</span>
+                                </div>
+                            </div>
+
+                            <!-- Impresora Equip. -->
+                            <div class="space-y-1 pt-1 border-t border-teal-950">
+                                <div class="flex justify-between items-center text-slate-300 font-semibold">
+                                    <span>Equipamiento Epson:</span>
+                                    <span id="lbl-amort-epson-eq" class="font-mono text-emerald-400">$4.2808/min</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                    <div>
+                                        <label class="text-slate-500 block">Costo ($)</label>
+                                        <input type="number" id="cfg-epson-machine-cost" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
+                                    </div>
+                                    <div>
+                                        <label class="text-slate-500 block">Min. Totales</label>
+                                        <input type="number" id="cfg-epson-machine-minutes" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Chip Epson -->
+                            <div class="space-y-1 pt-1 border-t border-teal-950">
+                                <div class="flex justify-between items-center text-slate-300 font-semibold">
+                                    <span>Chip Mantenimiento:</span>
+                                    <span id="lbl-amort-epson-chip" class="font-mono text-emerald-400">$0.3653/min</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                    <div>
+                                        <label class="text-slate-500 block">Costo ($)</label>
+                                        <input type="number" id="cfg-epson-chip-cost" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
+                                    </div>
+                                    <div>
+                                        <label class="text-slate-500 block">Min. Totales</label>
+                                        <input type="number" id="cfg-epson-chip-minutes" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Luz, Mano de Obra y % Imprevistos Base -->
+                        <div class="bg-[#061215] p-4 rounded-xl border border-teal-900/60 space-y-3">
+                            <h4 class="font-bold text-teal-300 border-b border-teal-900/60 pb-1">Luz, Honorarios e Imprevistos</h4>
+                            
+                            <!-- Servicio de Luz -->
+                            <div class="space-y-1">
+                                <div class="flex justify-between items-center text-slate-300 font-semibold">
+                                    <span>Servicio de Luz:</span>
+                                    <span id="lbl-amort-luz" class="font-mono text-emerald-400">$0.5787/min</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                    <div>
+                                        <label class="text-slate-500 block">Factura Mensual ($)</label>
+                                        <input type="number" id="cfg-luz-monthly" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
+                                    </div>
+                                    <div>
+                                        <label class="text-slate-500 block">Minutos Mes</label>
+                                        <input type="number" id="cfg-luz-minutes" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Honorarios -->
+                            <div class="space-y-1 pt-2 border-t border-teal-950">
+                                <div class="flex justify-between items-center text-slate-300 font-semibold">
+                                    <span>Valor Hora Impresión:</span>
+                                    <span id="lbl-min-labor" class="font-mono text-teal-300">$125.00/min</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-slate-400 text-xs">Precio por Hora ($):</span>
+                                    <input type="number" id="cfg-labor-print-hourly" oninput="saveMasterConfigFromUI()"
+                                        class="w-28 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-bold text-emerald-400">
+                                </div>
+                            </div>
+
+                            <!-- Imprevistos / Contingencias Base -->
+                            <div class="space-y-1 pt-2 border-t border-teal-950">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-amber-300 text-xs font-bold">% Imprevistos Base:</span>
+                                    <div class="flex items-center gap-1">
+                                        <input type="number" id="cfg-contingency-default-pct" oninput="saveMasterConfigFromUI()"
+                                            class="w-20 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-center font-bold text-amber-300">
+                                        <span class="text-amber-400">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- Modal Tirada por Cantidad -->
+    <div id="batch-modal" class="fixed inset-0 bg-[#061215]/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-[#0a1a1f] border border-teal-900/60 rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-5 relative">
+            <button onclick="closeBatchModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-3 border-b border-teal-900/60 pb-3">
+                <div class="w-10 h-10 rounded-xl bg-teal-500/20 border border-teal-500/30 text-teal-300 flex items-center justify-center font-bold text-lg">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+                <div>
+                    <h3 id="batch-modal-title" class="text-base font-bold text-white">Simular Tirada INPERU</h3>
+                    <p class="text-xs text-teal-200/60">Calcula costos totales, ganancias y lista de insumos requeridos</p>
+                </div>
+            </div>
+
+            <!-- Input de Cantidad -->
+            <div class="bg-[#061215] p-4 rounded-xl border border-teal-900/60 flex items-center justify-between">
+                <label class="text-xs font-semibold text-slate-300">Cantidad de Ejemplares:</label>
+                <div class="flex items-center gap-2">
+                    <button onclick="changeBatchQty(-5)" class="bg-teal-950 hover:bg-teal-900 text-teal-200 w-8 h-8 rounded-lg font-bold border border-teal-800/40">-</button>
+                    <input type="number" id="batch-qty-input" value="20" min="1" oninput="recalculateBatchModal()"
+                        class="w-20 bg-[#0a1a1f] border border-teal-700/80 rounded-lg py-1 px-2 text-center font-black text-emerald-400 focus:outline-none">
+                    <button onclick="changeBatchQty(5)" class="bg-teal-950 hover:bg-teal-900 text-teal-200 w-8 h-8 rounded-lg font-bold border border-teal-800/40">+</button>
+                </div>
+            </div>
+
+            <!-- Resumen Financiero -->
+            <div class="grid grid-cols-3 gap-3">
+                <div class="bg-[#061215] p-3 rounded-xl border border-teal-900/60 text-center">
+                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">Total Venta</span>
+                    <span id="batch-total-sale" class="text-base font-black text-emerald-400">$0</span>
+                </div>
+                <div class="bg-[#061215] p-3 rounded-xl border border-teal-900/60 text-center">
+                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">Costo Directo</span>
+                    <span id="batch-total-cost" class="text-base font-black text-rose-400">$0</span>
+                </div>
+                <div class="bg-[#061215] p-3 rounded-xl border border-teal-900/60 text-center">
+                    <span class="text-[10px] text-teal-300 uppercase font-semibold block">Ganancia Neta</span>
+                    <span id="batch-total-profit" class="text-base font-black text-teal-300">$0</span>
+                </div>
+            </div>
+
+            <!-- Tiempo Estimado -->
+            <div class="bg-teal-950/40 border border-teal-800/40 rounded-xl p-3 flex items-center justify-between text-xs">
+                <span class="text-teal-300"><i class="fa-solid fa-clock mr-1.5"></i> Tiempo de Impresión Continuo:</span>
+                <span id="batch-total-time" class="font-bold text-teal-200">0 horas 0 min</span>
+            </div>
+
+            <!-- Lista de Insumos -->
+            <div class="space-y-2">
+                <h4 class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                    <i class="fa-solid fa-clipboard-list text-amber-400"></i> Insumos Totales Requeridos:
+                </h4>
+                <div id="batch-materials-list" class="bg-[#061215] p-3 rounded-xl border border-teal-900/60 text-xs space-y-1.5 font-mono text-slate-300 max-h-48 overflow-y-auto">
+                    <!-- Dynamic List -->
+                </div>
+            </div>
+
+            <div class="pt-2 flex justify-end">
+                <button onclick="closeBatchModal()" class="bg-teal-950 hover:bg-teal-900 text-teal-200 border border-teal-800/60 text-xs font-semibold px-4 py-2 rounded-xl">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmar Eliminación -->
+    <div id="delete-modal" class="fixed inset-0 bg-[#061215]/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-[#0a1a1f] border border-rose-900/60 rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-trash-can"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white">¿Eliminar Libro?</h3>
+                    <p id="delete-modal-title" class="text-xs text-slate-400 truncate max-w-[200px]">Título del libro</p>
+                </div>
+            </div>
+            <p class="text-xs text-slate-300">Esta acción quitará el libro de la biblioteca en todos los dispositivos conectados.</p>
+            <div class="flex items-center justify-end gap-2 pt-2">
+                <button onclick="closeDeleteModal()" class="px-3.5 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white bg-[#061215]">Cancelar</button>
+                <button id="confirm-delete-btn" class="px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 shadow-md">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global Application Context
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'inperu-cotizador-app';
+        let db = null;
+        let auth = null;
+        let currentUser = null;
+
+        const DEFAULT_CONFIG = {
+            contingencyPercent: 15,
+            paper: { packPrice: 8200, packSheets: 500 },
+            inkStandard: { packPrice: 64000, bottlesQty: 14, pageYield: 1000 },
+            inkEternity: { packPrice: 240000, bottlesQty: 14, pageYield: 1500 },
+            tapas: { packPrice: 30000, packQty: 50 },
+            photoPaper: { packPrice: 13500, packQty: 100 },
+            laminado: { unitPrice: 160 },
+            spirals: [
+                { mm: 7, maxSheets: 25, unitPrice: 100 },
+                { mm: 9, maxSheets: 50, unitPrice: 150 },
+                { mm: 12, maxSheets: 70, unitPrice: 200 },
+                { mm: 14, maxSheets: 85, unitPrice: 250 },
+                { mm: 17, maxSheets: 100, unitPrice: 300 },
+                { mm: 20, maxSheets: 120, unitPrice: 350 },
+                { mm: 23, maxSheets: 140, unitPrice: 450 },
+                { mm: 25, maxSheets: 160, unitPrice: 500 },
+                { mm: 29, maxSheets: 180, unitPrice: 700 },
+                { mm: 33, maxSheets: 250, unitPrice: 800 },
+                { mm: 40, maxSheets: 350, unitPrice: 1200 },
+                { mm: 45, maxSheets: 400, unitPrice: 1900 },
+                { mm: 50, maxSheets: 450, unitPrice: 2100 }
+            ],
+            printers: {
+                canon: {
+                    name: "Canon G3100 / G1110",
+                    speedMinPerPage: 0.55,
+                    machineCost: 500000,
+                    machineMinutes: 350400,
+                    headCost: 140000,
+                    headMinutes: 87600,
+                    padsCost: 7500,
+                    padsMinutes: 175200
+                },
+                epson: {
+                    name: "Epson L14150",
+                    speedMinPerPage: 0.36,
+                    machineCost: 1500000,
+                    machineMinutes: 350400,
+                    chipCost: 32000,
+                    chipMinutes: 87600
+                }
+            },
+            services: {
+                luzMonthly: 250000,
+                luzMinutes: 43200
+            },
+            labor: {
+                hourlyRatePrint: 7500
+            }
+        };
+
+        const DEFAULT_CATALOG = [
+            {
+                id: 'book-1',
+                title: 'Manual de Anatomía Humana',
+                pages: 150,
+                printMode: 'doble',
+                format: 'A5',
+                printerKey: 'canon',
+                inkType: 'standard',
+                colorMode: 'bw',
+                description: 'Anillado espiral plástico, tapa transparente y contratapa opaca.',
+                deliverables: 'Se entrega impreso en hojas de 80g, espiral plástico de 17mm y tapas de polipropileno.',
+                coverImage: null,
+                targetPrice: 8100
+            },
+            {
+                id: 'book-2',
+                title: 'Libro Ejemplo Epson L14150 + Eternity',
+                pages: 150,
+                printMode: 'doble',
+                format: 'A5',
+                printerKey: 'epson',
+                inkType: 'eternity',
+                colorMode: 'bw',
+                description: 'Simulación de impresión con tinta pigmentada Eternity.',
+                deliverables: 'Se entrega en hojas de 80g, espiral plástico de 17mm y tapas con tinta Eternity resistente al agua.',
+                coverImage: null,
+                targetPrice: 6600
+            }
+        ];
+
+        window.masterConfig = loadMasterConfigLocal();
+        window.catalog = loadCatalogLocal();
+        window.currentCoverBase64 = null;
+        window.breakdownManualQty = null;
+        window.activeBatchBookId = null;
+        window.pendingDeleteBookId = null;
+
+        function loadMasterConfigLocal() {
+            const saved = localStorage.getItem('inperu_cfg_v4.2');
+            if (!saved) return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+            try {
+                const parsed = JSON.parse(saved);
+                if (!parsed.printers?.canon?.machineCost) return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+                if (parsed.contingencyPercent === undefined) parsed.contingencyPercent = 15;
+                return parsed;
+            } catch (e) {
+                return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+            }
+        }
+
+        function loadCatalogLocal() {
+            const saved = localStorage.getItem('inperu_catalog_v4.2');
+            if (!saved) return JSON.parse(JSON.stringify(DEFAULT_CATALOG));
+            try {
+                return JSON.parse(saved);
+            } catch (e) {
+                return JSON.parse(JSON.stringify(DEFAULT_CATALOG));
+            }
+        }
+
+        // Initialize Firebase
+        if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+            try {
+                const firebaseConfig = JSON.parse(__firebase_config);
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                const initAuth = async () => {
+                    try {
+                        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                            const userCred = await signInWithCustomToken(auth, __initial_auth_token);
+                            currentUser = userCred.user;
+                        } else {
+                            const userCred = await signInAnonymously(auth);
+                            currentUser = userCred.user;
+                        }
+                        setupFirebaseSync();
+                    } catch (err) {
+                        console.warn("Error autenticando en Firebase, continuando en modo local:", err);
+                    }
+                };
+                initAuth();
+            } catch (e) {
+                console.warn("Error inicializando Firebase:", e);
+            }
+        }
+
+        function setupFirebaseSync() {
+            if (!db || !currentUser) return;
+
+            const statusBadge = document.getElementById('cloud-status-badge');
+            if (statusBadge) {
+                statusBadge.innerHTML = `<i class="fa-solid fa-signal text-[9px] animate-pulse"></i> Nube Sync`;
+                statusBadge.className = `inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.2 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-700/50`;
+            }
+
+            // Sync Catalog Collection Path Rule 1: /artifacts/{appId}/public/data/catalog
+            const catalogColRef = collection(db, 'artifacts', appId, 'public', 'data', 'catalog');
+            onSnapshot(catalogColRef, (snapshot) => {
+                if (!snapshot.empty) {
+                    const cloudCatalog = [];
+                    snapshot.forEach(docSnap => {
+                        cloudCatalog.push({ id: docSnap.id, ...docSnap.data() });
+                    });
+                    window.catalog = cloudCatalog;
+                    localStorage.setItem('inperu_catalog_v4.2', JSON.stringify(window.catalog));
+                    window.renderCatalog();
+                } else {
+                    // Seed initial catalog if empty
+                    DEFAULT_CATALOG.forEach(b => {
+                        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'catalog', b.id), b);
+                    });
+                }
+            }, (error) => {
+                console.warn("Error escuchando catálogo de Firebase:", error);
+            });
+
+            // Sync Base Config Document Path Rule 1: /artifacts/{appId}/public/data/settings/config
+            const configDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'master_config');
+            onSnapshot(configDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    window.masterConfig = docSnap.data();
+                    localStorage.setItem('inperu_cfg_v4.2', JSON.stringify(window.masterConfig));
+                    window.renderConfigToUI();
+                    window.calculateQuote();
+                    window.renderCatalog();
+                } else {
+                    setDoc(configDocRef, window.masterConfig);
+                }
+            }, (error) => {
+                console.warn("Error escuchando configuración de Firebase:", error);
+            });
+        }
+
+        // Global functions tied to cloud or local state
+        window.syncConfigToCloud = function() {
+            localStorage.setItem('inperu_cfg_v4.2', JSON.stringify(window.masterConfig));
+            if (db && currentUser) {
+                const configDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'master_config');
+                setDoc(configDocRef, window.masterConfig).catch(e => console.warn("Error guardando config en nube:", e));
+            }
+        };
+
+        window.syncBookToCloud = function(bookObj) {
+            if (db && currentUser) {
+                const bookDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'catalog', bookObj.id);
+                setDoc(bookDocRef, bookObj).catch(e => console.warn("Error guardando libro en nube:", e));
+            }
+        };
+
+        window.deleteBookFromCloud = function(bookId) {
+            if (db && currentUser) {
+                const bookDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'catalog', bookId);
+                deleteDoc(bookDocRef).catch(e => console.warn("Error borrando libro de nube:", e));
+            }
+        };
+    </script>
+
+    <script>
+        function getUnitPrices() {
+            const paperUnitPrice = masterConfig.paper.packPrice / (masterConfig.paper.packSheets || 500);
+            
+            const stdBottles = masterConfig.inkStandard.bottlesQty || 14;
+            const stdYield = masterConfig.inkStandard.pageYield || 1000;
+            const inkStdUnitPrice = (masterConfig.inkStandard.packPrice / stdBottles) / stdYield;
+
+            const eteBottles = masterConfig.inkEternity.bottlesQty || 14;
+            const eteYield = masterConfig.inkEternity.pageYield || 1500;
+            const inkEteUnitPrice = (masterConfig.inkEternity.packPrice / eteBottles) / eteYield;
+
+            const tapasUnitPrice = masterConfig.tapas.packPrice / (masterConfig.tapas.packQty || 50);
+            const photoUnitPrice = masterConfig.photoPaper.packPrice / (masterConfig.photoPaper.packQty || 100);
+            const laminateUnitPrice = masterConfig.laminado.unitPrice || 160;
+
+            const canon = masterConfig.printers.canon || {};
+            const epson = masterConfig.printers.epson || {};
+
+            const canonMachineCostPerMin = (canon.machineCost || 500000) / (canon.machineMinutes || 350400);
+            const canonHeadCostPerMin = (canon.headCost || 140000) / (canon.headMinutes || 87600);
+            const canonPadsCostPerMin = (canon.padsCost || 7500) / (canon.padsMinutes || 175200);
+
+            const epsonMachineCostPerMin = (epson.machineCost || 1500000) / (epson.machineMinutes || 350400);
+            const epsonChipCostPerMin = (epson.chipCost || 32000) / (epson.chipMinutes || 87600);
+
+            const luzMinRate = (masterConfig.services.luzMonthly || 250000) / (masterConfig.services.luzMinutes || 43200);
+            const laborMinRate = (masterConfig.labor.hourlyRatePrint || 7500) / 60;
+
+            return {
+                paperUnitPrice,
+                inkStdUnitPrice,
+                inkEteUnitPrice,
+                tapasUnitPrice,
+                photoUnitPrice,
+                laminateUnitPrice,
+                canonMachineCostPerMin,
+                canonHeadCostPerMin,
+                canonPadsCostPerMin,
+                epsonMachineCostPerMin,
+                epsonChipCostPerMin,
+                luzMinRate,
+                laborMinRate
+            };
+        }
+
+        function getSpiralForSheets(sheets) {
+            const sortedSpirals = [...masterConfig.spirals].sort((a, b) => a.maxSheets - b.maxSheets);
+            const found = sortedSpirals.find(s => sheets <= s.maxSheets);
+            return found || sortedSpirals[sortedSpirals.length - 1] || { mm: 12, maxSheets: 70, unitPrice: 200 };
+        }
+
+        function calculateBookMetrics(pages, printMode, format, printerKey, inkType, colorMode = 'bw', customPrice = null, manualQty = null, contingencyPct = 15, orderQty = 1) {
+            const numPages = parseInt(pages) || 1;
+            const autoSheets = printMode === 'doble' ? Math.ceil(numPages / 2) : numPages;
+            const printer = masterConfig.printers[printerKey] || masterConfig.printers.canon;
+            
+            const autoMinutes = autoSheets * printer.speedMinPerPage;
+
+            const units = getUnitPrices();
+            let baseInkRate = inkType === 'eternity' ? units.inkEteUnitPrice : units.inkStdUnitPrice;
+            
+            const activeInkUnitPrice = colorMode === 'bw' ? (baseInkRate / 2) : baseInkRate;
+
+            const paperSheetsCount = format === 'A5' ? (autoSheets / 2) : autoSheets;
+            const coversCount = format === 'A5' ? 0.5 : 1;
+            const photoCount = format === 'A5' ? 1 : 2;
+
+            const spiralObj = getSpiralForSheets(autoSheets);
+
+            const q = {
+                paperSheets: (manualQty && manualQty.paperSheets !== undefined) ? parseFloat(manualQty.paperSheets) : paperSheetsCount,
+                inkPages: (manualQty && manualQty.inkPages !== undefined) ? parseFloat(manualQty.inkPages) : autoSheets,
+                tapasQty: (manualQty && manualQty.tapasQty !== undefined) ? parseFloat(manualQty.tapasQty) : (coversCount * 2),
+                photoQty: (manualQty && manualQty.photoQty !== undefined) ? parseFloat(manualQty.photoQty) : photoCount,
+                spiralQty: (manualQty && manualQty.spiralQty !== undefined) ? parseFloat(manualQty.spiralQty) : 1,
+                laminateQty: (manualQty && manualQty.laminateQty !== undefined) ? parseFloat(manualQty.laminateQty) : 1,
+                printerMin: (manualQty && manualQty.printerMin !== undefined) ? parseFloat(manualQty.printerMin) : autoMinutes,
+                luzMin: (manualQty && manualQty.luzMin !== undefined) ? parseFloat(manualQty.luzMin) : autoMinutes,
+                laborMin: (manualQty && manualQty.laborMin !== undefined) ? parseFloat(manualQty.laborMin) : autoMinutes
+            };
+
+            const paperCost = q.paperSheets * units.paperUnitPrice;
+            const inkCost = q.inkPages * activeInkUnitPrice;
+            const tapasCost = (q.tapasQty / (format === 'A5' ? 2 : 1)) * (units.tapasUnitPrice / 2);
+            const photoCost = q.photoQty * (units.photoUnitPrice / (format === 'A5' ? 1 : 1));
+            const spiralCost = q.spiralQty * spiralObj.unitPrice;
+            const laminateCost = q.laminateQty * units.laminateUnitPrice;
+
+            let printerAmort = 0;
+            let partsAmort = 0;
+            let padsAmort = 0;
+
+            if (printerKey === 'canon') {
+                printerAmort = q.printerMin * units.canonMachineCostPerMin;
+                partsAmort = q.printerMin * units.canonHeadCostPerMin;
+                padsAmort = q.printerMin * units.canonPadsCostPerMin;
+            } else {
+                printerAmort = q.printerMin * units.epsonMachineCostPerMin;
+                partsAmort = q.printerMin * units.epsonChipCostPerMin;
+            }
+
+            const luzCost = q.luzMin * units.luzMinRate;
+            const laborCost = q.laborMin * units.laborMinRate;
+
+            const directCost = paperCost + inkCost + tapasCost + photoCost + spiralCost + laminateCost + printerAmort + partsAmort + padsAmort + luzCost;
+
+            const activeContingencyPct = parseFloat(contingencyPct) >= 0 ? parseFloat(contingencyPct) : 15;
+            const taxesCost = (directCost + laborCost) * (activeContingencyPct / 100);
+
+            const rawTotalPrice = directCost + laborCost + taxesCost;
+            const suggestedRounded = Math.ceil(rawTotalPrice / 100) * 100;
+            const finalSalePrice = (customPrice !== null && customPrice !== undefined && customPrice > 0) ? parseFloat(customPrice) : suggestedRounded;
+
+            const netProfit = finalSalePrice - directCost;
+
+            const valPageReal = finalSalePrice / Math.max(1, numPages);
+            const valSheetPhysicalBook = finalSalePrice / Math.max(1, autoSheets);
+            const valSheetA4Paper = finalSalePrice / Math.max(1, q.paperSheets);
+
+            const qtyBatch = Math.max(1, parseInt(orderQty) || 1);
+            const totalBatchSale = finalSalePrice * qtyBatch;
+            const totalBatchCost = directCost * qtyBatch;
+            const totalBatchProfit = netProfit * qtyBatch;
+            const totalBatchMinutes = q.printerMin * qtyBatch;
+
+            const totalPaperSheetsA4 = q.paperSheets * qtyBatch;
+            const totalPaperReams = (totalPaperSheetsA4 / (masterConfig.paper.packSheets || 500)).toFixed(2);
+            const totalSpiralsNeeded = q.spiralQty * qtyBatch;
+            const totalCoversNeeded = q.tapasQty * qtyBatch;
+            const totalPhotoSheetsNeeded = q.photoQty * qtyBatch;
+            const totalLaminatesNeeded = q.laminateQty * qtyBatch;
+
+            return {
+                numPages,
+                autoSheets,
+                autoMinutes,
+                printerName: printer.name,
+                spiralObj,
+                units,
+                activeInkUnitPrice,
+                activeContingencyPct,
+                q,
+                paperCost,
+                inkCost,
+                tapasCost,
+                photoCost,
+                spiralCost,
+                laminateCost,
+                printerAmort,
+                partsAmort,
+                padsAmort,
+                luzCost,
+                laborCost,
+                directCost,
+                taxesCost,
+                suggestedRounded,
+                finalSalePrice,
+                netProfit,
+                valPageReal,
+                valSheetPhysicalBook,
+                valSheetA4Paper,
+                qtyBatch,
+                totalBatchSale,
+                totalBatchCost,
+                totalBatchProfit,
+                totalBatchMinutes,
+                totalPaperSheetsA4,
+                totalPaperReams,
+                totalSpiralsNeeded,
+                totalCoversNeeded,
+                totalPhotoSheetsNeeded,
+                totalLaminatesNeeded
+            };
+        }
+
+        function onParametersChange() {
+            breakdownManualQty = null;
+            calculateQuote();
+        }
+
+        function onCustomPriceInput() {
+            const input = document.getElementById('quote-custom-price');
+            input.dataset.auto = 'false';
+            calculateQuote();
+        }
+
+        function resetBreakdownQuantitiesToAuto() {
+            breakdownManualQty = null;
+            calculateQuote();
+        }
+
+        function updateManualQuantityFromTable(fieldKey, newValue) {
+            if (!breakdownManualQty) {
+                breakdownManualQty = {};
+            }
+            breakdownManualQty[fieldKey] = Math.max(0, parseFloat(newValue) || 0);
+            calculateQuote();
+        }
+
+        function calculateQuote() {
+            const pages = document.getElementById('quote-pages').value;
+            const printMode = document.getElementById('quote-print-mode').value;
+            const format = document.getElementById('quote-format').value;
+            const printerKey = document.getElementById('quote-printer').value;
+            const inkType = document.getElementById('quote-ink-type').value;
+            const colorMode = document.getElementById('quote-color-mode').value;
+            const contingencyPct = document.getElementById('quote-contingency-pct').value;
+            const orderQty = document.getElementById('quote-order-qty').value;
+            const customPriceInput = document.getElementById('quote-custom-price');
+
+            const numPages = parseInt(pages) || 1;
+            const calculatedSheets = printMode === 'doble' ? Math.ceil(numPages / 2) : numPages;
+            document.getElementById('calc-sheets-badge').textContent = `${calculatedSheets} Hojas (${printMode === 'doble' ? 'Doble Faz' : 'Simple Faz'})`;
+
+            let customPrice = parseFloat(customPriceInput.value);
+            if (isNaN(customPrice) || customPrice <= 0) customPrice = null;
+
+            const res = calculateBookMetrics(
+                numPages, printMode, format, printerKey, inkType, colorMode, customPrice, breakdownManualQty, contingencyPct, orderQty
+            );
+
+            if (customPriceInput.value === '' || customPriceInput.dataset.auto === 'true') {
+                customPriceInput.value = res.suggestedRounded;
+                customPriceInput.dataset.auto = 'true';
+                res.finalSalePrice = res.suggestedRounded;
+                res.netProfit = res.finalSalePrice - res.directCost;
+                res.totalBatchSale = res.finalSalePrice * res.qtyBatch;
+                res.totalBatchProfit = res.netProfit * res.qtyBatch;
+            }
+
+            document.getElementById('res-costo-total').textContent = `$${res.totalBatchCost.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('res-costo-batch-sub').textContent = res.qtyBatch > 1 ? `x1 un: $${res.directCost.toFixed(2)}` : `x1 unidad`;
+
+            document.getElementById('res-venta-total').textContent = `$${res.totalBatchSale.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('res-venta-batch-sub').textContent = res.qtyBatch > 1 ? `x1 un: $${res.finalSalePrice.toFixed(2)}` : `x1 unidad`;
+
+            document.getElementById('res-ganancia-total').textContent = `$${res.totalBatchProfit.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('res-ganancia-batch-sub').textContent = res.qtyBatch > 1 ? `x1 un: +$${res.netProfit.toFixed(2)}` : `x1 unidad`;
+
+            document.getElementById('stock-batch-qty-label').textContent = res.qtyBatch;
+            const hrs = Math.floor(res.totalBatchMinutes / 60);
+            const mins = Math.round(res.totalBatchMinutes % 60);
+            document.getElementById('stock-batch-time-badge').textContent = `${hrs > 0 ? hrs + 'h ' : ''}${mins} min imp`;
+
+            document.getElementById('stock-materials-grid').innerHTML = `
+                <div class="bg-[#061215] p-2.5 rounded-xl border border-teal-900/60 flex flex-col justify-between">
+                    <span class="text-slate-400 font-medium text-[10px]"><i class="fa-solid fa-file text-teal-400 mr-1"></i> Hojas A4 80g:</span>
+                    <span class="font-bold text-white text-xs mt-1">${res.totalPaperSheetsA4.toLocaleString('es-AR')} págs <span class="text-teal-300 font-normal">(${res.totalPaperReams} resmas)</span></span>
+                </div>
+                <div class="bg-[#061215] p-2.5 rounded-xl border border-teal-900/60 flex flex-col justify-between">
+                    <span class="text-slate-400 font-medium text-[10px]"><i class="fa-solid fa-ring text-amber-400 mr-1"></i> Espirales ${res.spiralObj.mm}mm:</span>
+                    <span class="font-bold text-amber-300 text-xs mt-1">${res.totalSpiralsNeeded} unidades</span>
+                </div>
+                <div class="bg-[#061215] p-2.5 rounded-xl border border-teal-900/60 flex flex-col justify-between">
+                    <span class="text-slate-400 font-medium text-[10px]"><i class="fa-solid fa-folder text-teal-300 mr-1"></i> Tapas Plásticas (${format}):</span>
+                    <span class="font-bold text-white text-xs mt-1">${res.totalCoversNeeded} ${format === 'A5' ? 'unid (pares A5)' : 'unid A4'}</span>
+                </div>
+                <div class="bg-[#061215] p-2.5 rounded-xl border border-teal-900/60 flex flex-col justify-between">
+                    <span class="text-slate-400 font-medium text-[10px]"><i class="fa-solid fa-image text-emerald-400 mr-1"></i> Papel Fotográfico:</span>
+                    <span class="font-bold text-white text-xs mt-1">${res.totalPhotoSheetsNeeded} hojas</span>
+                </div>
+                <div class="bg-[#061215] p-2.5 rounded-xl border border-teal-900/60 flex flex-col justify-between">
+                    <span class="text-slate-400 font-medium text-[10px]"><i class="fa-solid fa-layer-group text-cyan-400 mr-1"></i> Laminado 35u:</span>
+                    <span class="font-bold text-white text-xs mt-1">${res.totalLaminatesNeeded} pliegos</span>
+                </div>
+                <div class="bg-[#061215] p-2.5 rounded-xl border border-teal-900/60 flex flex-col justify-between">
+                    <span class="text-slate-400 font-medium text-[10px]"><i class="fa-solid fa-droplet text-teal-400 mr-1"></i> Tinta (${inkType}):</span>
+                    <span class="font-bold text-teal-300 text-xs mt-1">${(res.q.inkPages * res.qtyBatch).toLocaleString('es-AR')} págs impresas</span>
+                </div>
+            `;
+
+            const tbody = document.getElementById('quote-breakdown-tbody');
+            tbody.innerHTML = `
+                <tr class="hover:bg-teal-950/30">
+                    <td class="px-3 py-1.5 font-medium text-slate-200">Hoja 80g (A4 equivalentes)</td>
+                    <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.units.paperUnitPrice.toFixed(2)}</td>
+                    <td class="px-3 py-1.5 text-center">
+                        <input type="number" step="0.5" value="${res.q.paperSheets}" oninput="updateManualQuantityFromTable('paperSheets', this.value)"
+                            class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
+                    </td>
+                    <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.paperCost.toFixed(2)}</td>
+                </tr>
+                <tr class="hover:bg-teal-950/30">
+                    <td class="px-3 py-1.5 font-medium text-slate-200">Tinta (${inkType === 'eternity' ? 'Eternity' : 'Estándar'} ${colorMode === 'bw' ? 'B&N' : 'Color'})</td>
+                    <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.activeInkUnitPrice.toFixed(2)}</td>
+                    <td class="px-3 py-1.5 text-center">
+                        <input type="number" step="1" value="${res.q.inkPages}" oninput="updateManualQuantityFromTable('inkPages', this.value)"
+                            class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
+                    </td>
+                    <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.inkCost.toFixed(2)}</td>
+                </tr>
+                <tr class="hover:bg-teal-950/30">
+                    <td class="px-3 py-1.5 font-medium text-slate-200">Tapas Plásticas (${format})</td>
+                    <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${(format === 'A5' ? 150 : 300).toFixed(2)}</td>
+                    <td class="px-3 py-1.5 text-center">
+                        <input type="number" step="1" value="${res.q.tapasQty}" oninput="updateManualQuantityFromTable('tapasQty', this.value)"
+                            class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
+                    </td>
+                    <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.tapasCost.toFixed(2)}</td>
+                </tr>
+                <tr class="hover:bg-teal-950/30">
+                    <td class="px-3 py-1.5 font-medium text-slate-200">Papel Fotográfico 230g (${format})</td>
+                    <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.units.photoUnitPrice.toFixed(2)}</td>
+                    <td class="px-3 py-1.5 text-center">
+                        <input type="number" step="1" value="${res.q.photoQty}" oninput="updateManualQuantityFromTable('photoQty', this.value)"
+                            class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
+                    </td>
+                    <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.photoCost.toFixed(2)}</td>
+                </tr>
+                <tr class="hover:bg-teal-950/30">
+                    <td class="px-3 py-1.5 font-medium text-slate-200">Espiral Plástico (${res.spiralObj.mm}mm)</td>
+                    <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.spiralObj.unitPrice.toFixed(2)}</td>
+                    <td class="px-3 py-1.5 text-center">
+                        <input type="number" step="1" value="${res.q.spiralQty}" oninput="updateManualQuantityFromTable('spiralQty', this.value)"
+                            class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
+                    </td>
+                    <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.spiralCost.toFixed(2)}</td>
+                </tr>
+                <tr class="hover:bg-teal-950/30">
+                    <td class="px-3 py-1.5 font-medium text-slate-200">Laminado 35u</td>
+                    <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.units.laminateUnitPrice.toFixed(2)}</td>
+                    <td class="px-3 py-1.5 text-center">
+                        <input type="number" step="1" value="${res.q.laminateQty}" oninput="updateManualQuantityFromTable('laminateQty', this.value)"
+                            class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
+                    </td>
+                    <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.laminateCost.toFixed(2)}</td>
+                </tr>
+                <tr class="hover:bg-teal-950/30">
+                    <td class="px-3 py-1.5 font-medium text-slate-200">Amortización Impresora (${res.printerName})</td>
+                    <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${(res.printerAmort / Math.max(0.001, res.q.printerMin)).toFixed(2)}/m</td>
+                    <td class="px-3 py-1.5 text-center">
+                        <input type="number" step="0.1" value="${res.q.printerMin.toFixed(1)}" oninput="updateManualQuantityFromTable('printerMin', this.value)"
+                            class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
+                    </td>
+                    <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.printerAmort.toFixed(2)}</td>
+                </tr>
+                <tr class="hover:bg-teal-950/30">
+                    <td class="px-3 py-1.5 font-medium text-slate-200">Amortización Repuesto (Cabezal / Chip)</td>
+                    <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${(res.partsAmort / Math.max(0.001, res.q.printerMin)).toFixed(2)}/m</td>
+                    <td class="px-3 py-1.5 text-center">
+                        <span class="text-slate-500 font-mono">${res.q.printerMin.toFixed(1)}m</span>
+                    </td>
+                    <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.partsAmort.toFixed(2)}</td>
+                </tr>
+                ${res.padsAmort > 0 ? `
+                <tr class="hover:bg-teal-950/30">
+                    <td class="px-3 py-1.5 font-medium text-slate-200">Amortización Almohadillas</td>
+                    <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${(res.padsAmort / Math.max(0.001, res.q.printerMin)).toFixed(2)}/m</td>
+                    <td class="px-3 py-1.5 text-center">
+                        <span class="text-slate-500 font-mono">${res.q.printerMin.toFixed(1)}m</span>
+                    </td>
+                    <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.padsAmort.toFixed(2)}</td>
+                </tr>` : ''}
+                <tr class="hover:bg-teal-950/30">
+                    <td class="px-3 py-1.5 font-medium text-slate-200">Servicio de Luz</td>
+                    <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.units.luzMinRate.toFixed(2)}/m</td>
+                    <td class="px-3 py-1.5 text-center">
+                        <input type="number" step="0.1" value="${res.q.luzMin.toFixed(1)}" oninput="updateManualQuantityFromTable('luzMin', this.value)"
+                            class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
+                    </td>
+                    <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.luzCost.toFixed(2)}</td>
+                </tr>
+                <tr class="hover:bg-teal-950/30 bg-teal-950/20">
+                    <td class="px-3 py-1.5 font-medium text-teal-300">Honorarios Impresión (Incluido en Ganancia Neta)</td>
+                    <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.units.laborMinRate.toFixed(2)}/m</td>
+                    <td class="px-3 py-1.5 text-center">
+                        <input type="number" step="0.1" value="${res.q.laborMin.toFixed(1)}" oninput="updateManualQuantityFromTable('laborMin', this.value)"
+                            class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
+                    </td>
+                    <td class="px-3 py-1.5 text-right font-mono text-teal-300 font-bold">$${res.laborCost.toFixed(2)}</td>
+                </tr>
+            `;
+
+            document.getElementById('res-subtotal-base').textContent = `$${res.directCost.toFixed(2)}`;
+            document.getElementById('res-lbl-tax-pct').textContent = `${res.activeContingencyPct}%`;
+            document.getElementById('res-impuestos').textContent = `$${(res.laborCost + res.taxesCost).toFixed(2)}`;
+            
+            document.getElementById('res-val-pina-real').textContent = `$${res.valPageReal.toFixed(2)}`;
+            document.getElementById('res-lbl-mode-type').textContent = printMode === 'doble' ? 'Doble Faz' : 'Simple Faz';
+            document.getElementById('res-val-hoja-libro').textContent = `$${res.valSheetPhysicalBook.toFixed(2)}`;
+            document.getElementById('res-val-hoja-a4').textContent = `$${res.valSheetA4Paper.toFixed(2)}`;
+        }
+
+        function handleCoverUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentCoverBase64 = e.target.result;
+                    const container = document.getElementById('cover-preview-container');
+                    container.innerHTML = `<img src="${currentCoverBase64}" class="w-full h-full object-cover">`;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function resetCoverImage() {
+            currentCoverBase64 = null;
+            document.getElementById('quote-cover-input').value = '';
+            document.getElementById('cover-preview-container').innerHTML = `<i class="fa-solid fa-image"></i>`;
+        }
+
+        function saveCurrentQuoteToCatalog() {
+            const title = document.getElementById('quote-title').value.trim();
+            if (!title) {
+                showToastMessage('Por favor ingresa un título para el libro.');
+                return;
+            }
+
+            const pages = parseInt(document.getElementById('quote-pages').value) || 10;
+            const printMode = document.getElementById('quote-print-mode').value;
+            const format = document.getElementById('quote-format').value;
+            const printerKey = document.getElementById('quote-printer').value;
+            const inkType = document.getElementById('quote-ink-type').value;
+            const colorMode = document.getElementById('quote-color-mode').value;
+            const description = document.getElementById('quote-description').value;
+            const deliverables = document.getElementById('quote-deliverables').value;
+            const targetPrice = parseFloat(document.getElementById('quote-custom-price').value) || 0;
+
+            const newBook = {
+                id: 'book-' + Date.now(),
+                title,
+                pages,
+                printMode,
+                format,
+                printerKey,
+                inkType,
+                colorMode,
+                description,
+                deliverables,
+                coverImage: currentCoverBase64,
+                targetPrice
+            };
+
+            catalog.push(newBook);
+            localStorage.setItem('inperu_catalog_v4.2', JSON.stringify(catalog));
+            if (window.syncBookToCloud) window.syncBookToCloud(newBook);
+
+            switchTab('catalog');
+            renderCatalog();
+            showToastMessage('¡Libro guardado con éxito en el Catálogo INPERU!');
+        }
+
+        function renderCatalog() {
+            const grid = document.getElementById('catalog-grid');
+            const searchVal = (document.getElementById('catalog-search')?.value || '').toLowerCase();
+            document.getElementById('catalog-count').textContent = catalog.length;
+
+            const filtered = catalog.filter(b => b.title.toLowerCase().includes(searchVal) || (b.description && b.description.toLowerCase().includes(searchVal)) || (b.deliverables && b.deliverables.toLowerCase().includes(searchVal)));
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-6">
+                        <i class="fa-solid fa-book-open text-4xl text-teal-800/40 mb-3 block"></i>
+                        <h3 class="text-teal-200/60 font-semibold text-sm">No hay libros guardados en la biblioteca INPERU</h3>
+                        <p class="text-xs text-slate-600 mt-1">Cotiza un libro en la pestaña principal y presiona "Guardar en Catálogo".</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(book => {
+                const metrics = calculateBookMetrics(book.pages, book.printMode, book.format, book.printerKey, book.inkType, book.colorMode || 'bw', book.targetPrice, null, masterConfig.contingencyPercent, 1);
+
+                return `
+                    <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl overflow-hidden shadow-xl hover:border-teal-700/60 transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="h-36 bg-[#061215] border-b border-teal-900/60 relative flex items-center justify-center overflow-hidden">
+                                ${book.coverImage ? `
+                                    <img src="${book.coverImage}" class="w-full h-full object-cover">
+                                ` : `
+                                    <div class="text-center p-4">
+                                        <i class="fa-solid fa-book text-3xl text-teal-500/30 mb-1"></i>
+                                        <span class="text-[11px] text-slate-600 block uppercase font-mono">${book.format} • ${book.pages} págs</span>
+                                    </div>
+                                `}
+                                <div class="absolute top-2 right-2 bg-[#061215]/90 backdrop-blur-md px-2.5 py-1 rounded-lg text-[10px] font-bold text-teal-300 border border-teal-800/60">
+                                    ${book.printMode === 'doble' ? 'Doble Faz' : 'Simple Faz'}
+                                </div>
+                            </div>
+
+                            <div class="p-4 space-y-3">
+                                <div>
+                                    <h3 class="font-bold text-white text-sm line-clamp-1">${book.title}</h3>
+                                    <p class="text-xs text-slate-400 line-clamp-2 mt-0.5">${book.description || 'Sin descripción'}</p>
+                                    ${book.deliverables ? `
+                                        <div class="mt-2 text-[11px] bg-[#061215] p-2 rounded-lg border border-teal-900/60 text-teal-300 font-medium flex items-start gap-1.5">
+                                            <i class="fa-solid fa-box-open text-teal-400 mt-0.5 shrink-0"></i>
+                                            <span class="line-clamp-2">${book.deliverables}</span>
+                                        </div>
+                                    ` : ''}
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2 text-[11px] bg-[#061215] p-2.5 rounded-xl border border-teal-900/60">
+                                    <div>
+                                        <span class="text-slate-500 block">Costo Directo Insumos:</span>
+                                        <span class="font-bold text-rose-400">$${metrics.directCost.toFixed(2)}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-500 block">Precio Venta:</span>
+                                        <span class="font-bold text-emerald-400">$${metrics.finalSalePrice.toFixed(2)}</span>
+                                    </div>
+                                    <div class="col-span-2 pt-1 border-t border-teal-950 flex justify-between items-center text-teal-300 font-semibold">
+                                        <span>Ganancia Real Neta:</span>
+                                        <span>+$${metrics.netProfit.toFixed(2)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 pt-0 space-y-2">
+                            <button onclick="openBatchModal('${book.id}')" class="w-full bg-teal-600/20 hover:bg-teal-600/30 text-teal-300 border border-teal-500/30 font-semibold text-xs py-2 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-layer-group"></i>
+                                <span>Simular Tirada INPERU</span>
+                            </button>
+                            <div class="flex items-center gap-2">
+                                <button onclick="loadBookIntoQuoter('${book.id}')" class="flex-1 bg-[#061215] hover:bg-teal-950 text-slate-200 text-[11px] font-medium py-1.5 rounded-lg border border-teal-900/60 transition-colors">
+                                    <i class="fa-solid fa-pen-to-square mr-1"></i> Cargar
+                                </button>
+                                <button onclick="promptDeleteBook('${book.id}')" class="text-slate-500 hover:text-red-400 p-1.5 text-xs transition-colors">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function promptDeleteBook(id) {
+            const book = catalog.find(b => b.id === id);
+            if (!book) return;
+            pendingDeleteBookId = id;
+            document.getElementById('delete-modal-title').textContent = book.title;
+            document.getElementById('delete-modal').classList.remove('hidden');
+        }
+
+        function closeDeleteModal() {
+            pendingDeleteBookId = null;
+            document.getElementById('delete-modal').classList.add('hidden');
+        }
+
+        document.getElementById('confirm-delete-btn').addEventListener('click', () => {
+            if (!pendingDeleteBookId) return;
+            const id = pendingDeleteBookId;
+            catalog = catalog.filter(b => b.id !== id);
+            localStorage.setItem('inperu_catalog_v4.2', JSON.stringify(catalog));
+            if (window.deleteBookFromCloud) window.deleteBookFromCloud(id);
+            closeDeleteModal();
+            renderCatalog();
+            showToastMessage('Libro eliminado de la biblioteca.');
+        });
+
+        function loadBookIntoQuoter(id) {
+            const book = catalog.find(b => b.id === id);
+            if (!book) return;
+
+            document.getElementById('quote-title').value = book.title;
+            document.getElementById('quote-pages').value = book.pages;
+            document.getElementById('quote-print-mode').value = book.printMode;
+            document.getElementById('quote-format').value = book.format;
+            document.getElementById('quote-printer').value = book.printerKey;
+            document.getElementById('quote-ink-type').value = book.inkType;
+            document.getElementById('quote-color-mode').value = book.colorMode || 'bw';
+            document.getElementById('quote-description').value = book.description || '';
+            document.getElementById('quote-deliverables').value = book.deliverables || '';
+            document.getElementById('quote-custom-price').value = book.targetPrice || '';
+            
+            if (book.coverImage) {
+                currentCoverBase64 = book.coverImage;
+                document.getElementById('cover-preview-container').innerHTML = `<img src="${book.coverImage}" class="w-full h-full object-cover">`;
+            } else {
+                resetCoverImage();
+            }
+
+            breakdownManualQty = null;
+            switchTab('quoter');
+            calculateQuote();
+        }
+
+        function openBatchModal(bookId) {
+            activeBatchBookId = bookId;
+            const book = catalog.find(b => b.id === bookId);
+            if (!book) return;
+
+            document.getElementById('batch-modal-title').textContent = `Tirada: ${book.title}`;
+            document.getElementById('batch-modal').classList.remove('hidden');
+            recalculateBatchModal();
+        }
+
+        function closeBatchModal() {
+            document.getElementById('batch-modal').classList.add('hidden');
+        }
+
+        function changeBatchQty(delta) {
+            const input = document.getElementById('batch-qty-input');
+            let val = parseInt(input.value) || 1;
+            val = Math.max(1, val + delta);
+            input.value = val;
+            recalculateBatchModal();
+        }
+
+        function recalculateBatchModal() {
+            if (!activeBatchBookId) return;
+            const book = catalog.find(b => b.id === activeBatchBookId);
+            if (!book) return;
+
+            const qty = parseInt(document.getElementById('batch-qty-input').value) || 1;
+            const unitRes = calculateBookMetrics(book.pages, book.printMode, book.format, book.printerKey, book.inkType, book.colorMode || 'bw', book.targetPrice, null, masterConfig.contingencyPercent, qty);
+
+            document.getElementById('batch-total-sale').textContent = `$${unitRes.totalBatchSale.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+            document.getElementById('batch-total-cost').textContent = `$${unitRes.totalBatchCost.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+            document.getElementById('batch-total-profit').textContent = `$${unitRes.totalBatchProfit.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+            
+            const hoursPart = Math.floor(unitRes.totalBatchMinutes / 60);
+            const minPart = Math.round(unitRes.totalBatchMinutes % 60);
+            document.getElementById('batch-total-time').textContent = `${hoursPart} hrs ${minPart} min (${unitRes.totalBatchMinutes.toFixed(0)} min)`;
+
+            document.getElementById('batch-materials-list').innerHTML = `
+                <div class="flex justify-between"><span>• Hojas A4 80g Totales:</span><strong class="text-white">${unitRes.totalPaperSheetsA4.toLocaleString('es-AR')} hojas (${unitRes.totalPaperReams} resmas)</strong></div>
+                <div class="flex justify-between"><span>• Espirales ${unitRes.spiralObj.mm}mm:</span><strong class="text-white">${unitRes.totalSpiralsNeeded} unidades</strong></div>
+                <div class="flex justify-between"><span>• Tapas Plásticas (${book.format}):</span><strong class="text-white">${unitRes.totalCoversNeeded} ${book.format === 'A5' ? 'pares A5' : 'unidades A4'}</strong></div>
+                <div class="flex justify-between"><span>• Papel Fotográfico 230g:</span><strong class="text-white">${unitRes.totalPhotoSheetsNeeded} hojas</strong></div>
+                <div class="flex justify-between"><span>• Laminados 35u:</span><strong class="text-white">${unitRes.totalLaminatesNeeded} pliegos</strong></div>
+                <div class="flex justify-between"><span>• Páginas Totales a Imprimir:</span><strong class="text-white">${(book.pages * qty).toLocaleString('es-AR')} páginas</strong></div>
+            `;
+        }
+
+        function renderConfigToUI() {
+            document.getElementById('cfg-paper-price').value = masterConfig.paper.packPrice;
+            document.getElementById('cfg-paper-packsheets').value = masterConfig.paper.packSheets || 500;
+
+            document.getElementById('cfg-ink-standard-price').value = masterConfig.inkStandard.packPrice;
+            document.getElementById('cfg-ink-standard-bottles').value = masterConfig.inkStandard.bottlesQty || 14;
+            document.getElementById('cfg-ink-standard-yield').value = masterConfig.inkStandard.pageYield || 1000;
+
+            document.getElementById('cfg-ink-eternity-price').value = masterConfig.inkEternity.packPrice;
+            document.getElementById('cfg-ink-eternity-bottles').value = masterConfig.inkEternity.bottlesQty || 14;
+            document.getElementById('cfg-ink-eternity-yield').value = masterConfig.inkEternity.pageYield || 1500;
+
+            document.getElementById('cfg-tapas-price').value = masterConfig.tapas.packPrice;
+            document.getElementById('cfg-tapas-packqty').value = masterConfig.tapas.packQty || 50;
+
+            document.getElementById('cfg-photo-price').value = masterConfig.photoPaper.packPrice;
+            document.getElementById('cfg-photo-packqty').value = masterConfig.photoPaper.packQty || 100;
+
+            document.getElementById('cfg-laminate-price').value = masterConfig.laminado.unitPrice;
+
+            document.getElementById('cfg-printer-canon-speed').value = masterConfig.printers.canon.speedMinPerPage;
+            document.getElementById('cfg-printer-epson-speed').value = masterConfig.printers.epson.speedMinPerPage;
+
+            document.getElementById('cfg-canon-machine-cost').value = masterConfig.printers.canon.machineCost || 500000;
+            document.getElementById('cfg-canon-machine-minutes').value = masterConfig.printers.canon.machineMinutes || 350400;
+
+            document.getElementById('cfg-canon-head-cost').value = masterConfig.printers.canon.headCost || 140000;
+            document.getElementById('cfg-canon-head-minutes').value = masterConfig.printers.canon.headMinutes || 87600;
+
+            document.getElementById('cfg-canon-pads-cost').value = masterConfig.printers.canon.padsCost || 7500;
+            document.getElementById('cfg-canon-pads-minutes').value = masterConfig.printers.canon.padsMinutes || 175200;
+
+            document.getElementById('cfg-epson-machine-cost').value = masterConfig.printers.epson.machineCost || 1500000;
+            document.getElementById('cfg-epson-machine-minutes').value = masterConfig.printers.epson.machineMinutes || 350400;
+
+            document.getElementById('cfg-epson-chip-cost').value = masterConfig.printers.epson.chipCost || 32000;
+            document.getElementById('cfg-epson-chip-minutes').value = masterConfig.printers.epson.chipMinutes || 87600;
+
+            document.getElementById('cfg-luz-monthly').value = masterConfig.services.luzMonthly || 250000;
+            document.getElementById('cfg-luz-minutes').value = masterConfig.services.luzMinutes || 43200;
+            document.getElementById('cfg-labor-print-hourly').value = masterConfig.labor.hourlyRatePrint || 7500;
+            document.getElementById('cfg-contingency-default-pct').value = masterConfig.contingencyPercent || 15;
+
+            renderUnitLabelsInConfig();
+            renderSpiralsTableUI();
+        }
+
+        function renderUnitLabelsInConfig() {
+            const u = getUnitPrices();
+            document.getElementById('lbl-unit-paper').textContent = `$${u.paperUnitPrice.toFixed(2)} / hoja`;
+            document.getElementById('lbl-unit-ink-std').textContent = `$${u.inkStdUnitPrice.toFixed(2)} / pág`;
+            document.getElementById('lbl-unit-ink-ete').textContent = `$${u.inkEteUnitPrice.toFixed(2)} / pág`;
+            document.getElementById('lbl-unit-tapas').textContent = `$${u.tapasUnitPrice.toFixed(2)} / unidad`;
+            document.getElementById('lbl-unit-photo').textContent = `$${u.photoUnitPrice.toFixed(2)} / foto`;
+
+            document.getElementById('lbl-min-labor').textContent = `$${u.laborMinRate.toFixed(2)}/min`;
+
+            document.getElementById('lbl-amort-canon-eq').textContent = `$${u.canonMachineCostPerMin.toFixed(4)}/min`;
+            document.getElementById('lbl-amort-canon-head').textContent = `$${u.canonHeadCostPerMin.toFixed(4)}/min`;
+            document.getElementById('lbl-amort-canon-pads').textContent = `$${u.canonPadsCostPerMin.toFixed(4)}/min`;
+
+            document.getElementById('lbl-amort-epson-eq').textContent = `$${u.epsonMachineCostPerMin.toFixed(4)}/min`;
+            document.getElementById('lbl-amort-epson-chip').textContent = `$${u.epsonChipCostPerMin.toFixed(4)}/min`;
+
+            document.getElementById('lbl-amort-luz').textContent = `$${u.luzMinRate.toFixed(4)}/min`;
+        }
+
+        function renderSpiralsTableUI() {
+            const spirTbody = document.getElementById('config-spirals-tbody');
+            if (!spirTbody) return;
+
+            spirTbody.innerHTML = masterConfig.spirals.map((sp, idx) => `
+                <tr class="hover:bg-teal-950/40 transition-colors">
+                    <td class="px-3 py-1.5 font-bold text-teal-300">
+                        <div class="flex items-center gap-1">
+                            <input type="number" value="${sp.mm}" oninput="updateSpiralRow(${idx}, 'mm', this.value)"
+                                class="w-16 bg-[#061215] border border-teal-800/80 rounded px-2 py-1 text-xs text-teal-300 font-bold text-center focus:border-teal-400 focus:outline-none">
+                            <span class="text-xs text-slate-400">mm</span>
+                        </div>
+                    </td>
+                    <td class="px-3 py-1.5">
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-slate-400 text-xs">Hasta</span>
+                            <input type="number" value="${sp.maxSheets}" oninput="updateSpiralRow(${idx}, 'maxSheets', this.value)"
+                                class="w-24 bg-[#061215] border border-teal-800/80 rounded px-2 py-1 text-xs text-white font-semibold text-center focus:border-teal-400 focus:outline-none">
+                            <span class="text-slate-400 text-xs">hojas</span>
+                        </div>
+                    </td>
+                    <td class="px-3 py-1.5">
+                        <div class="flex items-center gap-1 justify-end">
+                            <span class="text-slate-400 text-xs">$</span>
+                            <input type="number" step="1" value="${sp.unitPrice}" oninput="updateSpiralRow(${idx}, 'unitPrice', this.value)"
+                                class="w-24 bg-[#061215] border border-teal-800/80 rounded px-2 py-1 text-xs text-emerald-400 font-bold text-right focus:border-teal-400 focus:outline-none">
+                        </div>
+                    </td>
+                    <td class="px-2 py-1.5 text-center">
+                        <button onclick="removeSpiralRow(${idx})" class="text-slate-500 hover:text-red-400 text-xs p-1">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateSpiralRow(idx, field, value) {
+            const parsed = parseFloat(value) || 0;
+            masterConfig.spirals[idx][field] = parsed;
+            saveMasterConfigToStorageAndRecalc();
+        }
+
+        function addNewSpiralRow() {
+            masterConfig.spirals.push({ mm: 10, maxSheets: 60, unitPrice: 180 });
+            renderSpiralsTableUI();
+            saveMasterConfigToStorageAndRecalc();
+        }
+
+        function removeSpiralRow(idx) {
+            masterConfig.spirals.splice(idx, 1);
+            renderSpiralsTableUI();
+            saveMasterConfigToStorageAndRecalc();
+        }
+
+        function saveMasterConfigFromUI() {
+            masterConfig.paper.packPrice = parseFloat(document.getElementById('cfg-paper-price')?.value) || 8200;
+            masterConfig.paper.packSheets = parseInt(document.getElementById('cfg-paper-packsheets')?.value) || 500;
+
+            masterConfig.inkStandard.packPrice = parseFloat(document.getElementById('cfg-ink-standard-price')?.value) || 64000;
+            masterConfig.inkStandard.bottlesQty = parseFloat(document.getElementById('cfg-ink-standard-bottles')?.value) || 14;
+            masterConfig.inkStandard.pageYield = parseFloat(document.getElementById('cfg-ink-standard-yield')?.value) || 1000;
+
+            masterConfig.inkEternity.packPrice = parseFloat(document.getElementById('cfg-ink-eternity-price')?.value) || 240000;
+            masterConfig.inkEternity.bottlesQty = parseFloat(document.getElementById('cfg-ink-eternity-bottles')?.value) || 14;
+            masterConfig.inkEternity.pageYield = parseFloat(document.getElementById('cfg-ink-eternity-yield')?.value) || 1500;
+
+            masterConfig.tapas.packPrice = parseFloat(document.getElementById('cfg-tapas-price')?.value) || 30000;
+            masterConfig.tapas.packQty = parseInt(document.getElementById('cfg-tapas-packqty')?.value) || 50;
+
+            masterConfig.photoPaper.packPrice = parseFloat(document.getElementById('cfg-photo-price')?.value) || 13500;
+            masterConfig.photoPaper.packQty = parseInt(document.getElementById('cfg-photo-packqty')?.value) || 100;
+
+            masterConfig.laminado.unitPrice = parseFloat(document.getElementById('cfg-laminate-price')?.value) || 160;
+
+            if (masterConfig.printers.canon) {
+                masterConfig.printers.canon.speedMinPerPage = parseFloat(document.getElementById('cfg-printer-canon-speed')?.value) || 0.55;
+                masterConfig.printers.canon.machineCost = parseFloat(document.getElementById('cfg-canon-machine-cost')?.value) || 500000;
+                masterConfig.printers.canon.machineMinutes = parseFloat(document.getElementById('cfg-canon-machine-minutes')?.value) || 350400;
+
+                masterConfig.printers.canon.headCost = parseFloat(document.getElementById('cfg-canon-head-cost')?.value) || 140000;
+                masterConfig.printers.canon.headMinutes = parseFloat(document.getElementById('cfg-canon-head-minutes')?.value) || 87600;
+
+                masterConfig.printers.canon.padsCost = parseFloat(document.getElementById('cfg-canon-pads-cost')?.value) || 7500;
+                masterConfig.printers.canon.padsMinutes = parseFloat(document.getElementById('cfg-canon-pads-minutes')?.value) || 175200;
+            }
+
+            if (masterConfig.printers.epson) {
+                masterConfig.printers.epson.speedMinPerPage = parseFloat(document.getElementById('cfg-printer-epson-speed')?.value) || 0.36;
+                masterConfig.printers.epson.machineCost = parseFloat(document.getElementById('cfg-epson-machine-cost')?.value) || 1500000;
+                masterConfig.printers.epson.machineMinutes = parseFloat(document.getElementById('cfg-epson-machine-minutes')?.value) || 350400;
+
+                masterConfig.printers.epson.chipCost = parseFloat(document.getElementById('cfg-epson-chip-cost')?.value) || 32000;
+                masterConfig.printers.epson.chipMinutes = parseFloat(document.getElementById('cfg-epson-chip-minutes')?.value) || 87600;
+            }
+
+            masterConfig.services.luzMonthly = parseFloat(document.getElementById('cfg-luz-monthly')?.value) || 250000;
+            masterConfig.services.luzMinutes = parseFloat(document.getElementById('cfg-luz-minutes')?.value) || 43200;
+            masterConfig.labor.hourlyRatePrint = parseFloat(document.getElementById('cfg-labor-print-hourly')?.value) || 7500;
+            masterConfig.contingencyPercent = parseFloat(document.getElementById('cfg-contingency-default-pct')?.value) || 15;
+
+            const quoterContingencyInput = document.getElementById('quote-contingency-pct');
+            if (quoterContingencyInput) {
+                quoterContingencyInput.value = masterConfig.contingencyPercent;
+            }
+
+            renderUnitLabelsInConfig();
+            saveMasterConfigToStorageAndRecalc();
+        }
+
+        function saveMasterConfigToStorageAndRecalc() {
+            localStorage.setItem('inperu_cfg_v4.2', JSON.stringify(masterConfig));
+            if (window.syncConfigToCloud) window.syncConfigToCloud();
+            calculateQuote();
+            renderCatalog();
+        }
+
+        function resetMasterConfigToDefaults() {
+            masterConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+            saveMasterConfigToStorageAndRecalc();
+            renderConfigToUI();
+            showToastMessage('Datos restablecidos a los valores originales.');
+        }
+
+        function switchTab(tabName) {
+            const tabs = ['quoter', 'catalog', 'config'];
+            tabs.forEach(t => {
+                const sec = document.getElementById(`tab-${t}`);
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if (t === tabName) {
+                    sec.classList.remove('hidden');
+                    btn.classList.add('bg-[#28838d]', 'text-white', 'shadow-md');
+                    btn.classList.remove('text-slate-400');
+                } else {
+                    sec.classList.add('hidden');
+                    btn.classList.remove('bg-[#28838d]', 'text-white', 'shadow-md');
+                    btn.classList.add('text-slate-400');
+                }
+            });
+
+            if (tabName === 'catalog') {
+                renderCatalog();
+            } else if (tabName === 'config') {
+                renderConfigToUI();
+            }
+        }
+
+        function showToastMessage(msg) {
+            let toast = document.getElementById('app-toast-box');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'app-toast-box';
+                toast.className = 'fixed bottom-5 right-5 bg-teal-900 border border-teal-400 text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs font-semibold z-50 transition-opacity duration-300 pointer-events-none opacity-0';
+                document.body.appendChild(toast);
+            }
+            toast.textContent = msg;
+            toast.classList.remove('opacity-0');
+            setTimeout(() => toast.classList.add('opacity-0'), 3000);
+        }
+
+        window.onload = function() {
+            renderConfigToUI();
+            calculateQuote();
+            renderCatalog();
+        };
+    </script>
+</body>
+</html>
