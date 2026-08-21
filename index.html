@@ -6,6 +6,15 @@
     <title>INPERU Producciones - Cotizador e Impresiones de Libros</title>
     <meta name="description" content="Sistema de Cotización e Imprenta Digital para INPERU Producciones.">
     <meta name="theme-color" content="#061215">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="INPERU">
+    
+    <!-- Iconos PWA y Favicon con el logo oficial -->
+    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1gqYlqWf_Bv92M1LkJp8_YV9Y39K8Z8Mv=s200">
+    <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1gqYlqWf_Bv92M1LkJp8_YV9Y39K8Z8Mv=s200">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome icons -->
@@ -25,7 +34,7 @@
                             200: '#99f6e4',
                             300: '#5eead4',
                             400: '#3bb0bd',
-                            500: '#28838d', /* INPERU Teal Primary */
+                            500: '#28838d',
                             600: '#1f6f78',
                             700: '#195c64',
                             800: '#134950',
@@ -44,14 +53,74 @@
         ::-webkit-scrollbar-thumb { background: #134950; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #195c64; }
         button, input, select { -webkit-tap-highlight-color: transparent; }
+        @media (max-width: 639px) {
+            body { padding-bottom: calc(5.25rem + env(safe-area-inset-bottom)); }
+            #app-nav {
+                position: fixed; z-index: 60; left: .75rem; right: .75rem;
+                bottom: calc(.65rem + env(safe-area-inset-bottom));
+                display: grid; grid-template-columns: repeat(3, minmax(0,1fr));
+                box-shadow: 0 18px 55px rgba(0,0,0,.6); backdrop-filter: blur(18px);
+            }
+            #app-nav button { min-height: 3.25rem; padding: .5rem .35rem; justify-content: center; }
+            #app-nav button > span { display: block; font-size: .65rem; }
+        }
     </style>
+
+    <!-- Firebase SDKs Compat -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
 <body class="bg-[#061215] text-slate-100 min-h-screen flex flex-col selection:bg-teal-500 selection:text-white">
 
+    <!-- Pantalla de Inicio de Sesión para los 2 Usuarios -->
+    <div id="auth-screen" class="fixed inset-0 z-50 bg-[#061215]/95 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-[#0a1a1f] border border-teal-900/50 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl space-y-6 text-center">
+            <div class="flex flex-col items-center">
+                <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border border-teal-500/30 p-1.5 bg-[#061215] shadow-lg mb-3">
+                    <svg viewBox="0 0 500 500" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="500" height="500" rx="60" fill="#ffffff" stroke="#28838d" stroke-width="20"/>
+                        <circle cx="250" cy="200" r="140" fill="none" stroke="#28838d" stroke-width="12"/>
+                        <path d="M190 140 C220 120 250 140 250 140 C250 140 280 120 310 140 L310 210 C280 190 250 210 250 210 C250 210 220 190 190 210 Z" fill="none" stroke="#28838d" stroke-width="8"/>
+                        <path d="M150 230 Q250 280 350 230 M150 255 Q250 305 350 255 M150 280 Q250 330 350 280" fill="none" stroke="#28838d" stroke-width="10" stroke-linecap="round"/>
+                        <rect x="180" y="210" width="140" height="90" rx="15" fill="#134950" stroke="#28838d" stroke-width="8"/>
+                        <rect x="205" y="260" width="90" height="55" rx="5" fill="#ffffff" stroke="#28838d" stroke-width="6"/>
+                        <line x1="218" y1="275" x2="282" y2="275" stroke="#28838d" stroke-width="4"/>
+                        <line x1="218" y1="288" x2="282" y2="288" stroke="#28838d" stroke-width="4"/>
+                        <line x1="218" y1="300" x2="265" y2="300" stroke="#28838d" stroke-width="4"/>
+                        <text x="250" y="380" font-family="'Inter', sans-serif" font-weight="900" font-size="52" fill="#28838d" text-anchor="middle" letter-spacing="4">INPERU</text>
+                        <text x="250" y="415" font-family="'Inter', sans-serif" font-weight="800" font-size="24" fill="#28838d" text-anchor="middle" letter-spacing="7">PRODUCCIONES</text>
+                    </svg>
+                </div>
+                <h1 class="text-xl sm:text-2xl font-black tracking-widest text-[#28838d]">INPERU</h1>
+                <p class="text-xs text-teal-300 font-bold tracking-[0.25em]">PRODUCCIONES</p>
+                <p class="text-xs text-slate-400 mt-1">Acceso al Sistema en la Nube</p>
+            </div>
+
+            <form onsubmit="handleLogin(event)" class="space-y-4 text-left">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Correo Electrónico</label>
+                    <input type="email" id="auth-email" required placeholder="usuario@inperu.com"
+                        class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#28838d]">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Contraseña</label>
+                    <input type="password" id="auth-password" required placeholder="••••••••"
+                        class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#28838d]">
+                </div>
+                <div id="auth-error" class="text-xs text-rose-400 font-semibold hidden"></div>
+                <button type="submit" id="auth-submit-btn" class="w-full bg-[#28838d] hover:bg-teal-600 text-white font-bold py-3 rounded-xl shadow-lg transition-all text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                    <span>Ingresar al Sistema</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Header Principal -->
     <header class="bg-[#0a1a1f]/90 backdrop-blur-md border-b border-teal-900/40 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
             
-            <!-- Tipografía limpia INPERU PRODUCCIONES -->
             <div class="flex items-center gap-3">
                 <div class="leading-none flex flex-col">
                     <span class="text-xl sm:text-2xl text-[#28838d] font-black tracking-[0.18em]">INPERU</span>
@@ -60,16 +129,17 @@
                 <div class="hidden md:block border-l border-teal-900/60 pl-3 py-0.5">
                     <p class="text-xs text-teal-200/70 font-medium">Sistema de Cotización e Imprenta</p>
                     <div class="flex items-center gap-2 mt-0.5">
-                        <span class="text-[10px] text-slate-400 font-mono">v4.3</span>
-                        <span id="cloud-status-badge" class="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.2 rounded bg-amber-950/60 text-amber-300 border border-amber-800/40">
-                            <i class="fa-solid fa-database text-[9px]"></i> Local
+                        <span id="cloud-status-badge" class="inline-flex items-center gap-1.5 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-700/50">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Nube Sync
                         </span>
+                        <button onclick="handleLogout()" class="text-[10px] text-slate-400 hover:text-rose-300 ml-2">
+                            <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Navegación por pestañas -->
-            <nav class="flex items-center gap-1 bg-[#061215]/80 p-1.5 rounded-xl border border-teal-900/50">
+            <nav id="app-nav" class="flex items-center gap-1 bg-[#061215]/80 p-1.5 rounded-xl border border-teal-900/50">
                 <button onclick="switchTab('quoter')" id="tab-btn-quoter" class="px-3.5 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 bg-[#28838d] text-white shadow-md shadow-teal-900/40">
                     <i class="fa-solid fa-calculator"></i>
                     <span>Cotizador</span>
@@ -88,10 +158,10 @@
 
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
+        <!-- Pestaña Cotizador -->
         <section id="tab-quoter" class="space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 
-                <!-- Form Inputs -->
                 <div class="lg:col-span-5 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 sm:p-6 shadow-xl space-y-5">
                     <div class="flex items-center justify-between border-b border-teal-900/40 pb-3">
                         <h2 class="text-base font-bold text-white flex items-center gap-2">
@@ -100,14 +170,12 @@
                         <span class="text-xs text-teal-300/60 font-semibold">Inperu System</span>
                     </div>
 
-                    <!-- Nombre del libro -->
                     <div>
                         <label class="block text-xs font-medium text-slate-300 mb-1">Nombre / Título del Libro *</label>
                         <input type="text" id="quote-title" placeholder="Ej. El Principito - Edición Anillada" value="Manual de Anatomía Humana"
                             class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400 transition-colors">
                     </div>
 
-                    <!-- Cantidad de Ejemplares (Lote / Pedido) y % Imprevistos -->
                     <div class="grid grid-cols-2 gap-4 bg-teal-950/30 border border-teal-800/40 p-3.5 rounded-xl">
                         <div>
                             <label class="block text-xs font-bold text-teal-300 mb-1">
@@ -132,7 +200,6 @@
                         </div>
                     </div>
 
-                    <!-- Cantidad de Páginas & Modo -->
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-medium text-slate-300 mb-1">Cantidad de Páginas *</label>
@@ -153,13 +220,11 @@
                         </div>
                     </div>
 
-                    <!-- Hojas Calculadas Resultantes -->
                     <div class="bg-teal-950/40 border border-teal-800/40 rounded-xl p-3 flex items-center justify-between text-xs">
                         <span class="text-teal-300 font-medium"><i class="fa-solid fa-file-lines mr-1.5"></i> Hojas Físicas por Ejemplar:</span>
                         <span id="calc-sheets-badge" class="font-bold text-teal-200 text-sm bg-teal-900/60 px-2.5 py-0.5 rounded-lg border border-teal-700/50">75 Hojas</span>
                     </div>
 
-                    <!-- Formato y Tipo de Impresora -->
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-medium text-slate-300 mb-1">Tamaño / Formato</label>
@@ -180,7 +245,6 @@
                         </div>
                     </div>
 
-                    <!-- Tipo de Tinta y Modo de Color -->
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-medium text-slate-300 mb-1">Tipo de Tinta</label>
@@ -200,19 +264,18 @@
                         </div>
                     </div>
 
-                    <!-- Ficha Catálogo -->
                     <div class="border-t border-teal-900/40 pt-4 space-y-3">
                         <span class="text-xs font-semibold text-teal-300/80 uppercase tracking-wider block">Ficha de Biblioteca INPERU</span>
                         
                         <div>
                             <label class="block text-xs font-medium text-slate-300 mb-1">Descripción corta o Autor</label>
-                            <input type="text" id="quote-description" placeholder="Ej. Anillado espiral, tapa dura transparente..." value="Anillado espiral plástico, tapa transparente y contratapa opaca."
+                            <input type="text" id="quote-description" placeholder="Ej. Anillado espiral, tapa dura..." value="Anillado espiral plástico, tapa transparente y contratapa opaca."
                                 class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-teal-400">
                         </div>
 
                         <div>
                             <label class="block text-xs font-medium text-slate-300 mb-1">Detalles de Entrega / Especificaciones</label>
-                            <input type="text" id="quote-deliverables" placeholder="Ej. Se entrega con hojas de 80g, espiral 17mm..." value="Se entrega impreso en hojas de 80g, espiral plástico, tapas de polipropileno y laminado 35u."
+                            <input type="text" id="quote-deliverables" placeholder="Ej. Se entrega con hojas de 80g..." value="Se entrega impreso en hojas de 80g, espiral plástico, tapas de polipropileno y laminado 35u."
                                 class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-teal-200 focus:outline-none focus:border-teal-400">
                         </div>
 
@@ -244,7 +307,6 @@
                         </div>
                     </div>
 
-                    <!-- Botón Guardar en Catálogo -->
                     <button onclick="saveCurrentQuoteToCatalog()" class="w-full bg-gradient-to-r from-[#28838d] to-teal-600 hover:from-teal-600 hover:to-teal-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-teal-950/50 transition-all flex items-center justify-center gap-2 text-sm">
                         <i class="fa-solid fa-bookmark"></i>
                         <span>Guardar Libro en Catálogo INPERU</span>
@@ -253,7 +315,6 @@
 
                 <div class="lg:col-span-7 space-y-5">
                     
-                    <!-- Resumen Ejecutivo Superior -->
                     <div class="grid grid-cols-3 gap-3">
                         <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-4 text-center">
                             <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold block mb-1">Costo Directo Insumos + Luz</span>
@@ -272,7 +333,6 @@
                         </div>
                     </div>
 
-                    <!-- Panel de Insumos y Stock Necesarios para el Pedido -->
                     <div id="stock-requirements-panel" class="bg-gradient-to-r from-[#0a1a1f] via-[#0a1a1f] to-teal-950/40 border border-teal-500/30 rounded-2xl p-4 shadow-xl space-y-3">
                         <div class="flex items-center justify-between border-b border-teal-900/40 pb-2">
                             <h4 class="text-xs font-bold text-teal-300 flex items-center gap-2">
@@ -280,10 +340,7 @@
                             </h4>
                             <span id="stock-batch-time-badge" class="text-[11px] bg-[#061215] text-teal-300 px-2 py-0.5 rounded-md font-mono border border-teal-900/60">0 min impresión</span>
                         </div>
-
-                        <div id="stock-materials-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
-                            <!-- Dynamic Material Stock Badges -->
-                        </div>
+                        <div id="stock-materials-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs"></div>
                     </div>
 
                     <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 shadow-xl space-y-4">
@@ -311,13 +368,10 @@
                                         <th class="px-3 py-2 text-right">Subtotal ($)</th>
                                     </tr>
                                 </thead>
-                                <tbody id="quote-breakdown-tbody" class="divide-y divide-teal-950/60 text-slate-300">
-                                    <!-- Dynamic rows with inputs -->
-                                </tbody>
+                                <tbody id="quote-breakdown-tbody" class="divide-y divide-teal-950/60 text-slate-300"></tbody>
                             </table>
                         </div>
 
-                        <!-- Subtotales de Impuestos y Hojas corregidos -->
                         <div class="bg-[#061215]/80 rounded-xl p-3 space-y-1.5 border border-teal-900/60 text-xs">
                             <div class="flex justify-between text-slate-400">
                                 <span>Costo Directo (Insumos + Luz + Amortizaciones) [x1]:</span>
@@ -346,13 +400,14 @@
             </div>
         </section>
 
+        <!-- Pestaña Catálogo -->
         <section id="tab-catalog" class="space-y-6 hidden">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 shadow-lg">
                 <div>
                     <h2 class="text-base font-bold text-white flex items-center gap-2">
                         <i class="fa-solid fa-book-bookmark text-teal-400"></i> Biblioteca de Libros INPERU
                     </h2>
-                    <p class="text-xs text-teal-200/60">Los costos y precios de venta se recalculan automáticamente con tus Costos Base actuales.</p>
+                    <p class="text-xs text-teal-200/60">Los precios se recalculan con los Costos Base compartidos en tiempo real.</p>
                 </div>
                 <div class="flex items-center gap-3 w-full sm:w-auto">
                     <input type="text" id="catalog-search" placeholder="Buscar por título..." oninput="renderCatalog()"
@@ -360,19 +415,17 @@
                 </div>
             </div>
 
-            <!-- Grid de Libros -->
-            <div id="catalog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Book Cards dynamic JS -->
-            </div>
+            <div id="catalog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
+        <!-- Pestaña Costos Base -->
         <section id="tab-config" class="space-y-6 hidden">
             <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
                     <h2 class="text-base font-bold text-white flex items-center gap-2">
                         <i class="fa-solid fa-sliders text-teal-400"></i> Configuración de Costos e Insumos Base
                     </h2>
-                    <p class="text-xs text-teal-200/60">Aquí están guardados todos tus datos de planillas INPERU. Puedes modificarlos en cualquier momento.</p>
+                    <p class="text-xs text-teal-200/60">Los cambios se sincronizan en la nube para ambos usuarios.</p>
                 </div>
                 <div class="flex items-center gap-2">
                     <button onclick="resetMasterConfigToDefaults()" class="text-xs bg-teal-600/30 hover:bg-teal-600/50 text-teal-200 px-3.5 py-2 rounded-xl transition-colors border border-teal-500/40 flex items-center gap-1.5 font-semibold">
@@ -383,7 +436,6 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 
-                <!-- Tabla de Insumos Materiales -->
                 <div class="lg:col-span-6 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 space-y-4 shadow-xl">
                     <h3 class="text-sm font-bold text-white flex items-center gap-2 border-b border-teal-900/40 pb-2">
                         <i class="fa-solid fa-boxes-packing text-amber-400"></i> Materiales & Insumos Base
@@ -515,6 +567,7 @@
                     </div>
                 </div>
 
+                <!-- Tabla de Espirales -->
                 <div class="lg:col-span-6 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 space-y-4 shadow-xl">
                     <div class="flex items-center justify-between border-b border-teal-900/40 pb-2">
                         <h3 class="text-sm font-bold text-white flex items-center gap-2">
@@ -535,13 +588,12 @@
                                     <th class="px-2 py-2 text-center">Acción</th>
                                 </tr>
                             </thead>
-                            <tbody id="config-spirals-tbody" class="divide-y divide-teal-950/60">
-                                <!-- Dynamic editable spiral rows -->
-                            </tbody>
+                            <tbody id="config-spirals-tbody" class="divide-y divide-teal-950/60"></tbody>
                         </table>
                     </div>
                 </div>
 
+                <!-- Amortizaciones y Servicios -->
                 <div class="lg:col-span-12 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 space-y-4 shadow-xl">
                     <h3 class="text-sm font-bold text-white flex items-center gap-2 border-b border-teal-900/40 pb-2">
                         <i class="fa-solid fa-gears text-teal-400"></i> Tiempos, Luz, Honorarios e Imprevistos Base
@@ -563,7 +615,6 @@
                                 </div>
                             </div>
 
-                            <!-- Impresora Equip. -->
                             <div class="space-y-1 pt-1 border-t border-teal-950">
                                 <div class="flex justify-between items-center text-slate-300 font-semibold">
                                     <span>Equipamiento Canon:</span>
@@ -583,7 +634,6 @@
                                 </div>
                             </div>
 
-                            <!-- Cabezal Canon -->
                             <div class="space-y-1 pt-1 border-t border-teal-950">
                                 <div class="flex justify-between items-center text-slate-300 font-semibold">
                                     <span>Cabezal:</span>
@@ -603,7 +653,6 @@
                                 </div>
                             </div>
 
-                            <!-- Almohadillas Canon -->
                             <div class="space-y-1 pt-1 border-t border-teal-950">
                                 <div class="flex justify-between items-center text-slate-300 font-semibold">
                                     <span>Almohadillas:</span>
@@ -637,7 +686,6 @@
                                 </div>
                             </div>
 
-                            <!-- Impresora Equip. -->
                             <div class="space-y-1 pt-1 border-t border-teal-950">
                                 <div class="flex justify-between items-center text-slate-300 font-semibold">
                                     <span>Equipamiento Epson:</span>
@@ -657,7 +705,6 @@
                                 </div>
                             </div>
 
-                            <!-- Chip Epson -->
                             <div class="space-y-1 pt-1 border-t border-teal-950">
                                 <div class="flex justify-between items-center text-slate-300 font-semibold">
                                     <span>Chip Mantenimiento:</span>
@@ -678,11 +725,10 @@
                             </div>
                         </div>
 
-                        <!-- Luz, Mano de Obra y % Imprevistos Base -->
+                        <!-- Luz, Mano de Obra y % Imprevistos -->
                         <div class="bg-[#061215] p-4 rounded-xl border border-teal-900/60 space-y-3">
                             <h4 class="font-bold text-teal-300 border-b border-teal-900/60 pb-1">Luz, Honorarios e Imprevistos</h4>
                             
-                            <!-- Servicio de Luz -->
                             <div class="space-y-1">
                                 <div class="flex justify-between items-center text-slate-300 font-semibold">
                                     <span>Servicio de Luz:</span>
@@ -702,7 +748,6 @@
                                 </div>
                             </div>
 
-                            <!-- Honorarios -->
                             <div class="space-y-1 pt-2 border-t border-teal-950">
                                 <div class="flex justify-between items-center text-slate-300 font-semibold">
                                     <span>Valor Hora Impresión:</span>
@@ -715,7 +760,6 @@
                                 </div>
                             </div>
 
-                            <!-- Imprevistos / Contingencias Base -->
                             <div class="space-y-1 pt-2 border-t border-teal-950">
                                 <div class="flex items-center justify-between">
                                     <span class="text-amber-300 text-xs font-bold">% Imprevistos Base:</span>
@@ -735,7 +779,6 @@
 
     </main>
 
-
     <!-- Modal Tirada por Cantidad -->
     <div id="batch-modal" class="fixed inset-0 bg-[#061215]/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-[#0a1a1f] border border-teal-900/60 rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-5 relative">
@@ -753,7 +796,6 @@
                 </div>
             </div>
 
-            <!-- Input de Cantidad -->
             <div class="bg-[#061215] p-4 rounded-xl border border-teal-900/60 flex items-center justify-between">
                 <label class="text-xs font-semibold text-slate-300">Cantidad de Ejemplares:</label>
                 <div class="flex items-center gap-2">
@@ -764,7 +806,6 @@
                 </div>
             </div>
 
-            <!-- Resumen Financiero -->
             <div class="grid grid-cols-3 gap-3">
                 <div class="bg-[#061215] p-3 rounded-xl border border-teal-900/60 text-center">
                     <span class="text-[10px] text-slate-400 uppercase font-semibold block">Total Venta</span>
@@ -780,20 +821,16 @@
                 </div>
             </div>
 
-            <!-- Tiempo Estimado -->
             <div class="bg-teal-950/40 border border-teal-800/40 rounded-xl p-3 flex items-center justify-between text-xs">
                 <span class="text-teal-300"><i class="fa-solid fa-clock mr-1.5"></i> Tiempo de Impresión Continuo:</span>
                 <span id="batch-total-time" class="font-bold text-teal-200">0 horas 0 min</span>
             </div>
 
-            <!-- Lista de Insumos -->
             <div class="space-y-2">
                 <h4 class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
                     <i class="fa-solid fa-clipboard-list text-amber-400"></i> Insumos Totales Requeridos:
                 </h4>
-                <div id="batch-materials-list" class="bg-[#061215] p-3 rounded-xl border border-teal-900/60 text-xs space-y-1.5 font-mono text-slate-300 max-h-48 overflow-y-auto">
-                    <!-- Dynamic List -->
-                </div>
+                <div id="batch-materials-list" class="bg-[#061215] p-3 rounded-xl border border-teal-900/60 text-xs space-y-1.5 font-mono text-slate-300 max-h-48 overflow-y-auto"></div>
             </div>
 
             <div class="pt-2 flex justify-end">
@@ -816,7 +853,7 @@
                     <p id="delete-modal-title" class="text-xs text-slate-400 truncate max-w-[200px]">Título del libro</p>
                 </div>
             </div>
-            <p class="text-xs text-slate-300">Esta acción quitará el libro de la biblioteca en todos los dispositivos conectados.</p>
+            <p class="text-xs text-slate-300">Esta acción quitará el libro de la biblioteca en la nube para ambos usuarios.</p>
             <div class="flex items-center justify-end gap-2 pt-2">
                 <button onclick="closeDeleteModal()" class="px-3.5 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white bg-[#061215]">Cancelar</button>
                 <button id="confirm-delete-btn" class="px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 shadow-md">Eliminar</button>
@@ -824,16 +861,21 @@
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <!-- Firebase App Logic -->
+    <script>
+        // Credenciales oficiales de Firebase de INPERU
+        const firebaseConfig = {
+            apiKey: "AIzaSyBMqyAp0dQ3vM0Z7ZZp2p8Htixcjx5HyVo",
+            authDomain: "inperu-cotizador.firebaseapp.com",
+            projectId: "inperu-cotizador",
+            storageBucket: "inperu-cotizador.firebasestorage.app",
+            messagingSenderId: "76240882727",
+            appId: "1:76240882727:web:6e73ee4f7228b77e789202"
+        };
 
-        // Global Application Context
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'inperu-cotizador-app';
-        let db = null;
-        let auth = null;
-        let currentUser = null;
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
         const DEFAULT_CONFIG = {
             contingencyPercent: 15,
@@ -918,136 +960,79 @@
             }
         ];
 
-        window.masterConfig = loadMasterConfigLocal();
-        window.catalog = loadCatalogLocal();
-        window.currentCoverBase64 = null;
-        window.breakdownManualQty = null;
-        window.activeBatchBookId = null;
-        window.pendingDeleteBookId = null;
+        let masterConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+        let catalog = [];
+        let currentCoverBase64 = null;
+        let breakdownManualQty = null;
+        let activeBatchBookId = null;
+        let pendingDeleteBookId = null;
 
-        function loadMasterConfigLocal() {
-            const saved = localStorage.getItem('inperu_cfg_v4.2');
-            if (!saved) return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+        // Listener de Autenticación
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                document.getElementById('auth-screen').classList.add('hidden');
+                initFirebaseRealtimeSync();
+            } else {
+                document.getElementById('auth-screen').classList.remove('hidden');
+            }
+        });
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value.trim();
+            const password = document.getElementById('auth-password').value;
+            const errorDiv = document.getElementById('auth-error');
+            const submitBtn = document.getElementById('auth-submit-btn');
+
+            errorDiv.classList.add('hidden');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Conectando...`;
+
             try {
-                const parsed = JSON.parse(saved);
-                if (!parsed.printers?.canon?.machineCost) return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
-                if (parsed.contingencyPercent === undefined) parsed.contingencyPercent = 15;
-                return parsed;
-            } catch (e) {
-                return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+                await auth.signInWithEmailAndPassword(email, password);
+            } catch (err) {
+                errorDiv.textContent = "Usuario o contraseña incorrectos. Verifica en la consola de Firebase.";
+                errorDiv.classList.remove('hidden');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<i class="fa-solid fa-arrow-right-to-bracket"></i> Iniciar Sesión`;
             }
         }
 
-        function loadCatalogLocal() {
-            const saved = localStorage.getItem('inperu_catalog_v4.2');
-            if (!saved) return JSON.parse(JSON.stringify(DEFAULT_CATALOG));
-            try {
-                return JSON.parse(saved);
-            } catch (e) {
-                return JSON.parse(JSON.stringify(DEFAULT_CATALOG));
-            }
+        function handleLogout() {
+            auth.signOut();
         }
 
-        // Initialize Firebase
-        if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-            try {
-                const firebaseConfig = JSON.parse(__firebase_config);
-                const app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
+        function initFirebaseRealtimeSync() {
+            // Sincronizar Configuración de Costos Base en Tiempo Real
+            db.collection('config').doc('master').onSnapshot(docSnap => {
+                if (docSnap.exists) {
+                    masterConfig = { ...DEFAULT_CONFIG, ...docSnap.data() };
+                } else {
+                    db.collection('config').doc('master').set(DEFAULT_CONFIG);
+                }
+                renderConfigToUI();
+                calculateQuote();
+                renderCatalog();
+            });
 
-                const initAuth = async () => {
-                    try {
-                        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                            const userCred = await signInWithCustomToken(auth, __initial_auth_token);
-                            currentUser = userCred.user;
-                        } else {
-                            const userCred = await signInAnonymously(auth);
-                            currentUser = userCred.user;
-                        }
-                        setupFirebaseSync();
-                    } catch (err) {
-                        console.warn("Error autenticando en Firebase, continuando en modo local:", err);
-                    }
-                };
-                initAuth();
-            } catch (e) {
-                console.warn("Error inicializando Firebase:", e);
-            }
-        }
-
-        function setupFirebaseSync() {
-            if (!db || !currentUser) return;
-
-            const statusBadge = document.getElementById('cloud-status-badge');
-            if (statusBadge) {
-                statusBadge.innerHTML = `<i class="fa-solid fa-signal text-[9px] animate-pulse"></i> Nube Sync`;
-                statusBadge.className = `inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.2 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-700/50`;
-            }
-
-            // Sync Catalog Collection Path Rule 1: /artifacts/{appId}/public/data/catalog
-            const catalogColRef = collection(db, 'artifacts', appId, 'public', 'data', 'catalog');
-            onSnapshot(catalogColRef, (snapshot) => {
+            // Sincronizar Catálogo de Libros en Tiempo Real
+            db.collection('catalog').onSnapshot(snapshot => {
                 if (!snapshot.empty) {
-                    const cloudCatalog = [];
+                    catalog = [];
                     snapshot.forEach(docSnap => {
-                        cloudCatalog.push({ id: docSnap.id, ...docSnap.data() });
+                        catalog.push({ id: docSnap.id, ...docSnap.data() });
                     });
-                    window.catalog = cloudCatalog;
-                    localStorage.setItem('inperu_catalog_v4.2', JSON.stringify(window.catalog));
-                    window.renderCatalog();
                 } else {
-                    // Seed initial catalog if empty
+                    // Cargar catálogo inicial de muestra si está vacío
                     DEFAULT_CATALOG.forEach(b => {
-                        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'catalog', b.id), b);
+                        db.collection('catalog').doc(b.id).set(b);
                     });
                 }
-            }, (error) => {
-                console.warn("Error escuchando catálogo de Firebase:", error);
-            });
-
-            // Sync Base Config Document Path Rule 1: /artifacts/{appId}/public/data/settings/config
-            const configDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'master_config');
-            onSnapshot(configDocRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    window.masterConfig = docSnap.data();
-                    localStorage.setItem('inperu_cfg_v4.2', JSON.stringify(window.masterConfig));
-                    window.renderConfigToUI();
-                    window.calculateQuote();
-                    window.renderCatalog();
-                } else {
-                    setDoc(configDocRef, window.masterConfig);
-                }
-            }, (error) => {
-                console.warn("Error escuchando configuración de Firebase:", error);
+                document.getElementById('catalog-count').textContent = catalog.length;
+                renderCatalog();
             });
         }
 
-        // Global functions tied to cloud or local state
-        window.syncConfigToCloud = function() {
-            localStorage.setItem('inperu_cfg_v4.2', JSON.stringify(window.masterConfig));
-            if (db && currentUser) {
-                const configDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'master_config');
-                setDoc(configDocRef, window.masterConfig).catch(e => console.warn("Error guardando config en nube:", e));
-            }
-        };
-
-        window.syncBookToCloud = function(bookObj) {
-            if (db && currentUser) {
-                const bookDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'catalog', bookObj.id);
-                setDoc(bookDocRef, bookObj).catch(e => console.warn("Error guardando libro en nube:", e));
-            }
-        };
-
-        window.deleteBookFromCloud = function(bookId) {
-            if (db && currentUser) {
-                const bookDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'catalog', bookId);
-                deleteDoc(bookDocRef).catch(e => console.warn("Error borrando libro de nube:", e));
-            }
-        };
-    </script>
-
-    <script>
         function getUnitPrices() {
             const paperUnitPrice = masterConfig.paper.packPrice / (masterConfig.paper.packSheets || 500);
             
@@ -1105,16 +1090,13 @@
             const printer = masterConfig.printers[printerKey] || masterConfig.printers.canon;
             
             const autoMinutes = autoSheets * printer.speedMinPerPage;
-
             const units = getUnitPrices();
             let baseInkRate = inkType === 'eternity' ? units.inkEteUnitPrice : units.inkStdUnitPrice;
-            
             const activeInkUnitPrice = colorMode === 'bw' ? (baseInkRate / 2) : baseInkRate;
 
             const paperSheetsCount = format === 'A5' ? (autoSheets / 2) : autoSheets;
             const coversCount = format === 'A5' ? 0.5 : 1;
             const photoCount = format === 'A5' ? 1 : 2;
-
             const spiralObj = getSpiralForSheets(autoSheets);
 
             const q = {
@@ -1136,10 +1118,7 @@
             const spiralCost = q.spiralQty * spiralObj.unitPrice;
             const laminateCost = q.laminateQty * units.laminateUnitPrice;
 
-            let printerAmort = 0;
-            let partsAmort = 0;
-            let padsAmort = 0;
-
+            let printerAmort = 0, partsAmort = 0, padsAmort = 0;
             if (printerKey === 'canon') {
                 printerAmort = q.printerMin * units.canonMachineCostPerMin;
                 partsAmort = q.printerMin * units.canonHeadCostPerMin;
@@ -1151,7 +1130,6 @@
 
             const luzCost = q.luzMin * units.luzMinRate;
             const laborCost = q.laborMin * units.laborMinRate;
-
             const directCost = paperCost + inkCost + tapasCost + photoCost + spiralCost + laminateCost + printerAmort + partsAmort + padsAmort + luzCost;
 
             const activeContingencyPct = parseFloat(contingencyPct) >= 0 ? parseFloat(contingencyPct) : 15;
@@ -1160,7 +1138,6 @@
             const rawTotalPrice = directCost + laborCost + taxesCost;
             const suggestedRounded = Math.ceil(rawTotalPrice / 100) * 100;
             const finalSalePrice = (customPrice !== null && customPrice !== undefined && customPrice > 0) ? parseFloat(customPrice) : suggestedRounded;
-
             const netProfit = finalSalePrice - directCost;
 
             const valPageReal = finalSalePrice / Math.max(1, numPages);
@@ -1168,58 +1145,20 @@
             const valSheetA4Paper = finalSalePrice / Math.max(1, q.paperSheets);
 
             const qtyBatch = Math.max(1, parseInt(orderQty) || 1);
-            const totalBatchSale = finalSalePrice * qtyBatch;
-            const totalBatchCost = directCost * qtyBatch;
-            const totalBatchProfit = netProfit * qtyBatch;
-            const totalBatchMinutes = q.printerMin * qtyBatch;
-
-            const totalPaperSheetsA4 = q.paperSheets * qtyBatch;
-            const totalPaperReams = (totalPaperSheetsA4 / (masterConfig.paper.packSheets || 500)).toFixed(2);
-            const totalSpiralsNeeded = q.spiralQty * qtyBatch;
-            const totalCoversNeeded = q.tapasQty * qtyBatch;
-            const totalPhotoSheetsNeeded = q.photoQty * qtyBatch;
-            const totalLaminatesNeeded = q.laminateQty * qtyBatch;
-
             return {
-                numPages,
-                autoSheets,
-                autoMinutes,
-                printerName: printer.name,
-                spiralObj,
-                units,
-                activeInkUnitPrice,
-                activeContingencyPct,
-                q,
-                paperCost,
-                inkCost,
-                tapasCost,
-                photoCost,
-                spiralCost,
-                laminateCost,
-                printerAmort,
-                partsAmort,
-                padsAmort,
-                luzCost,
-                laborCost,
-                directCost,
-                taxesCost,
-                suggestedRounded,
-                finalSalePrice,
-                netProfit,
-                valPageReal,
-                valSheetPhysicalBook,
-                valSheetA4Paper,
-                qtyBatch,
-                totalBatchSale,
-                totalBatchCost,
-                totalBatchProfit,
-                totalBatchMinutes,
-                totalPaperSheetsA4,
-                totalPaperReams,
-                totalSpiralsNeeded,
-                totalCoversNeeded,
-                totalPhotoSheetsNeeded,
-                totalLaminatesNeeded
+                numPages, autoSheets, autoMinutes, printerName: printer.name, spiralObj, units, activeInkUnitPrice, activeContingencyPct,
+                q, paperCost, inkCost, tapasCost, photoCost, spiralCost, laminateCost, printerAmort, partsAmort, padsAmort, luzCost, laborCost,
+                directCost, taxesCost, suggestedRounded, finalSalePrice, netProfit, valPageReal, valSheetPhysicalBook, valSheetA4Paper, qtyBatch,
+                totalBatchSale: finalSalePrice * qtyBatch,
+                totalBatchCost: directCost * qtyBatch,
+                totalBatchProfit: netProfit * qtyBatch,
+                totalBatchMinutes: q.printerMin * qtyBatch,
+                totalPaperSheetsA4: q.paperSheets * qtyBatch,
+                totalPaperReams: ((q.paperSheets * qtyBatch) / (masterConfig.paper.packSheets || 500)).toFixed(2),
+                totalSpiralsNeeded: q.spiralQty * qtyBatch,
+                totalCoversNeeded: q.tapasQty * qtyBatch,
+                totalPhotoSheetsNeeded: q.photoQty * qtyBatch,
+                totalLaminatesNeeded: q.laminateQty * qtyBatch
             };
         }
 
@@ -1229,8 +1168,7 @@
         }
 
         function onCustomPriceInput() {
-            const input = document.getElementById('quote-custom-price');
-            input.dataset.auto = 'false';
+            document.getElementById('quote-custom-price').dataset.auto = 'false';
             calculateQuote();
         }
 
@@ -1240,9 +1178,7 @@
         }
 
         function updateManualQuantityFromTable(fieldKey, newValue) {
-            if (!breakdownManualQty) {
-                breakdownManualQty = {};
-            }
+            if (!breakdownManualQty) breakdownManualQty = {};
             breakdownManualQty[fieldKey] = Math.max(0, parseFloat(newValue) || 0);
             calculateQuote();
         }
@@ -1265,9 +1201,7 @@
             let customPrice = parseFloat(customPriceInput.value);
             if (isNaN(customPrice) || customPrice <= 0) customPrice = null;
 
-            const res = calculateBookMetrics(
-                numPages, printMode, format, printerKey, inkType, colorMode, customPrice, breakdownManualQty, contingencyPct, orderQty
-            );
+            const res = calculateBookMetrics(numPages, printMode, format, printerKey, inkType, colorMode, customPrice, breakdownManualQty, contingencyPct, orderQty);
 
             if (customPriceInput.value === '' || customPriceInput.dataset.auto === 'true') {
                 customPriceInput.value = res.suggestedRounded;
@@ -1279,13 +1213,11 @@
             }
 
             document.getElementById('res-costo-total').textContent = `$${res.totalBatchCost.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            document.getElementById('res-costo-batch-sub').textContent = res.qtyBatch > 1 ? `x1 un: $${res.directCost.toFixed(2)}` : `x1 unidad`;
-
+            document.getElementById('res-costo-batch-sub').textContent = res.qtyBatch > 1 ? `x1 un: $${res.directCost.toFixed(2)}` : `x1 un: $0.00`;
             document.getElementById('res-venta-total').textContent = `$${res.totalBatchSale.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            document.getElementById('res-venta-batch-sub').textContent = res.qtyBatch > 1 ? `x1 un: $${res.finalSalePrice.toFixed(2)}` : `x1 unidad`;
-
+            document.getElementById('res-venta-batch-sub').textContent = res.qtyBatch > 1 ? `x1 un: $${res.finalSalePrice.toFixed(2)}` : `x1 un: $0.00`;
             document.getElementById('res-ganancia-total').textContent = `$${res.totalBatchProfit.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            document.getElementById('res-ganancia-batch-sub').textContent = res.qtyBatch > 1 ? `x1 un: +$${res.netProfit.toFixed(2)}` : `x1 unidad`;
+            document.getElementById('res-ganancia-batch-sub').textContent = res.qtyBatch > 1 ? `x1 un: +$${res.netProfit.toFixed(2)}` : `x1 un: $0.00`;
 
             document.getElementById('stock-batch-qty-label').textContent = res.qtyBatch;
             const hrs = Math.floor(res.totalBatchMinutes / 60);
@@ -1315,12 +1247,11 @@
                 </div>
                 <div class="bg-[#061215] p-2.5 rounded-xl border border-teal-900/60 flex flex-col justify-between">
                     <span class="text-slate-400 font-medium text-[10px]"><i class="fa-solid fa-droplet text-teal-400 mr-1"></i> Tinta (${inkType}):</span>
-                    <span class="font-bold text-teal-300 text-xs mt-1">${(res.q.inkPages * res.qtyBatch).toLocaleString('es-AR')} págs impresas</span>
+                    <span class="font-bold text-teal-300 text-xs mt-1">${(res.q.inkPages * res.qtyBatch).toLocaleString('es-AR')} págs</span>
                 </div>
             `;
 
-            const tbody = document.getElementById('quote-breakdown-tbody');
-            tbody.innerHTML = `
+            document.getElementById('quote-breakdown-tbody').innerHTML = `
                 <tr class="hover:bg-teal-950/30">
                     <td class="px-3 py-1.5 font-medium text-slate-200">Hoja 80g (A4 equivalentes)</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.units.paperUnitPrice.toFixed(2)}</td>
@@ -1387,18 +1318,14 @@
                 <tr class="hover:bg-teal-950/30">
                     <td class="px-3 py-1.5 font-medium text-slate-200">Amortización Repuesto (Cabezal / Chip)</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${(res.partsAmort / Math.max(0.001, res.q.printerMin)).toFixed(2)}/m</td>
-                    <td class="px-3 py-1.5 text-center">
-                        <span class="text-slate-500 font-mono">${res.q.printerMin.toFixed(1)}m</span>
-                    </td>
+                    <td class="px-3 py-1.5 text-center"><span class="text-slate-500 font-mono">${res.q.printerMin.toFixed(1)}m</span></td>
                     <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.partsAmort.toFixed(2)}</td>
                 </tr>
                 ${res.padsAmort > 0 ? `
                 <tr class="hover:bg-teal-950/30">
                     <td class="px-3 py-1.5 font-medium text-slate-200">Amortización Almohadillas</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${(res.padsAmort / Math.max(0.001, res.q.printerMin)).toFixed(2)}/m</td>
-                    <td class="px-3 py-1.5 text-center">
-                        <span class="text-slate-500 font-mono">${res.q.printerMin.toFixed(1)}m</span>
-                    </td>
+                    <td class="px-3 py-1.5 text-center"><span class="text-slate-500 font-mono">${res.q.printerMin.toFixed(1)}m</span></td>
                     <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.padsAmort.toFixed(2)}</td>
                 </tr>` : ''}
                 <tr class="hover:bg-teal-950/30">
@@ -1411,7 +1338,7 @@
                     <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.luzCost.toFixed(2)}</td>
                 </tr>
                 <tr class="hover:bg-teal-950/30 bg-teal-950/20">
-                    <td class="px-3 py-1.5 font-medium text-teal-300">Honorarios Impresión (Incluido en Ganancia Neta)</td>
+                    <td class="px-3 py-1.5 font-medium text-teal-300">Honorarios Impresión (Ganancia)</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.units.laborMinRate.toFixed(2)}/m</td>
                     <td class="px-3 py-1.5 text-center">
                         <input type="number" step="0.1" value="${res.q.laborMin.toFixed(1)}" oninput="updateManualQuantityFromTable('laborMin', this.value)"
@@ -1437,8 +1364,7 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     currentCoverBase64 = e.target.result;
-                    const container = document.getElementById('cover-preview-container');
-                    container.innerHTML = `<img src="${currentCoverBase64}" class="w-full h-full object-cover">`;
+                    document.getElementById('cover-preview-container').innerHTML = `<img src="${currentCoverBase64}" class="w-full h-full object-cover">`;
                 }
                 reader.readAsDataURL(file);
             }
@@ -1450,45 +1376,31 @@
             document.getElementById('cover-preview-container').innerHTML = `<i class="fa-solid fa-image"></i>`;
         }
 
-        function saveCurrentQuoteToCatalog() {
+        async function saveCurrentQuoteToCatalog() {
             const title = document.getElementById('quote-title').value.trim();
             if (!title) {
-                showToastMessage('Por favor ingresa un título para el libro.');
+                showToastMessage('Ingresa un título para el libro.');
                 return;
             }
-
-            const pages = parseInt(document.getElementById('quote-pages').value) || 10;
-            const printMode = document.getElementById('quote-print-mode').value;
-            const format = document.getElementById('quote-format').value;
-            const printerKey = document.getElementById('quote-printer').value;
-            const inkType = document.getElementById('quote-ink-type').value;
-            const colorMode = document.getElementById('quote-color-mode').value;
-            const description = document.getElementById('quote-description').value;
-            const deliverables = document.getElementById('quote-deliverables').value;
-            const targetPrice = parseFloat(document.getElementById('quote-custom-price').value) || 0;
 
             const newBook = {
                 id: 'book-' + Date.now(),
                 title,
-                pages,
-                printMode,
-                format,
-                printerKey,
-                inkType,
-                colorMode,
-                description,
-                deliverables,
+                pages: parseInt(document.getElementById('quote-pages').value) || 10,
+                printMode: document.getElementById('quote-print-mode').value,
+                format: document.getElementById('quote-format').value,
+                printerKey: document.getElementById('quote-printer').value,
+                inkType: document.getElementById('quote-ink-type').value,
+                colorMode: document.getElementById('quote-color-mode').value,
+                description: document.getElementById('quote-description').value,
+                deliverables: document.getElementById('quote-deliverables').value,
                 coverImage: currentCoverBase64,
-                targetPrice
+                targetPrice: parseFloat(document.getElementById('quote-custom-price').value) || 0
             };
 
-            catalog.push(newBook);
-            localStorage.setItem('inperu_catalog_v4.2', JSON.stringify(catalog));
-            if (window.syncBookToCloud) window.syncBookToCloud(newBook);
-
+            await db.collection('catalog').doc(newBook.id).set(newBook);
             switchTab('catalog');
-            renderCatalog();
-            showToastMessage('¡Libro guardado con éxito en el Catálogo INPERU!');
+            showToastMessage('¡Libro guardado y sincronizado en la nube!');
         }
 
         function renderCatalog() {
@@ -1496,14 +1408,14 @@
             const searchVal = (document.getElementById('catalog-search')?.value || '').toLowerCase();
             document.getElementById('catalog-count').textContent = catalog.length;
 
-            const filtered = catalog.filter(b => b.title.toLowerCase().includes(searchVal) || (b.description && b.description.toLowerCase().includes(searchVal)) || (b.deliverables && b.deliverables.toLowerCase().includes(searchVal)));
+            const filtered = catalog.filter(b => (b.title || '').toLowerCase().includes(searchVal) || (b.description && b.description.toLowerCase().includes(searchVal)) || (b.deliverables && b.deliverables.toLowerCase().includes(searchVal)));
 
             if (filtered.length === 0) {
                 grid.innerHTML = `
                     <div class="col-span-full text-center py-12 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-6">
                         <i class="fa-solid fa-book-open text-4xl text-teal-800/40 mb-3 block"></i>
-                        <h3 class="text-teal-200/60 font-semibold text-sm">No hay libros guardados en la biblioteca INPERU</h3>
-                        <p class="text-xs text-slate-600 mt-1">Cotiza un libro en la pestaña principal y presiona "Guardar en Catálogo".</p>
+                        <h3 class="text-teal-200/60 font-semibold text-sm">No hay libros en la biblioteca compartida</h3>
+                        <p class="text-xs text-slate-500 mt-1">Guarda una cotización para que aparezca aquí en tiempo real.</p>
                     </div>
                 `;
                 return;
@@ -1590,15 +1502,12 @@
             document.getElementById('delete-modal').classList.add('hidden');
         }
 
-        document.getElementById('confirm-delete-btn').addEventListener('click', () => {
+        document.getElementById('confirm-delete-btn').addEventListener('click', async () => {
             if (!pendingDeleteBookId) return;
             const id = pendingDeleteBookId;
-            catalog = catalog.filter(b => b.id !== id);
-            localStorage.setItem('inperu_catalog_v4.2', JSON.stringify(catalog));
-            if (window.deleteBookFromCloud) window.deleteBookFromCloud(id);
+            await db.collection('catalog').doc(id).delete();
             closeDeleteModal();
-            renderCatalog();
-            showToastMessage('Libro eliminado de la biblioteca.');
+            showToastMessage('Libro eliminado en la nube.');
         });
 
         function loadBookIntoQuoter(id) {
@@ -1781,8 +1690,7 @@
         }
 
         function updateSpiralRow(idx, field, value) {
-            const parsed = parseFloat(value) || 0;
-            masterConfig.spirals[idx][field] = parsed;
+            masterConfig.spirals[idx][field] = parseFloat(value) || 0;
             saveMasterConfigToStorageAndRecalc();
         }
 
@@ -1822,10 +1730,8 @@
                 masterConfig.printers.canon.speedMinPerPage = parseFloat(document.getElementById('cfg-printer-canon-speed')?.value) || 0.55;
                 masterConfig.printers.canon.machineCost = parseFloat(document.getElementById('cfg-canon-machine-cost')?.value) || 500000;
                 masterConfig.printers.canon.machineMinutes = parseFloat(document.getElementById('cfg-canon-machine-minutes')?.value) || 350400;
-
                 masterConfig.printers.canon.headCost = parseFloat(document.getElementById('cfg-canon-head-cost')?.value) || 140000;
                 masterConfig.printers.canon.headMinutes = parseFloat(document.getElementById('cfg-canon-head-minutes')?.value) || 87600;
-
                 masterConfig.printers.canon.padsCost = parseFloat(document.getElementById('cfg-canon-pads-cost')?.value) || 7500;
                 masterConfig.printers.canon.padsMinutes = parseFloat(document.getElementById('cfg-canon-pads-minutes')?.value) || 175200;
             }
@@ -1834,7 +1740,6 @@
                 masterConfig.printers.epson.speedMinPerPage = parseFloat(document.getElementById('cfg-printer-epson-speed')?.value) || 0.36;
                 masterConfig.printers.epson.machineCost = parseFloat(document.getElementById('cfg-epson-machine-cost')?.value) || 1500000;
                 masterConfig.printers.epson.machineMinutes = parseFloat(document.getElementById('cfg-epson-machine-minutes')?.value) || 350400;
-
                 masterConfig.printers.epson.chipCost = parseFloat(document.getElementById('cfg-epson-chip-cost')?.value) || 32000;
                 masterConfig.printers.epson.chipMinutes = parseFloat(document.getElementById('cfg-epson-chip-minutes')?.value) || 87600;
             }
@@ -1845,17 +1750,14 @@
             masterConfig.contingencyPercent = parseFloat(document.getElementById('cfg-contingency-default-pct')?.value) || 15;
 
             const quoterContingencyInput = document.getElementById('quote-contingency-pct');
-            if (quoterContingencyInput) {
-                quoterContingencyInput.value = masterConfig.contingencyPercent;
-            }
+            if (quoterContingencyInput) quoterContingencyInput.value = masterConfig.contingencyPercent;
 
             renderUnitLabelsInConfig();
             saveMasterConfigToStorageAndRecalc();
         }
 
         function saveMasterConfigToStorageAndRecalc() {
-            localStorage.setItem('inperu_cfg_v4.2', JSON.stringify(masterConfig));
-            if (window.syncConfigToCloud) window.syncConfigToCloud();
+            db.collection('config').doc('master').set(masterConfig).catch(e => console.warn("Error guardando en Firestore:", e));
             calculateQuote();
             renderCatalog();
         }
@@ -1864,12 +1766,11 @@
             masterConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
             saveMasterConfigToStorageAndRecalc();
             renderConfigToUI();
-            showToastMessage('Datos restablecidos a los valores originales.');
+            showToastMessage('Valores restablecidos a los de tus planillas.');
         }
 
         function switchTab(tabName) {
-            const tabs = ['quoter', 'catalog', 'config'];
-            tabs.forEach(t => {
+            ['quoter', 'catalog', 'config'].forEach(t => {
                 const sec = document.getElementById(`tab-${t}`);
                 const btn = document.getElementById(`tab-btn-${t}`);
                 if (t === tabName) {
@@ -1883,11 +1784,8 @@
                 }
             });
 
-            if (tabName === 'catalog') {
-                renderCatalog();
-            } else if (tabName === 'config') {
-                renderConfigToUI();
-            }
+            if (tabName === 'catalog') renderCatalog();
+            else if (tabName === 'config') renderConfigToUI();
         }
 
         function showToastMessage(msg) {
@@ -1906,7 +1804,6 @@
         window.onload = function() {
             renderConfigToUI();
             calculateQuote();
-            renderCatalog();
         };
     </script>
 </body>
