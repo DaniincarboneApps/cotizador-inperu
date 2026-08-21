@@ -10,9 +10,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="INPERU">
-    <link rel="manifest" href="manifest.webmanifest">
-    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -76,10 +73,47 @@
     <div id="auth-screen" class="fixed inset-0 z-50 bg-[#061215] flex items-center justify-center p-4">
         <div class="bg-[#0a1a1f] border border-teal-900/50 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl space-y-6 text-center">
             
-            <!-- Logo e identidad gráfica oficial -->
+            <!-- Logo e Identidad gráfica oficial idéntico a la imagen -->
             <div class="flex flex-col items-center">
                 <div class="w-32 h-32 sm:w-36 sm:h-36 rounded-3xl overflow-hidden border border-teal-500/40 p-1.5 bg-[#061215] shadow-2xl mb-3 relative flex items-center justify-center">
-                    <img src="icons/icon-512.png" alt="Logo de INPERU Producciones" class="w-full h-full object-contain rounded-[1.15rem]" width="512" height="512">
+                    <svg viewBox="0 0 500 500" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Border frame rounded square -->
+                        <rect x="15" y="15" width="470" height="470" rx="70" fill="#ffffff" stroke="#28838d" stroke-width="26"/>
+                        <!-- Main circle background -->
+                        <circle cx="250" cy="210" r="135" fill="#28838d"/>
+                        <!-- White open book on top left of circle -->
+                        <path d="M165 145 C190 130 215 145 215 145 L215 195 C190 180 165 195 165 195 Z" fill="#ffffff"/>
+                        <path d="M215 145 C240 130 265 145 265 145 L265 195 C240 180 215 195 215 195 Z" fill="#ffffff"/>
+                        <line x1="215" y1="145" x2="215" y2="195" stroke="#28838d" stroke-width="4"/>
+                        <!-- QR code motif on top right of circle -->
+                        <rect x="280" y="140" width="16" height="16" fill="#ffffff"/>
+                        <rect x="305" y="140" width="16" height="16" fill="#ffffff"/>
+                        <rect x="330" y="140" width="16" height="16" fill="#ffffff"/>
+                        <rect x="280" y="165" width="16" height="16" fill="#ffffff"/>
+                        <rect x="330" y="165" width="16" height="16" fill="#ffffff"/>
+                        <rect x="280" y="190" width="16" height="16" fill="#ffffff"/>
+                        <rect x="305" y="190" width="16" height="16" fill="#ffffff"/>
+                        <rect x="330" y="190" width="16" height="16" fill="#ffffff"/>
+                        <rect x="310" y="168" width="8" height="8" fill="#ffffff"/>
+                        <!-- Waves inside circle -->
+                        <path d="M125 240 Q250 280 375 240" stroke="#ffffff" stroke-width="12" fill="none" stroke-linecap="round"/>
+                        <path d="M125 265 Q250 305 375 265" stroke="#ffffff" stroke-width="12" fill="none" stroke-linecap="round"/>
+                        <path d="M125 290 Q250 330 375 290" stroke="#ffffff" stroke-width="12" fill="none" stroke-linecap="round"/>
+                        <!-- Printer overlay -->
+                        <rect x="230" y="240" width="170" height="95" rx="20" fill="#0f343a" stroke="#ffffff" stroke-width="8"/>
+                        <rect x="255" y="295" width="120" height="55" rx="8" fill="#ffffff" stroke="#0f343a" stroke-width="6"/>
+                        <line x1="270" y1="312" x2="360" y2="312" stroke="#28838d" stroke-width="5" stroke-linecap="round"/>
+                        <line x1="270" y1="326" x2="360" y2="326" stroke="#28838d" stroke-width="5" stroke-linecap="round"/>
+                        <circle cx="370" cy="265" r="7" fill="#ffffff"/>
+                        <circle cx="385" cy="265" r="7" fill="#ffffff"/>
+                        <!-- Brand Name Text -->
+                        <text x="250" y="380" font-family="'Inter', sans-serif" font-weight="900" font-size="50" fill="#28838d" text-anchor="middle" letter-spacing="4">INPERU</text>
+                        <text x="250" y="412" font-family="'Inter', sans-serif" font-weight="800" font-size="22" fill="#28838d" text-anchor="middle" letter-spacing="6">PRODUCCIONES</text>
+                        <!-- Bottom banner -->
+                        <path d="M100 425 H400 A20 20 0 0 1 420 445 V470 A15 15 0 0 1 405 485 H95 A15 15 0 0 1 80 470 V445 A20 20 0 0 1 100 425 Z" fill="#28838d"/>
+                        <text x="250" y="455" font-family="'Inter', sans-serif" font-weight="800" font-size="16" fill="#ffffff" text-anchor="middle" letter-spacing="2">— COTIZAR IMPRESIONES —</text>
+                        <text x="250" y="475" font-family="'Inter', sans-serif" font-weight="800" font-size="15" fill="#ffffff" text-anchor="middle" letter-spacing="2">Y LIBROS</text>
+                    </svg>
                 </div>
                 <h1 class="text-xl font-black tracking-widest text-[#28838d]">INPERU</h1>
                 <p class="text-xs text-teal-300 font-bold tracking-[0.25em]">PRODUCCIONES</p>
@@ -95,8 +129,14 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1">Contraseña</label>
-                    <input type="password" id="auth-password" required placeholder="••••••••"
-                        class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-[#28838d] transition-colors">
+                    <div class="relative">
+                        <input type="password" id="auth-password" required placeholder="••••••••"
+                            class="w-full bg-[#061215] border border-teal-800/60 rounded-xl pl-3.5 pr-11 py-2.5 text-sm text-white focus:outline-none focus:border-[#28838d] transition-colors">
+                        <button type="button" id="toggle-password-btn" onclick="togglePasswordVisibility()" aria-label="Mostrar contraseña" aria-pressed="false"
+                            class="absolute inset-y-0 right-0 w-11 flex items-center justify-center text-slate-400 hover:text-teal-300 focus:outline-none transition-colors">
+                            <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                        </button>
+                    </div>
                 </div>
                 
                 <div id="auth-error" class="text-xs text-rose-400 font-semibold p-2 bg-rose-950/40 border border-rose-800/50 rounded-lg hidden"></div>
@@ -124,7 +164,14 @@
                 
                 <div class="flex items-center gap-3">
                     <div class="w-11 h-11 rounded-xl overflow-hidden border border-teal-500/30 bg-[#061215] shadow-md flex items-center justify-center p-0.5 shrink-0">
-                        <img src="icons/favicon-32.png" alt="" aria-hidden="true" class="w-full h-full object-contain rounded-lg" width="32" height="32">
+                        <svg viewBox="0 0 500 500" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="500" height="500" rx="60" fill="#ffffff"/>
+                            <circle cx="250" cy="220" r="140" fill="#28838d"/>
+                            <path d="M165 160 C190 150 215 160 215 160 L215 200 C190 190 165 200 165 200 Z" fill="#ffffff"/>
+                            <path d="M215 160 C240 150 265 160 265 160 L265 200 C240 190 215 200 215 200 Z" fill="#ffffff"/>
+                            <rect x="230" y="240" width="160" height="90" rx="15" fill="#0f343a" stroke="#ffffff" stroke-width="8"/>
+                            <rect x="255" y="290" width="110" height="50" rx="6" fill="#ffffff"/>
+                        </svg>
                     </div>
                     <div class="leading-none flex flex-col">
                         <span class="text-xl sm:text-2xl text-[#28838d] font-black tracking-[0.18em]">INPERU</span>
@@ -455,12 +502,12 @@
                                 <div class="grid grid-cols-2 gap-2 text-[11px]">
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Precio Paquete ($)</label>
-                                        <input type="number" id="cfg-paper-price" oninput="saveMasterConfigFromUI()"
+                                        <input type="number" id="cfg-paper-price" oninput="onMasterConfigInput()"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
                                     </div>
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Cant. Hojas Paquete</label>
-                                        <input type="number" id="cfg-paper-packsheets" oninput="saveMasterConfigFromUI()"
+                                        <input type="number" id="cfg-paper-packsheets" oninput="onMasterConfigInput()"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
                                     </div>
                                 </div>
@@ -474,17 +521,17 @@
                                 <div class="grid grid-cols-3 gap-2 text-[11px]">
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Precio Juego ($)</label>
-                                        <input type="number" id="cfg-ink-standard-price" oninput="saveMasterConfigFromUI()"
+                                        <input type="number" id="cfg-ink-standard-price" oninput="onMasterConfigInput()"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
                                     </div>
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Divisor Botellas</label>
-                                        <input type="number" id="cfg-ink-standard-bottles" oninput="saveMasterConfigFromUI()"
+                                        <input type="number" id="cfg-ink-standard-bottles" oninput="onMasterConfigInput()"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
                                     </div>
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Rendimiento Págs</label>
-                                        <input type="number" id="cfg-ink-standard-yield" oninput="saveMasterConfigFromUI()"
+                                        <input type="number" id="cfg-ink-standard-yield" oninput="onMasterConfigInput()"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
                                     </div>
                                 </div>
@@ -498,17 +545,17 @@
                                 <div class="grid grid-cols-3 gap-2 text-[11px]">
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Precio Juego ($)</label>
-                                        <input type="number" id="cfg-ink-eternity-price" oninput="saveMasterConfigFromUI()"
+                                        <input type="number" id="cfg-ink-eternity-price" oninput="onMasterConfigInput()"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
                                     </div>
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Divisor Botellas</label>
-                                        <input type="number" id="cfg-ink-eternity-bottles" oninput="saveMasterConfigFromUI()"
+                                        <input type="number" id="cfg-ink-eternity-bottles" oninput="onMasterConfigInput()"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
                                     </div>
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Rendimiento Págs</label>
-                                        <input type="number" id="cfg-ink-eternity-yield" oninput="saveMasterConfigFromUI()"
+                                        <input type="number" id="cfg-ink-eternity-yield" oninput="onMasterConfigInput()"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
                                     </div>
                                 </div>
@@ -522,12 +569,12 @@
                                 <div class="grid grid-cols-2 gap-2 text-[11px]">
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Precio Paquete ($)</label>
-                                        <input type="number" id="cfg-tapas-price" oninput="saveMasterConfigFromUI()"
+                                        <input type="number" id="cfg-tapas-price" oninput="onMasterConfigInput()"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
                                     </div>
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Cant. Unidades Paquete</label>
-                                        <input type="number" id="cfg-tapas-packqty" oninput="saveMasterConfigFromUI()"
+                                        <input type="number" id="cfg-tapas-packqty" oninput="onMasterConfigInput()"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
                                     </div>
                                 </div>
@@ -541,12 +588,12 @@
                                 <div class="grid grid-cols-2 gap-2 text-[11px]">
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Precio Paquete ($)</label>
-                                        <input type="number" id="cfg-photo-price" oninput="saveMasterConfigFromUI()"
+                                        <input type="number" id="cfg-photo-price" oninput="onMasterConfigInput()"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
                                     </div>
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Cant. Hojas Paquete</label>
-                                        <input type="number" id="cfg-photo-packqty" oninput="saveMasterConfigFromUI()"
+                                        <input type="number" id="cfg-photo-packqty" oninput="onMasterConfigInput()"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
                                     </div>
                                 </div>
@@ -559,7 +606,7 @@
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <span class="text-slate-400">$</span>
-                                    <input type="number" id="cfg-laminate-price" oninput="saveMasterConfigFromUI()"
+                                    <input type="number" id="cfg-laminate-price" oninput="onMasterConfigInput()"
                                         class="w-24 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-emerald-400 font-bold focus:outline-none">
                                 </div>
                             </div>
@@ -605,7 +652,7 @@
                                 <div class="flex justify-between items-center">
                                     <span class="text-slate-400">Velocidad:</span>
                                     <div class="flex items-center gap-1">
-                                        <input type="number" step="0.01" id="cfg-printer-canon-speed" oninput="saveMasterConfigFromUI()"
+                                        <input type="number" step="0.01" id="cfg-printer-canon-speed" oninput="onMasterConfigInput()"
                                             class="w-16 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-bold text-white">
                                         <span class="text-slate-500">min/hoja</span>
                                     </div>
@@ -619,12 +666,12 @@
                                     <div class="grid grid-cols-2 gap-2 text-[11px]">
                                         <div>
                                             <label class="text-slate-500 block">Costo ($)</label>
-                                            <input type="number" id="cfg-canon-machine-cost" oninput="saveMasterConfigFromUI()"
+                                            <input type="number" id="cfg-canon-machine-cost" oninput="onMasterConfigInput()"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
                                         </div>
                                         <div>
                                             <label class="text-slate-500 block">Min. Totales</label>
-                                            <input type="number" id="cfg-canon-machine-minutes" oninput="saveMasterConfigFromUI()"
+                                            <input type="number" id="cfg-canon-machine-minutes" oninput="onMasterConfigInput()"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
                                         </div>
                                     </div>
@@ -638,12 +685,12 @@
                                     <div class="grid grid-cols-2 gap-2 text-[11px]">
                                         <div>
                                             <label class="text-slate-500 block">Costo ($)</label>
-                                            <input type="number" id="cfg-canon-head-cost" oninput="saveMasterConfigFromUI()"
+                                            <input type="number" id="cfg-canon-head-cost" oninput="onMasterConfigInput()"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
                                         </div>
                                         <div>
                                             <label class="text-slate-500 block">Min. Totales</label>
-                                            <input type="number" id="cfg-canon-head-minutes" oninput="saveMasterConfigFromUI()"
+                                            <input type="number" id="cfg-canon-head-minutes" oninput="onMasterConfigInput()"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
                                         </div>
                                     </div>
@@ -657,12 +704,12 @@
                                     <div class="grid grid-cols-2 gap-2 text-[11px]">
                                         <div>
                                             <label class="text-slate-500 block">Costo ($)</label>
-                                            <input type="number" id="cfg-canon-pads-cost" oninput="saveMasterConfigFromUI()"
+                                            <input type="number" id="cfg-canon-pads-cost" oninput="onMasterConfigInput()"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
                                         </div>
                                         <div>
                                             <label class="text-slate-500 block">Min. Totales</label>
-                                            <input type="number" id="cfg-canon-pads-minutes" oninput="saveMasterConfigFromUI()"
+                                            <input type="number" id="cfg-canon-pads-minutes" oninput="onMasterConfigInput()"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
                                         </div>
                                     </div>
@@ -675,7 +722,7 @@
                                 <div class="flex justify-between items-center">
                                     <span class="text-slate-400">Velocidad:</span>
                                     <div class="flex items-center gap-1">
-                                        <input type="number" step="0.01" id="cfg-printer-epson-speed" oninput="saveMasterConfigFromUI()"
+                                        <input type="number" step="0.01" id="cfg-printer-epson-speed" oninput="onMasterConfigInput()"
                                             class="w-16 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-bold text-white">
                                         <span class="text-slate-500">min/hoja</span>
                                     </div>
@@ -689,12 +736,12 @@
                                     <div class="grid grid-cols-2 gap-2 text-[11px]">
                                         <div>
                                             <label class="text-slate-500 block">Costo ($)</label>
-                                            <input type="number" id="cfg-epson-machine-cost" oninput="saveMasterConfigFromUI()"
+                                            <input type="number" id="cfg-epson-machine-cost" oninput="onMasterConfigInput()"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
                                         </div>
                                         <div>
                                             <label class="text-slate-500 block">Min. Totales</label>
-                                            <input type="number" id="cfg-epson-machine-minutes" oninput="saveMasterConfigFromUI()"
+                                            <input type="number" id="cfg-epson-machine-minutes" oninput="onMasterConfigInput()"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
                                         </div>
                                     </div>
@@ -708,12 +755,12 @@
                                     <div class="grid grid-cols-2 gap-2 text-[11px]">
                                         <div>
                                             <label class="text-slate-500 block">Costo ($)</label>
-                                            <input type="number" id="cfg-epson-chip-cost" oninput="saveMasterConfigFromUI()"
+                                            <input type="number" id="cfg-epson-chip-cost" oninput="onMasterConfigInput()"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
                                         </div>
                                         <div>
                                             <label class="text-slate-500 block">Min. Totales</label>
-                                            <input type="number" id="cfg-epson-chip-minutes" oninput="saveMasterConfigFromUI()"
+                                            <input type="number" id="cfg-epson-chip-minutes" oninput="onMasterConfigInput()"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
                                         </div>
                                     </div>
@@ -731,12 +778,12 @@
                                     <div class="grid grid-cols-2 gap-2 text-[11px]">
                                         <div>
                                             <label class="text-slate-500 block">Factura Mensual ($)</label>
-                                            <input type="number" id="cfg-luz-monthly" oninput="saveMasterConfigFromUI()"
+                                            <input type="number" id="cfg-luz-monthly" oninput="onMasterConfigInput()"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
                                         </div>
                                         <div>
                                             <label class="text-slate-500 block">Minutos Mes</label>
-                                            <input type="number" id="cfg-luz-minutes" oninput="saveMasterConfigFromUI()"
+                                            <input type="number" id="cfg-luz-minutes" oninput="onMasterConfigInput()"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
                                         </div>
                                     </div>
@@ -749,7 +796,7 @@
                                     </div>
                                     <div class="flex items-center justify-between">
                                         <span class="text-slate-400 text-xs">Precio por Hora ($):</span>
-                                        <input type="number" id="cfg-labor-print-hourly" oninput="saveMasterConfigFromUI()"
+                                        <input type="number" id="cfg-labor-print-hourly" oninput="onMasterConfigInput()"
                                             class="w-28 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-bold text-emerald-400">
                                     </div>
                                 </div>
@@ -758,7 +805,7 @@
                                     <div class="flex items-center justify-between">
                                         <span class="text-amber-300 text-xs font-bold">% Imprevistos Base:</span>
                                         <div class="flex items-center gap-1">
-                                            <input type="number" id="cfg-contingency-default-pct" oninput="saveMasterConfigFromUI()"
+                                            <input type="number" id="cfg-contingency-default-pct" oninput="onMasterConfigInput()"
                                                 class="w-20 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-center font-bold text-amber-300">
                                             <span class="text-amber-400">%</span>
                                         </div>
@@ -887,7 +934,7 @@
             paper: { packPrice: 8200, packSheets: 500 },
             inkStandard: { packPrice: 64000, bottlesQty: 14, pageYield: 1000 },
             inkEternity: { packPrice: 240000, bottlesQty: 14, pageYield: 1500 },
-            tapas: { packPrice: 30000, packQty: 50 },
+            tapas: { packPrice: 0, packQty: 50 },
             photoPaper: { packPrice: 13500, packQty: 100 },
             laminado: { unitPrice: 160 },
             spirals: [
@@ -971,53 +1018,18 @@
         let breakdownManualQty = null;
         let activeBatchBookId = null;
         let pendingDeleteBookId = null;
-        let firebaseRealtimeUnsubscribers = [];
+        let masterConfigSaveTimer = null;
 
-        function deepMergeConfig(defaultValue, savedValue) {
-            if (Array.isArray(defaultValue)) {
-                return Array.isArray(savedValue) && savedValue.length
-                    ? JSON.parse(JSON.stringify(savedValue))
-                    : JSON.parse(JSON.stringify(defaultValue));
-            }
-
-            if (defaultValue && typeof defaultValue === 'object') {
-                const savedObject = savedValue && typeof savedValue === 'object' ? savedValue : {};
-                return Object.keys(defaultValue).reduce((merged, key) => {
-                    merged[key] = deepMergeConfig(defaultValue[key], savedObject[key]);
-                    return merged;
-                }, {});
-            }
-
-            return savedValue === undefined || savedValue === null ? defaultValue : savedValue;
-        }
-
-        function setLoginPending(isPending) {
-            const submitBtn = document.getElementById('auth-submit-btn');
-            if (!submitBtn) return;
-            submitBtn.disabled = isPending;
-            submitBtn.innerHTML = isPending
-                ? `<i class="fa-solid fa-circle-notch fa-spin"></i> Conectando...`
-                : `<i class="fa-solid fa-arrow-right-to-bracket"></i><span>Ingresar al Sistema</span>`;
-        }
-
-        function stopFirebaseRealtimeSync() {
-            firebaseRealtimeUnsubscribers.forEach(unsubscribe => unsubscribe());
-            firebaseRealtimeUnsubscribers = [];
-        }
-
-        function escapeHtml(value) {
-            return String(value ?? '').replace(/[&<>"']/g, character => ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#39;'
-            })[character]);
-        }
-
-        function getSafeImageSource(value) {
-            const source = String(value || '');
-            return /^(?:data:image\/(?:png|jpe?g|webp|gif);base64,|https:\/\/)/i.test(source) ? source : '';
+        function togglePasswordVisibility() {
+            const input = document.getElementById('auth-password');
+            const button = document.getElementById('toggle-password-btn');
+            if (!input || !button) return;
+            const showPassword = input.type === 'password';
+            input.type = showPassword ? 'text' : 'password';
+            button.setAttribute('aria-label', showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña');
+            button.setAttribute('aria-pressed', String(showPassword));
+            button.innerHTML = `<i class="fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'}" aria-hidden="true"></i>`;
+            input.focus({ preventScroll: true });
         }
 
         // Listener de Autenticación
@@ -1031,10 +1043,8 @@
                     appMainContent.classList.remove('hidden');
                     initFirebaseRealtimeSync();
                 } else {
-                    stopFirebaseRealtimeSync();
                     authScreen.classList.remove('hidden');
                     appMainContent.classList.add('hidden');
-                    setLoginPending(false);
                 }
             });
         }
@@ -1044,9 +1054,11 @@
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value;
             const errorDiv = document.getElementById('auth-error');
+            const submitBtn = document.getElementById('auth-submit-btn');
 
             errorDiv.classList.add('hidden');
-            setLoginPending(true);
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Conectando...`;
 
             if (firebaseInitialized && auth) {
                 try {
@@ -1059,13 +1071,12 @@
                     
                     errorDiv.textContent = msg;
                     errorDiv.classList.remove('hidden');
-                } finally {
-                    setLoginPending(false);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = `<i class="fa-solid fa-arrow-right-to-bracket"></i> Ingresar al Sistema`;
                 }
             } else {
                 // Modo fallback si Firebase no está disponible en la vista previa
                 bypassLoginForPreview();
-                setLoginPending(false);
             }
         }
 
@@ -1092,19 +1103,19 @@
         }
 
         function initFirebaseRealtimeSync() {
-            if (!db || firebaseRealtimeUnsubscribers.length) return;
-            const unsubscribeConfig = db.collection('config').doc('master').onSnapshot(docSnap => {
+            if (!db) return;
+            db.collection('config').doc('master').onSnapshot(docSnap => {
                 if (docSnap.exists) {
-                    masterConfig = deepMergeConfig(DEFAULT_CONFIG, docSnap.data());
+                    masterConfig = { ...DEFAULT_CONFIG, ...docSnap.data() };
                 } else {
                     db.collection('config').doc('master').set(DEFAULT_CONFIG);
                 }
-                renderConfigToUI();
+                renderConfigToUI({ preserveFocusedInput: true });
                 calculateQuote();
                 renderCatalog();
             }, err => console.warn("Error leyendo config de Firebase:", err));
 
-            const unsubscribeCatalog = db.collection('catalog').onSnapshot(snapshot => {
+            db.collection('catalog').onSnapshot(snapshot => {
                 if (!snapshot.empty) {
                     catalog = [];
                     snapshot.forEach(docSnap => {
@@ -1118,8 +1129,6 @@
                 document.getElementById('catalog-count').textContent = catalog.length;
                 renderCatalog();
             }, err => console.warn("Error leyendo catálogo de Firebase:", err));
-
-            firebaseRealtimeUnsubscribers = [unsubscribeConfig, unsubscribeCatalog];
         }
 
         function getUnitPrices() {
@@ -1342,7 +1351,9 @@
                 </div>
             `;
 
-            document.getElementById('quote-breakdown-tbody').innerHTML = `
+            const breakdownTableBody = document.getElementById('quote-breakdown-tbody');
+            const isEditingBreakdown = breakdownTableBody && breakdownTableBody.contains(document.activeElement);
+            if (!isEditingBreakdown) breakdownTableBody.innerHTML = `
                 <tr class="hover:bg-teal-950/30">
                     <td class="px-3 py-1.5 font-medium text-slate-200">Hoja 80g (A4 equivalentes)</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.units.paperUnitPrice.toFixed(2)}</td>
@@ -1363,7 +1374,7 @@
                 </tr>
                 <tr class="hover:bg-teal-950/30">
                     <td class="px-3 py-1.5 font-medium text-slate-200">Tapas Plásticas (${format})</td>
-                    <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${(format === 'A5' ? 150 : 300).toFixed(2)}</td>
+                    <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${(res.units.tapasUnitPrice / (format === 'A5' ? 4 : 2)).toFixed(2)}</td>
                     <td class="px-3 py-1.5 text-center">
                         <input type="number" step="1" value="${res.q.tapasQty}" oninput="updateManualQuantityFromTable('tapasQty', this.value)"
                             class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
@@ -1489,16 +1500,10 @@
                 targetPrice: parseFloat(document.getElementById('quote-custom-price').value) || 0
             };
 
-            try {
-                if (db) {
-                    await db.collection('catalog').doc(newBook.id).set(newBook);
-                } else {
-                    catalog.push(newBook);
-                }
-            } catch (err) {
-                console.warn('No se pudo guardar el libro en Firebase:', err);
-                showToastMessage('No se pudo guardar el libro. Revisa la conexión e inténtalo nuevamente.');
-                return;
+            if (db) {
+                await db.collection('catalog').doc(newBook.id).set(newBook);
+            } else {
+                catalog.push(newBook);
             }
             switchTab('catalog');
             showToastMessage('¡Libro guardado en la biblioteca!');
@@ -1524,25 +1529,18 @@
             }
 
             grid.innerHTML = filtered.map(book => {
-                const metrics = calculateBookMetrics(book.pages, book.printMode, book.format, book.printerKey, book.inkType, book.colorMode || 'bw', book.targetPrice, null, masterConfig.contingencyPercent, 1);
-                const safeTitle = escapeHtml(book.title || 'Sin título');
-                const safeDescription = escapeHtml(book.description || 'Sin descripción');
-                const safeDeliverables = escapeHtml(book.deliverables || '');
-                const safeFormat = escapeHtml(book.format || '');
-                const safePages = escapeHtml(book.pages || '');
-                const safeCoverImage = getSafeImageSource(book.coverImage);
-                const encodedBookId = encodeURIComponent(String(book.id)).replace(/'/g, '%27');
+                const metrics = calculateBookMetrics(book.pages, book.printMode, book.format, book.printerKey, book.inkType, book.colorMode || 'bw', null, null, masterConfig.contingencyPercent, 1);
 
                 return `
                     <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl overflow-hidden shadow-xl hover:border-teal-700/60 transition-all flex flex-col justify-between">
                         <div>
                             <div class="h-36 bg-[#061215] border-b border-teal-900/60 relative flex items-center justify-center overflow-hidden">
-                                ${safeCoverImage ? `
-                                    <img src="${escapeHtml(safeCoverImage)}" class="w-full h-full object-cover" alt="Portada de ${safeTitle}">
+                                ${book.coverImage ? `
+                                    <img src="${book.coverImage}" class="w-full h-full object-cover">
                                 ` : `
                                     <div class="text-center p-4">
                                         <i class="fa-solid fa-book text-3xl text-teal-500/30 mb-1"></i>
-                                        <span class="text-[11px] text-slate-600 block uppercase font-mono">${safeFormat} • ${safePages} págs</span>
+                                        <span class="text-[11px] text-slate-600 block uppercase font-mono">${book.format} • ${book.pages} págs</span>
                                     </div>
                                 `}
                                 <div class="absolute top-2 right-2 bg-[#061215]/90 backdrop-blur-md px-2.5 py-1 rounded-lg text-[10px] font-bold text-teal-300 border border-teal-800/60">
@@ -1552,12 +1550,12 @@
 
                             <div class="p-4 space-y-3">
                                 <div>
-                                    <h3 class="font-bold text-white text-sm line-clamp-1">${safeTitle}</h3>
-                                    <p class="text-xs text-slate-400 line-clamp-2 mt-0.5">${safeDescription}</p>
+                                    <h3 class="font-bold text-white text-sm line-clamp-1">${book.title}</h3>
+                                    <p class="text-xs text-slate-400 line-clamp-2 mt-0.5">${book.description || 'Sin descripción'}</p>
                                     ${book.deliverables ? `
                                         <div class="mt-2 text-[11px] bg-[#061215] p-2 rounded-lg border border-teal-900/60 text-teal-300 font-medium flex items-start gap-1.5">
                                             <i class="fa-solid fa-box-open text-teal-400 mt-0.5 shrink-0"></i>
-                                            <span class="line-clamp-2">${safeDeliverables}</span>
+                                            <span class="line-clamp-2">${book.deliverables}</span>
                                         </div>
                                     ` : ''}
                                 </div>
@@ -1580,15 +1578,15 @@
                         </div>
 
                         <div class="p-4 pt-0 space-y-2">
-                            <button onclick="openBatchModal(decodeURIComponent('${encodedBookId}'))" class="w-full bg-teal-600/20 hover:bg-teal-600/30 text-teal-300 border border-teal-500/30 font-semibold text-xs py-2 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
+                            <button onclick="openBatchModal('${book.id}')" class="w-full bg-teal-600/20 hover:bg-teal-600/30 text-teal-300 border border-teal-500/30 font-semibold text-xs py-2 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-layer-group"></i>
                                 <span>Simular Tirada INPERU</span>
                             </button>
                             <div class="flex items-center gap-2">
-                                <button onclick="loadBookIntoQuoter(decodeURIComponent('${encodedBookId}'))" class="flex-1 bg-[#061215] hover:bg-teal-950 text-slate-200 text-[11px] font-medium py-1.5 rounded-lg border border-teal-900/60 transition-colors">
+                                <button onclick="loadBookIntoQuoter('${book.id}')" class="flex-1 bg-[#061215] hover:bg-teal-950 text-slate-200 text-[11px] font-medium py-1.5 rounded-lg border border-teal-900/60 transition-colors">
                                     <i class="fa-solid fa-pen-to-square mr-1"></i> Cargar
                                 </button>
-                                <button onclick="promptDeleteBook(decodeURIComponent('${encodedBookId}'))" class="text-slate-500 hover:text-red-400 p-1.5 text-xs transition-colors">
+                                <button onclick="promptDeleteBook('${book.id}')" class="text-slate-500 hover:text-red-400 p-1.5 text-xs transition-colors">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </div>
@@ -1614,16 +1612,10 @@
         document.getElementById('confirm-delete-btn').addEventListener('click', async () => {
             if (!pendingDeleteBookId) return;
             const id = pendingDeleteBookId;
-            try {
-                if (db) {
-                    await db.collection('catalog').doc(id).delete();
-                } else {
-                    catalog = catalog.filter(b => b.id !== id);
-                }
-            } catch (err) {
-                console.warn('No se pudo eliminar el libro de Firebase:', err);
-                showToastMessage('No se pudo eliminar el libro. Revisa la conexión e inténtalo nuevamente.');
-                return;
+            if (db) {
+                await db.collection('catalog').doc(id).delete();
+            } else {
+                catalog = catalog.filter(b => b.id !== id);
             }
             closeDeleteModal();
             renderCatalog();
@@ -1643,12 +1635,12 @@
             document.getElementById('quote-color-mode').value = book.colorMode || 'bw';
             document.getElementById('quote-description').value = book.description || '';
             document.getElementById('quote-deliverables').value = book.deliverables || '';
-            document.getElementById('quote-custom-price').value = book.targetPrice || '';
+            document.getElementById('quote-custom-price').value = '';
+            document.getElementById('quote-custom-price').dataset.auto = 'true';
             
-            const safeCoverImage = getSafeImageSource(book.coverImage);
-            if (safeCoverImage) {
-                currentCoverBase64 = safeCoverImage;
-                document.getElementById('cover-preview-container').innerHTML = `<img src="${escapeHtml(safeCoverImage)}" class="w-full h-full object-cover" alt="Portada seleccionada">`;
+            if (book.coverImage) {
+                currentCoverBase64 = book.coverImage;
+                document.getElementById('cover-preview-container').innerHTML = `<img src="${book.coverImage}" class="w-full h-full object-cover">`;
             } else {
                 resetCoverImage();
             }
@@ -1686,7 +1678,7 @@
             if (!book) return;
 
             const qty = parseInt(document.getElementById('batch-qty-input').value) || 1;
-            const unitRes = calculateBookMetrics(book.pages, book.printMode, book.format, book.printerKey, book.inkType, book.colorMode || 'bw', book.targetPrice, null, masterConfig.contingencyPercent, qty);
+            const unitRes = calculateBookMetrics(book.pages, book.printMode, book.format, book.printerKey, book.inkType, book.colorMode || 'bw', null, null, masterConfig.contingencyPercent, qty);
 
             document.getElementById('batch-total-sale').textContent = `$${unitRes.totalBatchSale.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
             document.getElementById('batch-total-cost').textContent = `$${unitRes.totalBatchCost.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
@@ -1706,9 +1698,14 @@
             `;
         }
 
-        function renderConfigToUI() {
+        function renderConfigToUI({ preserveFocusedInput = false } = {}) {
             if (!document.getElementById('cfg-paper-price')) return;
-            document.getElementById('cfg-paper-price').value = masterConfig.paper.packPrice;
+            if (preserveFocusedInput && document.activeElement?.matches('#tab-config input[type="number"]')) return;
+            const setConfigValue = (id, value) => {
+                const input = document.getElementById(id);
+                if (input && !(preserveFocusedInput && document.activeElement === input)) input.value = value;
+            };
+            setConfigValue('cfg-paper-price', masterConfig.paper.packPrice);
             document.getElementById('cfg-paper-packsheets').value = masterConfig.paper.packSheets || 500;
 
             document.getElementById('cfg-ink-standard-price').value = masterConfig.inkStandard.packPrice;
@@ -1719,7 +1716,7 @@
             document.getElementById('cfg-ink-eternity-bottles').value = masterConfig.inkEternity.bottlesQty || 14;
             document.getElementById('cfg-ink-eternity-yield').value = masterConfig.inkEternity.pageYield || 1500;
 
-            document.getElementById('cfg-tapas-price').value = masterConfig.tapas.packPrice;
+            setConfigValue('cfg-tapas-price', masterConfig.tapas.packPrice);
             document.getElementById('cfg-tapas-packqty').value = masterConfig.tapas.packQty || 50;
 
             document.getElementById('cfg-photo-price').value = masterConfig.photoPaper.packPrice;
@@ -1751,7 +1748,8 @@
             document.getElementById('cfg-contingency-default-pct').value = masterConfig.contingencyPercent || 15;
 
             renderUnitLabelsInConfig();
-            renderSpiralsTableUI();
+            const spiralsTable = document.getElementById('config-spirals-tbody');
+            if (!(preserveFocusedInput && spiralsTable?.contains(document.activeElement))) renderSpiralsTableUI();
         }
 
         function renderUnitLabelsInConfig() {
@@ -1829,8 +1827,14 @@
         }
 
         function saveMasterConfigFromUI() {
-            masterConfig.paper.packPrice = parseFloat(document.getElementById('cfg-paper-price')?.value) || 8200;
-            masterConfig.paper.packSheets = parseInt(document.getElementById('cfg-paper-packsheets')?.value) || 500;
+            const readNumber = (id, currentValue, integer = false) => {
+                const raw = document.getElementById(id)?.value;
+                if (raw === undefined || raw === '' || raw === '-' || raw === '.') return currentValue;
+                const parsed = integer ? parseInt(raw, 10) : parseFloat(raw);
+                return Number.isFinite(parsed) ? parsed : currentValue;
+            };
+            masterConfig.paper.packPrice = readNumber('cfg-paper-price', masterConfig.paper.packPrice);
+            masterConfig.paper.packSheets = readNumber('cfg-paper-packsheets', masterConfig.paper.packSheets, true);
 
             masterConfig.inkStandard.packPrice = parseFloat(document.getElementById('cfg-ink-standard-price')?.value) || 64000;
             masterConfig.inkStandard.bottlesQty = parseFloat(document.getElementById('cfg-ink-standard-bottles')?.value) || 14;
@@ -1840,8 +1844,8 @@
             masterConfig.inkEternity.bottlesQty = parseFloat(document.getElementById('cfg-ink-eternity-bottles')?.value) || 14;
             masterConfig.inkEternity.pageYield = parseFloat(document.getElementById('cfg-ink-eternity-yield')?.value) || 1500;
 
-            masterConfig.tapas.packPrice = parseFloat(document.getElementById('cfg-tapas-price')?.value) || 30000;
-            masterConfig.tapas.packQty = parseInt(document.getElementById('cfg-tapas-packqty')?.value) || 50;
+            masterConfig.tapas.packPrice = readNumber('cfg-tapas-price', masterConfig.tapas.packPrice);
+            masterConfig.tapas.packQty = readNumber('cfg-tapas-packqty', masterConfig.tapas.packQty, true);
 
             masterConfig.photoPaper.packPrice = parseFloat(document.getElementById('cfg-photo-price')?.value) || 13500;
             masterConfig.photoPaper.packQty = parseInt(document.getElementById('cfg-photo-packqty')?.value) || 100;
@@ -1876,6 +1880,11 @@
 
             renderUnitLabelsInConfig();
             saveMasterConfigToStorageAndRecalc();
+        }
+
+        function onMasterConfigInput() {
+            clearTimeout(masterConfigSaveTimer);
+            masterConfigSaveTimer = setTimeout(saveMasterConfigFromUI, 350);
         }
 
         function saveMasterConfigToStorageAndRecalc() {
@@ -1930,13 +1939,7 @@
             calculateQuote();
             renderCatalog();
         };
-
-        if ('serviceWorker' in navigator && window.isSecureContext) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js')
-                    .catch(err => console.warn('No se pudo registrar el modo instalable:', err));
-            });
-        }
     </script>
 </body>
 </html>
+
