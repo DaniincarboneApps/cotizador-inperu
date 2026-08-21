@@ -10,11 +10,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="INPERU">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
     
-    <!-- Iconos PWA y Favicon con el logo oficial -->
-    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1gqYlqWf_Bv92M1LkJp8_YV9Y39K8Z8Mv=s200">
-    <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1gqYlqWf_Bv92M1LkJp8_YV9Y39K8Z8Mv=s200">
-
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome icons -->
@@ -74,796 +73,791 @@
 <body class="bg-[#061215] text-slate-100 min-h-screen flex flex-col selection:bg-teal-500 selection:text-white">
 
     <!-- Pantalla de Inicio de Sesión para los 2 Usuarios -->
-    <div id="auth-screen" class="fixed inset-0 z-50 bg-[#061215]/95 backdrop-blur-md flex items-center justify-center p-4">
+    <div id="auth-screen" class="fixed inset-0 z-50 bg-[#061215] flex items-center justify-center p-4">
         <div class="bg-[#0a1a1f] border border-teal-900/50 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl space-y-6 text-center">
+            
+            <!-- Logo e identidad gráfica oficial -->
             <div class="flex flex-col items-center">
-                <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border border-teal-500/30 p-1.5 bg-[#061215] shadow-lg mb-3">
-                    <svg viewBox="0 0 500 500" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="500" height="500" rx="60" fill="#ffffff" stroke="#28838d" stroke-width="20"/>
-                        <circle cx="250" cy="200" r="140" fill="none" stroke="#28838d" stroke-width="12"/>
-                        <path d="M190 140 C220 120 250 140 250 140 C250 140 280 120 310 140 L310 210 C280 190 250 210 250 210 C250 210 220 190 190 210 Z" fill="none" stroke="#28838d" stroke-width="8"/>
-                        <path d="M150 230 Q250 280 350 230 M150 255 Q250 305 350 255 M150 280 Q250 330 350 280" fill="none" stroke="#28838d" stroke-width="10" stroke-linecap="round"/>
-                        <rect x="180" y="210" width="140" height="90" rx="15" fill="#134950" stroke="#28838d" stroke-width="8"/>
-                        <rect x="205" y="260" width="90" height="55" rx="5" fill="#ffffff" stroke="#28838d" stroke-width="6"/>
-                        <line x1="218" y1="275" x2="282" y2="275" stroke="#28838d" stroke-width="4"/>
-                        <line x1="218" y1="288" x2="282" y2="288" stroke="#28838d" stroke-width="4"/>
-                        <line x1="218" y1="300" x2="265" y2="300" stroke="#28838d" stroke-width="4"/>
-                        <text x="250" y="380" font-family="'Inter', sans-serif" font-weight="900" font-size="52" fill="#28838d" text-anchor="middle" letter-spacing="4">INPERU</text>
-                        <text x="250" y="415" font-family="'Inter', sans-serif" font-weight="800" font-size="24" fill="#28838d" text-anchor="middle" letter-spacing="7">PRODUCCIONES</text>
-                    </svg>
+                <div class="w-32 h-32 sm:w-36 sm:h-36 rounded-3xl overflow-hidden border border-teal-500/40 p-1.5 bg-[#061215] shadow-2xl mb-3 relative flex items-center justify-center">
+                    <img src="icons/icon-512.png" alt="Logo de INPERU Producciones" class="w-full h-full object-contain rounded-[1.15rem]" width="512" height="512">
                 </div>
-                <h1 class="text-xl sm:text-2xl font-black tracking-widest text-[#28838d]">INPERU</h1>
+                <h1 class="text-xl font-black tracking-widest text-[#28838d]">INPERU</h1>
                 <p class="text-xs text-teal-300 font-bold tracking-[0.25em]">PRODUCCIONES</p>
-                <p class="text-xs text-slate-400 mt-1">Acceso al Sistema en la Nube</p>
+                <p class="text-[11px] text-slate-400 mt-1">Cotizador e Imprenta Digital</p>
             </div>
 
-            <form onsubmit="handleLogin(event)" class="space-y-4 text-left">
+            <!-- Formulario de Ingreso -->
+            <form onsubmit="handleLogin(event)" class="space-y-3.5 text-left">
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1">Correo Electrónico</label>
                     <input type="email" id="auth-email" required placeholder="usuario@inperu.com"
-                        class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#28838d]">
+                        class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-[#28838d] transition-colors">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1">Contraseña</label>
                     <input type="password" id="auth-password" required placeholder="••••••••"
-                        class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#28838d]">
+                        class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-[#28838d] transition-colors">
                 </div>
-                <div id="auth-error" class="text-xs text-rose-400 font-semibold hidden"></div>
+                
+                <div id="auth-error" class="text-xs text-rose-400 font-semibold p-2 bg-rose-950/40 border border-rose-800/50 rounded-lg hidden"></div>
+
                 <button type="submit" id="auth-submit-btn" class="w-full bg-[#28838d] hover:bg-teal-600 text-white font-bold py-3 rounded-xl shadow-lg transition-all text-sm flex items-center justify-center gap-2">
                     <i class="fa-solid fa-arrow-right-to-bracket"></i>
                     <span>Ingresar al Sistema</span>
                 </button>
             </form>
+            
+            <div class="border-t border-teal-900/40 pt-3">
+                <button type="button" onclick="bypassLoginForPreview()" class="text-xs text-teal-300 hover:text-teal-200 underline font-medium">
+                    <i class="fa-solid fa-eye mr-1"></i> Previsualizar App (Modo Prueba / Offline)
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Header Principal -->
-    <header class="bg-[#0a1a1f]/90 backdrop-blur-md border-b border-teal-900/40 sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
-            
-            <div class="flex items-center gap-3">
-                <div class="leading-none flex flex-col">
-                    <span class="text-xl sm:text-2xl text-[#28838d] font-black tracking-[0.18em]">INPERU</span>
-                    <span class="text-[10px] sm:text-[11px] text-teal-300 font-bold tracking-[0.25em] mt-1">PRODUCCIONES</span>
+    <!-- Contenido Principal de la Aplicación -->
+    <div id="app-main-content" class="hidden flex-1 flex flex-col">
+
+        <!-- Header Principal -->
+        <header class="bg-[#0a1a1f]/90 backdrop-blur-md border-b border-teal-900/40 sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+                
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl overflow-hidden border border-teal-500/30 bg-[#061215] shadow-md flex items-center justify-center p-0.5 shrink-0">
+                        <img src="icons/favicon-32.png" alt="" aria-hidden="true" class="w-full h-full object-contain rounded-lg" width="32" height="32">
+                    </div>
+                    <div class="leading-none flex flex-col">
+                        <span class="text-xl sm:text-2xl text-[#28838d] font-black tracking-[0.18em]">INPERU</span>
+                        <span class="text-[10px] sm:text-[11px] text-teal-300 font-bold tracking-[0.25em] mt-1">PRODUCCIONES</span>
+                    </div>
+                    <div class="hidden md:block border-l border-teal-900/60 pl-3 py-0.5">
+                        <p class="text-xs text-teal-200/70 font-medium">Sistema de Cotización e Imprenta</p>
+                        <div class="flex items-center gap-2 mt-0.5">
+                            <span id="cloud-status-badge" class="inline-flex items-center gap-1.5 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-700/50">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Nube Sync
+                            </span>
+                            <button onclick="handleLogout()" class="text-[10px] text-slate-400 hover:text-rose-300 ml-2 font-medium">
+                                <i class="fa-solid fa-right-from-bracket"></i> Salir
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="hidden md:block border-l border-teal-900/60 pl-3 py-0.5">
-                    <p class="text-xs text-teal-200/70 font-medium">Sistema de Cotización e Imprenta</p>
-                    <div class="flex items-center gap-2 mt-0.5">
-                        <span id="cloud-status-badge" class="inline-flex items-center gap-1.5 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-700/50">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Nube Sync
-                        </span>
-                        <button onclick="handleLogout()" class="text-[10px] text-slate-400 hover:text-rose-300 ml-2">
-                            <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
+
+                <nav id="app-nav" class="flex items-center gap-1 bg-[#061215]/80 p-1.5 rounded-xl border border-teal-900/50">
+                    <button onclick="switchTab('quoter')" id="tab-btn-quoter" class="px-3.5 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 bg-[#28838d] text-white shadow-md shadow-teal-900/40">
+                        <i class="fa-solid fa-calculator"></i>
+                        <span>Cotizador</span>
+                    </button>
+                    <button onclick="switchTab('catalog')" id="tab-btn-catalog" class="px-3.5 sm:px-4 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-teal-200 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-book-bookmark"></i>
+                        <span>Catálogo (<span id="catalog-count">0</span>)</span>
+                    </button>
+                    <button onclick="switchTab('config')" id="tab-btn-config" class="px-3.5 sm:px-4 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-teal-200 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-sliders"></i>
+                        <span>Costos Base</span>
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+            <!-- Pestaña Cotizador -->
+            <section id="tab-quoter" class="space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    
+                    <div class="lg:col-span-5 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 sm:p-6 shadow-xl space-y-5">
+                        <div class="flex items-center justify-between border-b border-teal-900/40 pb-3">
+                            <h2 class="text-base font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-book text-teal-400"></i> Parámetros de Cotización
+                            </h2>
+                            <span class="text-xs text-teal-300/60 font-semibold">Inperu System</span>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Nombre / Título del Libro *</label>
+                            <input type="text" id="quote-title" placeholder="Ej. El Principito - Edición Anillada" value="Manual de Anatomía Humana"
+                                class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400 transition-colors">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 bg-teal-950/30 border border-teal-800/40 p-3.5 rounded-xl">
+                            <div>
+                                <label class="block text-xs font-bold text-teal-300 mb-1">
+                                    <i class="fa-solid fa-layer-group text-teal-400 mr-1"></i> Cant. Ejemplares *
+                                </label>
+                                <div class="relative">
+                                    <input type="number" id="quote-order-qty" min="1" value="1" oninput="onParametersChange()"
+                                        class="w-full bg-[#061215] border border-teal-500/50 rounded-xl px-3 py-2 text-sm text-white font-extrabold text-center focus:outline-none focus:border-teal-300">
+                                    <span class="absolute right-2.5 top-2 text-[10px] text-slate-400 font-semibold">unid</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-amber-300 mb-1">
+                                    <i class="fa-solid fa-percent text-amber-400 mr-1"></i> % Imprevistos
+                                </label>
+                                <div class="relative">
+                                    <input type="number" id="quote-contingency-pct" step="1" min="0" value="15" oninput="onParametersChange()"
+                                        class="w-full bg-[#061215] border border-amber-500/50 rounded-xl px-3 py-2 text-sm text-amber-300 font-extrabold text-center focus:outline-none focus:border-amber-400">
+                                    <span class="absolute right-2.5 top-2 text-[10px] text-amber-400 font-bold">%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Cantidad de Páginas *</label>
+                                <div class="relative">
+                                    <input type="number" id="quote-pages" min="1" value="150" oninput="onParametersChange()"
+                                        class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white font-bold focus:outline-none focus:border-teal-400">
+                                    <span class="absolute right-3 top-2.5 text-xs text-slate-500">págs</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Modo Impresión *</label>
+                                <select id="quote-print-mode" onchange="onParametersChange()"
+                                    class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400">
+                                    <option value="doble" selected>Doble Faz (2 págs/hoja)</option>
+                                    <option value="simple">Simple Faz (1 pág/hoja)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="bg-teal-950/40 border border-teal-800/40 rounded-xl p-3 flex items-center justify-between text-xs">
+                            <span class="text-teal-300 font-medium"><i class="fa-solid fa-file-lines mr-1.5"></i> Hojas Físicas por Ejemplar:</span>
+                            <span id="calc-sheets-badge" class="font-bold text-teal-200 text-sm bg-teal-900/60 px-2.5 py-0.5 rounded-lg border border-teal-700/50">75 Hojas</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Tamaño / Formato</label>
+                                <select id="quote-format" onchange="onParametersChange()"
+                                    class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400">
+                                    <option value="A5" selected>A5 (37.5 A4 / 1 foto / 1 tapa)</option>
+                                    <option value="A4">A4 (75 A4 / 2 fotos / 2 tapas)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Equipo / Impresora</label>
+                                <select id="quote-printer" onchange="onParametersChange()"
+                                    class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400">
+                                    <option value="canon" selected>Canon G3100 / G1110 (0.55 m/hoja)</option>
+                                    <option value="epson">Epson L14150 (0.36 m/hoja)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Tipo de Tinta</label>
+                                <select id="quote-ink-type" onchange="onParametersChange()"
+                                    class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400">
+                                    <option value="standard" selected>Tinta Estándar</option>
+                                    <option value="eternity">Tinta Epson Eternity</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Tono de Impresión</label>
+                                <select id="quote-color-mode" onchange="onParametersChange()"
+                                    class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400">
+                                    <option value="bw" selected>Blanco y Negro (50% tinta)</option>
+                                    <option value="color">Full Color (100% tinta)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-teal-900/40 pt-4 space-y-3">
+                            <span class="text-xs font-semibold text-teal-300/80 uppercase tracking-wider block">Ficha de Biblioteca INPERU</span>
+                            
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Descripción corta o Autor</label>
+                                <input type="text" id="quote-description" placeholder="Ej. Anillado espiral, tapa dura..." value="Anillado espiral plástico, tapa transparente y contratapa opaca."
+                                    class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-teal-400">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Detalles de Entrega / Especificaciones</label>
+                                <input type="text" id="quote-deliverables" placeholder="Ej. Se entrega con hojas de 80g..." value="Se entrega impreso en hojas de 80g, espiral plástico, tapas de polipropileno y laminado 35u."
+                                    class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-teal-200 focus:outline-none focus:border-teal-400">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Imagen de Portada (Opcional)</label>
+                                <div class="flex items-center gap-3">
+                                    <label class="cursor-pointer bg-teal-950/60 hover:bg-teal-900/60 border border-teal-700/50 text-xs text-teal-200 px-3 py-2 rounded-xl transition-colors flex items-center gap-2">
+                                        <i class="fa-solid fa-upload"></i>
+                                        <span>Subir Foto</span>
+                                        <input type="file" id="quote-cover-input" accept="image/*" onchange="handleCoverUpload(event)" class="hidden">
+                                    </label>
+                                    <div id="cover-preview-container" class="h-10 w-10 rounded-lg bg-[#061215] border border-teal-900/60 overflow-hidden flex items-center justify-center text-slate-600 text-xs">
+                                        <i class="fa-solid fa-image"></i>
+                                    </div>
+                                    <button type="button" onclick="resetCoverImage()" class="text-xs text-slate-500 hover:text-red-400">Quitar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-teal-900/40 pt-4">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label class="text-xs font-semibold text-teal-300">Precio Final Venta Unitario ($)</label>
+                                <span class="text-[11px] text-slate-400">Edita el precio o deja el redondeado</span>
+                            </div>
+                            <div class="relative">
+                                <span class="absolute left-3.5 top-2.5 text-slate-400 font-bold">$</span>
+                                <input type="number" id="quote-custom-price" step="50" oninput="onCustomPriceInput()"
+                                    class="w-full bg-teal-950/50 border border-teal-500/50 rounded-xl pl-8 pr-3.5 py-2 text-base font-extrabold text-emerald-400 focus:outline-none focus:border-emerald-400">
+                            </div>
+                        </div>
+
+                        <button onclick="saveCurrentQuoteToCatalog()" class="w-full bg-gradient-to-r from-[#28838d] to-teal-600 hover:from-teal-600 hover:to-teal-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-teal-950/50 transition-all flex items-center justify-center gap-2 text-sm">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <span>Guardar Libro en Catálogo INPERU</span>
+                        </button>
+                    </div>
+
+                    <div class="lg:col-span-7 space-y-5">
+                        
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-4 text-center">
+                                <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold block mb-1">Costo Directo Insumos + Luz</span>
+                                <span id="res-costo-total" class="text-base sm:text-lg font-black text-rose-400">$0.00</span>
+                                <span id="res-costo-batch-sub" class="text-[10px] text-slate-500 block mt-0.5">x1 un: $0.00</span>
+                            </div>
+                            <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-4 text-center">
+                                <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold block mb-1">Precio Venta Total</span>
+                                <span id="res-venta-total" class="text-base sm:text-lg font-black text-emerald-400">$0.00</span>
+                                <span id="res-venta-batch-sub" class="text-[10px] text-slate-500 block mt-0.5">x1 un: $0.00</span>
+                            </div>
+                            <div class="bg-[#0a1a1f] border border-teal-500/30 bg-teal-950/30 rounded-2xl p-4 text-center">
+                                <span class="text-[10px] uppercase tracking-wider text-teal-300 font-semibold block mb-1">Ganancia Real Neta</span>
+                                <span id="res-ganancia-total" class="text-base sm:text-lg font-black text-teal-300">$0.00</span>
+                                <span id="res-ganancia-batch-sub" class="text-[10px] text-teal-400/70 block mt-0.5">x1 un: $0.00</span>
+                            </div>
+                        </div>
+
+                        <div id="stock-requirements-panel" class="bg-gradient-to-r from-[#0a1a1f] via-[#0a1a1f] to-teal-950/40 border border-teal-500/30 rounded-2xl p-4 shadow-xl space-y-3">
+                            <div class="flex items-center justify-between border-b border-teal-900/40 pb-2">
+                                <h4 class="text-xs font-bold text-teal-300 flex items-center gap-2">
+                                    <i class="fa-solid fa-boxes-stacked text-amber-400"></i> Stock & Insumos Requeridos (<span id="stock-batch-qty-label" class="text-amber-300">1</span> ejemplares)
+                                </h4>
+                                <span id="stock-batch-time-badge" class="text-[11px] bg-[#061215] text-teal-300 px-2 py-0.5 rounded-md font-mono border border-teal-900/60">0 min impresión</span>
+                            </div>
+
+                            <div id="stock-materials-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs"></div>
+                        </div>
+
+                        <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 shadow-xl space-y-4">
+                            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-teal-900/40 pb-3">
+                                <div>
+                                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                                        <i class="fa-solid fa-list-check text-teal-400"></i> Desglose por Ejemplar (Cantidades Editables)
+                                    </h3>
+                                    <p class="text-[11px] text-slate-400">Modifica cualquier cantidad directamente para ajustar la cotización unitaria.</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="resetBreakdownQuantitiesToAuto()" class="text-[11px] bg-[#061215] hover:bg-teal-950 text-teal-300 border border-teal-500/30 px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1">
+                                        <i class="fa-solid fa-rotate-left"></i> Restablecer Cantidades
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-xs text-left">
+                                    <thead class="bg-[#061215] text-teal-300/80 border-b border-teal-900/60 uppercase font-semibold">
+                                        <tr>
+                                            <th class="px-3 py-2">Concepto / Insumo</th>
+                                            <th class="px-3 py-2 text-right">Valor Unid. ($)</th>
+                                            <th class="px-3 py-2 text-center w-28">Cant. (Editable)</th>
+                                            <th class="px-3 py-2 text-right">Subtotal ($)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="quote-breakdown-tbody" class="divide-y divide-teal-950/60 text-slate-300"></tbody>
+                                </table>
+                            </div>
+
+                            <div class="bg-[#061215]/80 rounded-xl p-3 space-y-1.5 border border-teal-900/60 text-xs">
+                                <div class="flex justify-between text-slate-400">
+                                    <span>Costo Directo (Insumos + Luz + Amortizaciones) [x1]:</span>
+                                    <span id="res-subtotal-base" class="font-mono text-rose-400 font-bold">$0.00</span>
+                                </div>
+                                <div class="flex justify-between text-slate-400">
+                                    <span>Honorarios Impresión + Imprevistos (<span id="res-lbl-tax-pct">15%</span>) [Pasan a Ganancia]:</span>
+                                    <span id="res-impuestos" class="font-mono text-amber-400">$0.00</span>
+                                </div>
+                                <div class="border-t border-teal-900/60 pt-1.5 flex justify-between font-semibold text-slate-300">
+                                    <span>Valor Venta Final por Página / Carilla:</span>
+                                    <span id="res-val-pina-real" class="font-mono text-teal-300">$0.00</span>
+                                </div>
+                                <div class="flex justify-between font-bold text-slate-200">
+                                    <span>Valor Venta Final por Hoja del Libro (<span id="res-lbl-mode-type">Doble Faz</span>):</span>
+                                    <span id="res-val-hoja-libro" class="font-mono text-teal-400">$0.00</span>
+                                </div>
+                                <div class="flex justify-between text-xs text-teal-200/80">
+                                    <span>Valor Venta Final por Hoja A4 Físicamente Utilizada:</span>
+                                    <span id="res-val-hoja-a4" class="font-mono text-emerald-400">$0.00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pestaña Catálogo -->
+            <section id="tab-catalog" class="space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 shadow-lg">
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-book-bookmark text-teal-400"></i> Biblioteca de Libros INPERU
+                        </h2>
+                        <p class="text-xs text-teal-200/60">Los costos y precios de venta se recalculan automáticamente con los Costos Base compartidos en la nube.</p>
+                    </div>
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <input type="text" id="catalog-search" placeholder="Buscar por título..." oninput="renderCatalog()"
+                            class="bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-teal-400 w-full sm:w-64">
+                    </div>
+                </div>
+
+                <div id="catalog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </section>
+
+            <!-- Pestaña Costos Base -->
+            <section id="tab-config" class="space-y-6 hidden">
+                <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-teal-400"></i> Configuración de Costos e Insumos Base
+                        </h2>
+                        <p class="text-xs text-teal-200/60">Los cambios se guardan y sincronizan en la nube para ambos usuarios.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="resetMasterConfigToDefaults()" class="text-xs bg-teal-600/30 hover:bg-teal-600/50 text-teal-200 px-3.5 py-2 rounded-xl transition-colors border border-teal-500/40 flex items-center gap-1.5 font-semibold">
+                            <i class="fa-solid fa-rotate-left"></i> Restablecer Datos Originales
                         </button>
                     </div>
                 </div>
-            </div>
 
-            <nav id="app-nav" class="flex items-center gap-1 bg-[#061215]/80 p-1.5 rounded-xl border border-teal-900/50">
-                <button onclick="switchTab('quoter')" id="tab-btn-quoter" class="px-3.5 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 bg-[#28838d] text-white shadow-md shadow-teal-900/40">
-                    <i class="fa-solid fa-calculator"></i>
-                    <span>Cotizador</span>
-                </button>
-                <button onclick="switchTab('catalog')" id="tab-btn-catalog" class="px-3.5 sm:px-4 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-teal-200 transition-all flex items-center gap-2">
-                    <i class="fa-solid fa-book-bookmark"></i>
-                    <span>Catálogo (<span id="catalog-count">0</span>)</span>
-                </button>
-                <button onclick="switchTab('config')" id="tab-btn-config" class="px-3.5 sm:px-4 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-teal-200 transition-all flex items-center gap-2">
-                    <i class="fa-solid fa-sliders"></i>
-                    <span>Costos Base</span>
-                </button>
-            </nav>
-        </div>
-    </header>
-
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-
-        <!-- Pestaña Cotizador -->
-        <section id="tab-quoter" class="space-y-6">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                
-                <div class="lg:col-span-5 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 sm:p-6 shadow-xl space-y-5">
-                    <div class="flex items-center justify-between border-b border-teal-900/40 pb-3">
-                        <h2 class="text-base font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-book text-teal-400"></i> Parámetros de Cotización
-                        </h2>
-                        <span class="text-xs text-teal-300/60 font-semibold">Inperu System</span>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Nombre / Título del Libro *</label>
-                        <input type="text" id="quote-title" placeholder="Ej. El Principito - Edición Anillada" value="Manual de Anatomía Humana"
-                            class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400 transition-colors">
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4 bg-teal-950/30 border border-teal-800/40 p-3.5 rounded-xl">
-                        <div>
-                            <label class="block text-xs font-bold text-teal-300 mb-1">
-                                <i class="fa-solid fa-layer-group text-teal-400 mr-1"></i> Cant. Ejemplares *
-                            </label>
-                            <div class="relative">
-                                <input type="number" id="quote-order-qty" min="1" value="1" oninput="onParametersChange()"
-                                    class="w-full bg-[#061215] border border-teal-500/50 rounded-xl px-3 py-2 text-sm text-white font-extrabold text-center focus:outline-none focus:border-teal-300">
-                                <span class="absolute right-2.5 top-2 text-[10px] text-slate-400 font-semibold">unid</span>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-bold text-amber-300 mb-1">
-                                <i class="fa-solid fa-percent text-amber-400 mr-1"></i> % Imprevistos
-                            </label>
-                            <div class="relative">
-                                <input type="number" id="quote-contingency-pct" step="1" min="0" value="15" oninput="onParametersChange()"
-                                    class="w-full bg-[#061215] border border-amber-500/50 rounded-xl px-3 py-2 text-sm text-amber-300 font-extrabold text-center focus:outline-none focus:border-amber-400">
-                                <span class="absolute right-2.5 top-2 text-[10px] text-amber-400 font-bold">%</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Cantidad de Páginas *</label>
-                            <div class="relative">
-                                <input type="number" id="quote-pages" min="1" value="150" oninput="onParametersChange()"
-                                    class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white font-bold focus:outline-none focus:border-teal-400">
-                                <span class="absolute right-3 top-2.5 text-xs text-slate-500">págs</span>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Modo Impresión *</label>
-                            <select id="quote-print-mode" onchange="onParametersChange()"
-                                class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400">
-                                <option value="doble" selected>Doble Faz (2 págs/hoja)</option>
-                                <option value="simple">Simple Faz (1 pág/hoja)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="bg-teal-950/40 border border-teal-800/40 rounded-xl p-3 flex items-center justify-between text-xs">
-                        <span class="text-teal-300 font-medium"><i class="fa-solid fa-file-lines mr-1.5"></i> Hojas Físicas por Ejemplar:</span>
-                        <span id="calc-sheets-badge" class="font-bold text-teal-200 text-sm bg-teal-900/60 px-2.5 py-0.5 rounded-lg border border-teal-700/50">75 Hojas</span>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Tamaño / Formato</label>
-                            <select id="quote-format" onchange="onParametersChange()"
-                                class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400">
-                                <option value="A5" selected>A5 (37.5 A4 / 1 foto / 1 tapa)</option>
-                                <option value="A4">A4 (75 A4 / 2 fotos / 2 tapas)</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Equipo / Impresora</label>
-                            <select id="quote-printer" onchange="onParametersChange()"
-                                class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400">
-                                <option value="canon" selected>Canon G3100 / G1110 (0.55 m/hoja)</option>
-                                <option value="epson">Epson L14150 (0.36 m/hoja)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Tipo de Tinta</label>
-                            <select id="quote-ink-type" onchange="onParametersChange()"
-                                class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400">
-                                <option value="standard" selected>Tinta Estándar</option>
-                                <option value="eternity">Tinta Epson Eternity</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Tono de Impresión</label>
-                            <select id="quote-color-mode" onchange="onParametersChange()"
-                                class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400">
-                                <option value="bw" selected>Blanco y Negro (50% tinta)</option>
-                                <option value="color">Full Color (100% tinta)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-teal-900/40 pt-4 space-y-3">
-                        <span class="text-xs font-semibold text-teal-300/80 uppercase tracking-wider block">Ficha de Biblioteca INPERU</span>
-                        
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Descripción corta o Autor</label>
-                            <input type="text" id="quote-description" placeholder="Ej. Anillado espiral, tapa dura..." value="Anillado espiral plástico, tapa transparente y contratapa opaca."
-                                class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-teal-400">
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Detalles de Entrega / Especificaciones</label>
-                            <input type="text" id="quote-deliverables" placeholder="Ej. Se entrega con hojas de 80g..." value="Se entrega impreso en hojas de 80g, espiral plástico, tapas de polipropileno y laminado 35u."
-                                class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-teal-200 focus:outline-none focus:border-teal-400">
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Imagen de Portada (Opcional)</label>
-                            <div class="flex items-center gap-3">
-                                <label class="cursor-pointer bg-teal-950/60 hover:bg-teal-900/60 border border-teal-700/50 text-xs text-teal-200 px-3 py-2 rounded-xl transition-colors flex items-center gap-2">
-                                    <i class="fa-solid fa-upload"></i>
-                                    <span>Subir Foto</span>
-                                    <input type="file" id="quote-cover-input" accept="image/*" onchange="handleCoverUpload(event)" class="hidden">
-                                </label>
-                                <div id="cover-preview-container" class="h-10 w-10 rounded-lg bg-[#061215] border border-teal-900/60 overflow-hidden flex items-center justify-center text-slate-600 text-xs">
-                                    <i class="fa-solid fa-image"></i>
-                                </div>
-                                <button type="button" onclick="resetCoverImage()" class="text-xs text-slate-500 hover:text-red-400">Quitar</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-teal-900/40 pt-4">
-                        <div class="flex items-center justify-between mb-1.5">
-                            <label class="text-xs font-semibold text-teal-300">Precio Final Venta Unitario ($)</label>
-                            <span class="text-[11px] text-slate-400">Edita el precio o deja el redondeado</span>
-                        </div>
-                        <div class="relative">
-                            <span class="absolute left-3.5 top-2.5 text-slate-400 font-bold">$</span>
-                            <input type="number" id="quote-custom-price" step="50" oninput="onCustomPriceInput()"
-                                class="w-full bg-teal-950/50 border border-teal-500/50 rounded-xl pl-8 pr-3.5 py-2 text-base font-extrabold text-emerald-400 focus:outline-none focus:border-emerald-400">
-                        </div>
-                    </div>
-
-                    <button onclick="saveCurrentQuoteToCatalog()" class="w-full bg-gradient-to-r from-[#28838d] to-teal-600 hover:from-teal-600 hover:to-teal-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-teal-950/50 transition-all flex items-center justify-center gap-2 text-sm">
-                        <i class="fa-solid fa-bookmark"></i>
-                        <span>Guardar Libro en Catálogo INPERU</span>
-                    </button>
-                </div>
-
-                <div class="lg:col-span-7 space-y-5">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     
-                    <div class="grid grid-cols-3 gap-3">
-                        <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-4 text-center">
-                            <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold block mb-1">Costo Directo Insumos + Luz</span>
-                            <span id="res-costo-total" class="text-base sm:text-lg font-black text-rose-400">$0.00</span>
-                            <span id="res-costo-batch-sub" class="text-[10px] text-slate-500 block mt-0.5">x1 un: $0.00</span>
-                        </div>
-                        <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-4 text-center">
-                            <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold block mb-1">Precio Venta Total</span>
-                            <span id="res-venta-total" class="text-base sm:text-lg font-black text-emerald-400">$0.00</span>
-                            <span id="res-venta-batch-sub" class="text-[10px] text-slate-500 block mt-0.5">x1 un: $0.00</span>
-                        </div>
-                        <div class="bg-[#0a1a1f] border border-teal-500/30 bg-teal-950/30 rounded-2xl p-4 text-center">
-                            <span class="text-[10px] uppercase tracking-wider text-teal-300 font-semibold block mb-1">Ganancia Real Neta</span>
-                            <span id="res-ganancia-total" class="text-base sm:text-lg font-black text-teal-300">$0.00</span>
-                            <span id="res-ganancia-batch-sub" class="text-[10px] text-teal-400/70 block mt-0.5">x1 un: $0.00</span>
+                    <div class="lg:col-span-6 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 space-y-4 shadow-xl">
+                        <h3 class="text-sm font-bold text-white flex items-center gap-2 border-b border-teal-900/40 pb-2">
+                            <i class="fa-solid fa-boxes-packing text-amber-400"></i> Materiales & Insumos Base
+                        </h3>
+
+                        <div class="space-y-3 text-xs">
+                            <div class="p-3 bg-[#061215] rounded-xl border border-teal-900/60 space-y-2">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="font-bold text-white">Hoja 80g</span>
+                                    <span id="lbl-unit-paper" class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2 py-0.5 rounded-lg">$16.40 / hoja</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                    <div>
+                                        <label class="text-slate-400 block mb-0.5">Precio Paquete ($)</label>
+                                        <input type="number" id="cfg-paper-price" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="text-slate-400 block mb-0.5">Cant. Hojas Paquete</label>
+                                        <input type="number" id="cfg-paper-packsheets" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-3 bg-[#061215] rounded-xl border border-teal-900/60 space-y-2">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="font-bold text-white">Tinta Estándar (4 Colores)</span>
+                                    <span id="lbl-unit-ink-std" class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2 py-0.5 rounded-lg">$4.57 / pág</span>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 text-[11px]">
+                                    <div>
+                                        <label class="text-slate-400 block mb-0.5">Precio Juego ($)</label>
+                                        <input type="number" id="cfg-ink-standard-price" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="text-slate-400 block mb-0.5">Divisor Botellas</label>
+                                        <input type="number" id="cfg-ink-standard-bottles" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="text-slate-400 block mb-0.5">Rendimiento Págs</label>
+                                        <input type="number" id="cfg-ink-standard-yield" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-3 bg-[#061215] rounded-xl border border-teal-900/60 space-y-2">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="font-bold text-white">Tinta Epson Eternity Pigmentada</span>
+                                    <span id="lbl-unit-ink-ete" class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2 py-0.5 rounded-lg">$11.43 / pág</span>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 text-[11px]">
+                                    <div>
+                                        <label class="text-slate-400 block mb-0.5">Precio Juego ($)</label>
+                                        <input type="number" id="cfg-ink-eternity-price" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="text-slate-400 block mb-0.5">Divisor Botellas</label>
+                                        <input type="number" id="cfg-ink-eternity-bottles" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="text-slate-400 block mb-0.5">Rendimiento Págs</label>
+                                        <input type="number" id="cfg-ink-eternity-yield" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-3 bg-[#061215] rounded-xl border border-teal-900/60 space-y-2">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="font-bold text-white">Tapas Plásticas A4</span>
+                                    <span id="lbl-unit-tapas" class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2 py-0.5 rounded-lg">$600.00 / unidad</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                    <div>
+                                        <label class="text-slate-400 block mb-0.5">Precio Paquete ($)</label>
+                                        <input type="number" id="cfg-tapas-price" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="text-slate-400 block mb-0.5">Cant. Unidades Paquete</label>
+                                        <input type="number" id="cfg-tapas-packqty" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-3 bg-[#061215] rounded-xl border border-teal-900/60 space-y-2">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="font-bold text-white">Papel Fotográfico 230g A4</span>
+                                    <span id="lbl-unit-photo" class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2 py-0.5 rounded-lg">$135.00 / hoja</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                    <div>
+                                        <label class="text-slate-400 block mb-0.5">Precio Paquete ($)</label>
+                                        <input type="number" id="cfg-photo-price" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="text-slate-400 block mb-0.5">Cant. Hojas Paquete</label>
+                                        <input type="number" id="cfg-photo-packqty" oninput="saveMasterConfigFromUI()"
+                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-3 bg-[#061215] rounded-xl border border-teal-900/60 flex items-center justify-between gap-3">
+                                <div>
+                                    <span class="font-bold text-white block">Laminado 35 micrones</span>
+                                    <span class="text-[11px] text-slate-500">Costo Unitario Por Libro</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-slate-400">$</span>
+                                    <input type="number" id="cfg-laminate-price" oninput="saveMasterConfigFromUI()"
+                                        class="w-24 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-emerald-400 font-bold focus:outline-none">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div id="stock-requirements-panel" class="bg-gradient-to-r from-[#0a1a1f] via-[#0a1a1f] to-teal-950/40 border border-teal-500/30 rounded-2xl p-4 shadow-xl space-y-3">
+                    <div class="lg:col-span-6 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 space-y-4 shadow-xl">
                         <div class="flex items-center justify-between border-b border-teal-900/40 pb-2">
-                            <h4 class="text-xs font-bold text-teal-300 flex items-center gap-2">
-                                <i class="fa-solid fa-boxes-stacked text-amber-400"></i> Stock & Insumos Requeridos (<span id="stock-batch-qty-label" class="text-amber-300">1</span> ejemplares)
-                            </h4>
-                            <span id="stock-batch-time-badge" class="text-[11px] bg-[#061215] text-teal-300 px-2 py-0.5 rounded-md font-mono border border-teal-900/60">0 min impresión</span>
-                        </div>
-                        <div id="stock-materials-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs"></div>
-                    </div>
-
-                    <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 shadow-xl space-y-4">
-                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-teal-900/40 pb-3">
-                            <div>
-                                <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                                    <i class="fa-solid fa-list-check text-teal-400"></i> Desglose por Ejemplar (Cantidades Editables)
-                                </h3>
-                                <p class="text-[11px] text-slate-400">Modifica cualquier cantidad directamente para ajustar la cotización unitaria.</p>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <button onclick="resetBreakdownQuantitiesToAuto()" class="text-[11px] bg-[#061215] hover:bg-teal-950 text-teal-300 border border-teal-500/30 px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1">
-                                    <i class="fa-solid fa-rotate-left"></i> Restablecer Cantidades
-                                </button>
-                            </div>
+                            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-ring text-teal-400"></i> Tabla de Espirales (Editables)
+                            </h3>
+                            <button onclick="addNewSpiralRow()" class="text-xs bg-teal-600/30 hover:bg-teal-600/50 text-teal-300 border border-teal-500/40 px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1">
+                                <i class="fa-solid fa-plus"></i> Agregar Espiral
+                            </button>
                         </div>
 
-                        <div class="overflow-x-auto">
+                        <div class="overflow-y-auto max-h-[420px] border border-teal-900/60 rounded-xl">
                             <table class="w-full text-xs text-left">
-                                <thead class="bg-[#061215] text-teal-300/80 border-b border-teal-900/60 uppercase font-semibold">
+                                <thead class="bg-[#061215] text-teal-300/80 sticky top-0 border-b border-teal-900/60">
                                     <tr>
-                                        <th class="px-3 py-2">Concepto / Insumo</th>
-                                        <th class="px-3 py-2 text-right">Valor Unid. ($)</th>
-                                        <th class="px-3 py-2 text-center w-28">Cant. (Editable)</th>
-                                        <th class="px-3 py-2 text-right">Subtotal ($)</th>
+                                        <th class="px-3 py-2">Diámetro (mm)</th>
+                                        <th class="px-3 py-2">Límite Máx. Hojas</th>
+                                        <th class="px-3 py-2 text-right">Precio Unid. ($)</th>
+                                        <th class="px-2 py-2 text-center">Acción</th>
                                     </tr>
                                 </thead>
-                                <tbody id="quote-breakdown-tbody" class="divide-y divide-teal-950/60 text-slate-300"></tbody>
+                                <tbody id="config-spirals-tbody" class="divide-y divide-teal-950/60"></tbody>
                             </table>
                         </div>
+                    </div>
 
-                        <div class="bg-[#061215]/80 rounded-xl p-3 space-y-1.5 border border-teal-900/60 text-xs">
-                            <div class="flex justify-between text-slate-400">
-                                <span>Costo Directo (Insumos + Luz + Amortizaciones) [x1]:</span>
-                                <span id="res-subtotal-base" class="font-mono text-rose-400 font-bold">$0.00</span>
+                    <div class="lg:col-span-12 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 space-y-4 shadow-xl">
+                        <h3 class="text-sm font-bold text-white flex items-center gap-2 border-b border-teal-900/40 pb-2">
+                            <i class="fa-solid fa-gears text-teal-400"></i> Tiempos, Luz, Honorarios e Imprevistos Base
+                        </h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                            <div class="bg-[#061215] p-4 rounded-xl border border-teal-900/60 space-y-3">
+                                <h4 class="font-bold text-teal-300 border-b border-teal-900/60 pb-1 flex justify-between items-center">
+                                    <span>Canon G3100 / G1110</span>
+                                </h4>
+                                
+                                <div class="flex justify-between items-center">
+                                    <span class="text-slate-400">Velocidad:</span>
+                                    <div class="flex items-center gap-1">
+                                        <input type="number" step="0.01" id="cfg-printer-canon-speed" oninput="saveMasterConfigFromUI()"
+                                            class="w-16 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-bold text-white">
+                                        <span class="text-slate-500">min/hoja</span>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1 pt-1 border-t border-teal-950">
+                                    <div class="flex justify-between items-center text-slate-300 font-semibold">
+                                        <span>Equipamiento Canon:</span>
+                                        <span id="lbl-amort-canon-eq" class="font-mono text-emerald-400">$1.4269/min</span>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                        <div>
+                                            <label class="text-slate-500 block">Costo ($)</label>
+                                            <input type="number" id="cfg-canon-machine-cost" oninput="saveMasterConfigFromUI()"
+                                                class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
+                                        </div>
+                                        <div>
+                                            <label class="text-slate-500 block">Min. Totales</label>
+                                            <input type="number" id="cfg-canon-machine-minutes" oninput="saveMasterConfigFromUI()"
+                                                class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1 pt-1 border-t border-teal-950">
+                                    <div class="flex justify-between items-center text-slate-300 font-semibold">
+                                        <span>Cabezal:</span>
+                                        <span id="lbl-amort-canon-head" class="font-mono text-emerald-400">$1.5982/min</span>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                        <div>
+                                            <label class="text-slate-500 block">Costo ($)</label>
+                                            <input type="number" id="cfg-canon-head-cost" oninput="saveMasterConfigFromUI()"
+                                                class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
+                                        </div>
+                                        <div>
+                                            <label class="text-slate-500 block">Min. Totales</label>
+                                            <input type="number" id="cfg-canon-head-minutes" oninput="saveMasterConfigFromUI()"
+                                                class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1 pt-1 border-t border-teal-950">
+                                    <div class="flex justify-between items-center text-slate-300 font-semibold">
+                                        <span>Almohadillas:</span>
+                                        <span id="lbl-amort-canon-pads" class="font-mono text-emerald-400">$0.0428/min</span>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                        <div>
+                                            <label class="text-slate-500 block">Costo ($)</label>
+                                            <input type="number" id="cfg-canon-pads-cost" oninput="saveMasterConfigFromUI()"
+                                                class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
+                                        </div>
+                                        <div>
+                                            <label class="text-slate-500 block">Min. Totales</label>
+                                            <input type="number" id="cfg-canon-pads-minutes" oninput="saveMasterConfigFromUI()"
+                                                class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="flex justify-between text-slate-400">
-                                <span>Honorarios Impresión + Imprevistos (<span id="res-lbl-tax-pct">15%</span>) [Pasan a Ganancia]:</span>
-                                <span id="res-impuestos" class="font-mono text-amber-400">$0.00</span>
+
+                            <div class="bg-[#061215] p-4 rounded-xl border border-teal-900/60 space-y-3">
+                                <h4 class="font-bold text-teal-300 border-b border-teal-900/60 pb-1">Epson L14150</h4>
+                                
+                                <div class="flex justify-between items-center">
+                                    <span class="text-slate-400">Velocidad:</span>
+                                    <div class="flex items-center gap-1">
+                                        <input type="number" step="0.01" id="cfg-printer-epson-speed" oninput="saveMasterConfigFromUI()"
+                                            class="w-16 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-bold text-white">
+                                        <span class="text-slate-500">min/hoja</span>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1 pt-1 border-t border-teal-950">
+                                    <div class="flex justify-between items-center text-slate-300 font-semibold">
+                                        <span>Equipamiento Epson:</span>
+                                        <span id="lbl-amort-epson-eq" class="font-mono text-emerald-400">$4.2808/min</span>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                        <div>
+                                            <label class="text-slate-500 block">Costo ($)</label>
+                                            <input type="number" id="cfg-epson-machine-cost" oninput="saveMasterConfigFromUI()"
+                                                class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
+                                        </div>
+                                        <div>
+                                            <label class="text-slate-500 block">Min. Totales</label>
+                                            <input type="number" id="cfg-epson-machine-minutes" oninput="saveMasterConfigFromUI()"
+                                                class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1 pt-1 border-t border-teal-950">
+                                    <div class="flex justify-between items-center text-slate-300 font-semibold">
+                                        <span>Chip Mantenimiento:</span>
+                                        <span id="lbl-amort-epson-chip" class="font-mono text-emerald-400">$0.3653/min</span>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                        <div>
+                                            <label class="text-slate-500 block">Costo ($)</label>
+                                            <input type="number" id="cfg-epson-chip-cost" oninput="saveMasterConfigFromUI()"
+                                                class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
+                                        </div>
+                                        <div>
+                                            <label class="text-slate-500 block">Min. Totales</label>
+                                            <input type="number" id="cfg-epson-chip-minutes" oninput="saveMasterConfigFromUI()"
+                                                class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="border-t border-teal-900/60 pt-1.5 flex justify-between font-semibold text-slate-300">
-                                <span>Valor Venta Final por Página / Carilla:</span>
-                                <span id="res-val-pina-real" class="font-mono text-teal-300">$0.00</span>
-                            </div>
-                            <div class="flex justify-between font-bold text-slate-200">
-                                <span>Valor Venta Final por Hoja del Libro (<span id="res-lbl-mode-type">Doble Faz</span>):</span>
-                                <span id="res-val-hoja-libro" class="font-mono text-teal-400">$0.00</span>
-                            </div>
-                            <div class="flex justify-between text-xs text-teal-200/80">
-                                <span>Valor Venta Final por Hoja A4 Físicamente Utilizada:</span>
-                                <span id="res-val-hoja-a4" class="font-mono text-emerald-400">$0.00</span>
+
+                            <div class="bg-[#061215] p-4 rounded-xl border border-teal-900/60 space-y-3">
+                                <h4 class="font-bold text-teal-300 border-b border-teal-900/60 pb-1">Luz, Honorarios e Imprevistos</h4>
+                                
+                                <div class="space-y-1">
+                                    <div class="flex justify-between items-center text-slate-300 font-semibold">
+                                        <span>Servicio de Luz:</span>
+                                        <span id="lbl-amort-luz" class="font-mono text-emerald-400">$0.5787/min</span>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                        <div>
+                                            <label class="text-slate-500 block">Factura Mensual ($)</label>
+                                            <input type="number" id="cfg-luz-monthly" oninput="saveMasterConfigFromUI()"
+                                                class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
+                                        </div>
+                                        <div>
+                                            <label class="text-slate-500 block">Minutos Mes</label>
+                                            <input type="number" id="cfg-luz-minutes" oninput="saveMasterConfigFromUI()"
+                                                class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1 pt-2 border-t border-teal-950">
+                                    <div class="flex justify-between items-center text-slate-300 font-semibold">
+                                        <span>Valor Hora Impresión:</span>
+                                        <span id="lbl-min-labor" class="font-mono text-teal-300">$125.00/min</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-slate-400 text-xs">Precio por Hora ($):</span>
+                                        <input type="number" id="cfg-labor-print-hourly" oninput="saveMasterConfigFromUI()"
+                                            class="w-28 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-bold text-emerald-400">
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1 pt-2 border-t border-teal-950">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-amber-300 text-xs font-bold">% Imprevistos Base:</span>
+                                        <div class="flex items-center gap-1">
+                                            <input type="number" id="cfg-contingency-default-pct" oninput="saveMasterConfigFromUI()"
+                                                class="w-20 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-center font-bold text-amber-300">
+                                            <span class="text-amber-400">%</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Pestaña Catálogo -->
-        <section id="tab-catalog" class="space-y-6 hidden">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 shadow-lg">
-                <div>
-                    <h2 class="text-base font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-book-bookmark text-teal-400"></i> Biblioteca de Libros INPERU
-                    </h2>
-                    <p class="text-xs text-teal-200/60">Los precios se recalculan con los Costos Base compartidos en tiempo real.</p>
-                </div>
-                <div class="flex items-center gap-3 w-full sm:w-auto">
-                    <input type="text" id="catalog-search" placeholder="Buscar por título..." oninput="renderCatalog()"
-                        class="bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-teal-400 w-full sm:w-64">
-                </div>
-            </div>
+        </main>
 
-            <div id="catalog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-        </section>
+        <!-- Modales -->
+        <div id="batch-modal" class="fixed inset-0 bg-[#061215]/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+            <div class="bg-[#0a1a1f] border border-teal-900/60 rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-5 relative">
+                <button onclick="closeBatchModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
 
-        <!-- Pestaña Costos Base -->
-        <section id="tab-config" class="space-y-6 hidden">
-            <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div>
-                    <h2 class="text-base font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-sliders text-teal-400"></i> Configuración de Costos e Insumos Base
-                    </h2>
-                    <p class="text-xs text-teal-200/60">Los cambios se sincronizan en la nube para ambos usuarios.</p>
+                <div class="flex items-center gap-3 border-b border-teal-900/60 pb-3">
+                    <div class="w-10 h-10 rounded-xl bg-teal-500/20 border border-teal-500/30 text-teal-300 flex items-center justify-center font-bold text-lg">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
+                    <div>
+                        <h3 id="batch-modal-title" class="text-base font-bold text-white">Simular Tirada INPERU</h3>
+                        <p class="text-xs text-teal-200/60">Calcula costos totales, ganancias y lista de insumos requeridos</p>
+                    </div>
                 </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="resetMasterConfigToDefaults()" class="text-xs bg-teal-600/30 hover:bg-teal-600/50 text-teal-200 px-3.5 py-2 rounded-xl transition-colors border border-teal-500/40 flex items-center gap-1.5 font-semibold">
-                        <i class="fa-solid fa-rotate-left"></i> Restablecer Datos Originales
+
+                <div class="bg-[#061215] p-4 rounded-xl border border-teal-900/60 flex items-center justify-between">
+                    <label class="text-xs font-semibold text-slate-300">Cantidad de Ejemplares:</label>
+                    <div class="flex items-center gap-2">
+                        <button onclick="changeBatchQty(-5)" class="bg-teal-950 hover:bg-teal-900 text-teal-200 w-8 h-8 rounded-lg font-bold border border-teal-800/40">-</button>
+                        <input type="number" id="batch-qty-input" value="20" min="1" oninput="recalculateBatchModal()"
+                            class="w-20 bg-[#0a1a1f] border border-teal-700/80 rounded-lg py-1 px-2 text-center font-black text-emerald-400 focus:outline-none">
+                        <button onclick="changeBatchQty(5)" class="bg-teal-950 hover:bg-teal-900 text-teal-200 w-8 h-8 rounded-lg font-bold border border-teal-800/40">+</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="bg-[#061215] p-3 rounded-xl border border-teal-900/60 text-center">
+                        <span class="text-[10px] text-slate-400 uppercase font-semibold block">Total Venta</span>
+                        <span id="batch-total-sale" class="text-base font-black text-emerald-400">$0</span>
+                    </div>
+                    <div class="bg-[#061215] p-3 rounded-xl border border-teal-900/60 text-center">
+                        <span class="text-[10px] text-slate-400 uppercase font-semibold block">Costo Directo</span>
+                        <span id="batch-total-cost" class="text-base font-black text-rose-400">$0</span>
+                    </div>
+                    <div class="bg-[#061215] p-3 rounded-xl border border-teal-900/60 text-center">
+                        <span class="text-[10px] text-teal-300 uppercase font-semibold block">Ganancia Neta</span>
+                        <span id="batch-total-profit" class="text-base font-black text-teal-300">$0</span>
+                    </div>
+                </div>
+
+                <div class="bg-teal-950/40 border border-teal-800/40 rounded-xl p-3 flex items-center justify-between text-xs">
+                    <span class="text-teal-300"><i class="fa-solid fa-clock mr-1.5"></i> Tiempo de Impresión Continuo:</span>
+                    <span id="batch-total-time" class="font-bold text-teal-200">0 horas 0 min</span>
+                </div>
+
+                <div class="space-y-2">
+                    <h4 class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                        <i class="fa-solid fa-clipboard-list text-amber-400"></i> Insumos Totales Requeridos:
+                    </h4>
+                    <div id="batch-materials-list" class="bg-[#061215] p-3 rounded-xl border border-teal-900/60 text-xs space-y-1.5 font-mono text-slate-300 max-h-48 overflow-y-auto"></div>
+                </div>
+
+                <div class="pt-2 flex justify-end">
+                    <button onclick="closeBatchModal()" class="bg-teal-950 hover:bg-teal-900 text-teal-200 border border-teal-800/60 text-xs font-semibold px-4 py-2 rounded-xl">
+                        Cerrar
                     </button>
                 </div>
             </div>
+        </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                
-                <div class="lg:col-span-6 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 space-y-4 shadow-xl">
-                    <h3 class="text-sm font-bold text-white flex items-center gap-2 border-b border-teal-900/40 pb-2">
-                        <i class="fa-solid fa-boxes-packing text-amber-400"></i> Materiales & Insumos Base
-                    </h3>
-
-                    <div class="space-y-3 text-xs">
-                        <!-- Hoja 80g -->
-                        <div class="p-3 bg-[#061215] rounded-xl border border-teal-900/60 space-y-2">
-                            <div class="flex items-center justify-between gap-2">
-                                <span class="font-bold text-white">Hoja 80g</span>
-                                <span id="lbl-unit-paper" class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2 py-0.5 rounded-lg">$16.40 / hoja</span>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2 text-[11px]">
-                                <div>
-                                    <label class="text-slate-400 block mb-0.5">Precio Paquete ($)</label>
-                                    <input type="number" id="cfg-paper-price" oninput="saveMasterConfigFromUI()"
-                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none focus:border-teal-400">
-                                </div>
-                                <div>
-                                    <label class="text-slate-400 block mb-0.5">Cant. Hojas Paquete</label>
-                                    <input type="number" id="cfg-paper-packsheets" oninput="saveMasterConfigFromUI()"
-                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none focus:border-teal-400">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tinta Standard -->
-                        <div class="p-3 bg-[#061215] rounded-xl border border-teal-900/60 space-y-2">
-                            <div class="flex items-center justify-between gap-2">
-                                <span class="font-bold text-white">Tinta Estándar (4 Colores)</span>
-                                <span id="lbl-unit-ink-std" class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2 py-0.5 rounded-lg">$4.57 / pág</span>
-                            </div>
-                            <div class="grid grid-cols-3 gap-2 text-[11px]">
-                                <div>
-                                    <label class="text-slate-400 block mb-0.5">Precio Juego ($)</label>
-                                    <input type="number" id="cfg-ink-standard-price" oninput="saveMasterConfigFromUI()"
-                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
-                                </div>
-                                <div>
-                                    <label class="text-slate-400 block mb-0.5">Divisor Botellas</label>
-                                    <input type="number" id="cfg-ink-standard-bottles" oninput="saveMasterConfigFromUI()"
-                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
-                                </div>
-                                <div>
-                                    <label class="text-slate-400 block mb-0.5">Rendimiento Págs</label>
-                                    <input type="number" id="cfg-ink-standard-yield" oninput="saveMasterConfigFromUI()"
-                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tinta Epson Eternity -->
-                        <div class="p-3 bg-[#061215] rounded-xl border border-teal-900/60 space-y-2">
-                            <div class="flex items-center justify-between gap-2">
-                                <span class="font-bold text-white">Tinta Epson Eternity Pigmentada</span>
-                                <span id="lbl-unit-ink-ete" class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2 py-0.5 rounded-lg">$11.43 / pág</span>
-                            </div>
-                            <div class="grid grid-cols-3 gap-2 text-[11px]">
-                                <div>
-                                    <label class="text-slate-400 block mb-0.5">Precio Juego ($)</label>
-                                    <input type="number" id="cfg-ink-eternity-price" oninput="saveMasterConfigFromUI()"
-                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
-                                </div>
-                                <div>
-                                    <label class="text-slate-400 block mb-0.5">Divisor Botellas</label>
-                                    <input type="number" id="cfg-ink-eternity-bottles" oninput="saveMasterConfigFromUI()"
-                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
-                                </div>
-                                <div>
-                                    <label class="text-slate-400 block mb-0.5">Rendimiento Págs</label>
-                                    <input type="number" id="cfg-ink-eternity-yield" oninput="saveMasterConfigFromUI()"
-                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tapas Plásticas -->
-                        <div class="p-3 bg-[#061215] rounded-xl border border-teal-900/60 space-y-2">
-                            <div class="flex items-center justify-between gap-2">
-                                <span class="font-bold text-white">Tapas Plásticas A4</span>
-                                <span id="lbl-unit-tapas" class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2 py-0.5 rounded-lg">$600.00 / unidad</span>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2 text-[11px]">
-                                <div>
-                                    <label class="text-slate-400 block mb-0.5">Precio Paquete ($)</label>
-                                    <input type="number" id="cfg-tapas-price" oninput="saveMasterConfigFromUI()"
-                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
-                                </div>
-                                <div>
-                                    <label class="text-slate-400 block mb-0.5">Cant. Unidades Paquete</label>
-                                    <input type="number" id="cfg-tapas-packqty" oninput="saveMasterConfigFromUI()"
-                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Papel Fotográfico -->
-                        <div class="p-3 bg-[#061215] rounded-xl border border-teal-900/60 space-y-2">
-                            <div class="flex items-center justify-between gap-2">
-                                <span class="font-bold text-white">Papel Fotográfico 230g A4</span>
-                                <span id="lbl-unit-photo" class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2 py-0.5 rounded-lg">$135.00 / hoja</span>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2 text-[11px]">
-                                <div>
-                                    <label class="text-slate-400 block mb-0.5">Precio Paquete ($)</label>
-                                    <input type="number" id="cfg-photo-price" oninput="saveMasterConfigFromUI()"
-                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
-                                </div>
-                                <div>
-                                    <label class="text-slate-400 block mb-0.5">Cant. Hojas Paquete</label>
-                                    <input type="number" id="cfg-photo-packqty" oninput="saveMasterConfigFromUI()"
-                                        class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Laminado -->
-                        <div class="p-3 bg-[#061215] rounded-xl border border-teal-900/60 flex items-center justify-between gap-3">
-                            <div>
-                                <span class="font-bold text-white block">Laminado 35 micrones</span>
-                                <span class="text-[11px] text-slate-500">Costo Unitario Por Libro</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="text-slate-400">$</span>
-                                <input type="number" id="cfg-laminate-price" oninput="saveMasterConfigFromUI()"
-                                    class="w-24 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-emerald-400 font-bold focus:outline-none">
-                            </div>
-                        </div>
+        <div id="delete-modal" class="fixed inset-0 bg-[#061215]/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+            <div class="bg-[#0a1a1f] border border-rose-900/60 rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">¿Eliminar Libro?</h3>
+                        <p id="delete-modal-title" class="text-xs text-slate-400 truncate max-w-[200px]">Título del libro</p>
                     </div>
                 </div>
-
-                <!-- Tabla de Espirales -->
-                <div class="lg:col-span-6 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 space-y-4 shadow-xl">
-                    <div class="flex items-center justify-between border-b border-teal-900/40 pb-2">
-                        <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-ring text-teal-400"></i> Tabla de Espirales (Editables)
-                        </h3>
-                        <button onclick="addNewSpiralRow()" class="text-xs bg-teal-600/30 hover:bg-teal-600/50 text-teal-300 border border-teal-500/40 px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1">
-                            <i class="fa-solid fa-plus"></i> Agregar Espiral
-                        </button>
-                    </div>
-
-                    <div class="overflow-y-auto max-h-[420px] border border-teal-900/60 rounded-xl">
-                        <table class="w-full text-xs text-left">
-                            <thead class="bg-[#061215] text-teal-300/80 sticky top-0 border-b border-teal-900/60">
-                                <tr>
-                                    <th class="px-3 py-2">Diámetro (mm)</th>
-                                    <th class="px-3 py-2">Límite Máx. Hojas</th>
-                                    <th class="px-3 py-2 text-right">Precio Unid. ($)</th>
-                                    <th class="px-2 py-2 text-center">Acción</th>
-                                </tr>
-                            </thead>
-                            <tbody id="config-spirals-tbody" class="divide-y divide-teal-950/60"></tbody>
-                        </table>
-                    </div>
+                <p class="text-xs text-slate-300">Esta acción quitará el libro de la biblioteca en la nube para ambos usuarios.</p>
+                <div class="flex items-center justify-end gap-2 pt-2">
+                    <button onclick="closeDeleteModal()" class="px-3.5 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white bg-[#061215]">Cancelar</button>
+                    <button id="confirm-delete-btn" class="px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 shadow-md">Eliminar</button>
                 </div>
-
-                <!-- Amortizaciones y Servicios -->
-                <div class="lg:col-span-12 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 space-y-4 shadow-xl">
-                    <h3 class="text-sm font-bold text-white flex items-center gap-2 border-b border-teal-900/40 pb-2">
-                        <i class="fa-solid fa-gears text-teal-400"></i> Tiempos, Luz, Honorarios e Imprevistos Base
-                    </h3>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                        <!-- Canon Amort -->
-                        <div class="bg-[#061215] p-4 rounded-xl border border-teal-900/60 space-y-3">
-                            <h4 class="font-bold text-teal-300 border-b border-teal-900/60 pb-1 flex justify-between items-center">
-                                <span>Canon G3100 / G1110</span>
-                            </h4>
-                            
-                            <div class="flex justify-between items-center">
-                                <span class="text-slate-400">Velocidad:</span>
-                                <div class="flex items-center gap-1">
-                                    <input type="number" step="0.01" id="cfg-printer-canon-speed" oninput="saveMasterConfigFromUI()"
-                                        class="w-16 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-bold text-white">
-                                    <span class="text-slate-500">min/hoja</span>
-                                </div>
-                            </div>
-
-                            <div class="space-y-1 pt-1 border-t border-teal-950">
-                                <div class="flex justify-between items-center text-slate-300 font-semibold">
-                                    <span>Equipamiento Canon:</span>
-                                    <span id="lbl-amort-canon-eq" class="font-mono text-emerald-400">$1.4269/min</span>
-                                </div>
-                                <div class="grid grid-cols-2 gap-2 text-[11px]">
-                                    <div>
-                                        <label class="text-slate-500 block">Costo ($)</label>
-                                        <input type="number" id="cfg-canon-machine-cost" oninput="saveMasterConfigFromUI()"
-                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
-                                    </div>
-                                    <div>
-                                        <label class="text-slate-500 block">Min. Totales</label>
-                                        <input type="number" id="cfg-canon-machine-minutes" oninput="saveMasterConfigFromUI()"
-                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="space-y-1 pt-1 border-t border-teal-950">
-                                <div class="flex justify-between items-center text-slate-300 font-semibold">
-                                    <span>Cabezal:</span>
-                                    <span id="lbl-amort-canon-head" class="font-mono text-emerald-400">$1.5982/min</span>
-                                </div>
-                                <div class="grid grid-cols-2 gap-2 text-[11px]">
-                                    <div>
-                                        <label class="text-slate-500 block">Costo ($)</label>
-                                        <input type="number" id="cfg-canon-head-cost" oninput="saveMasterConfigFromUI()"
-                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
-                                    </div>
-                                    <div>
-                                        <label class="text-slate-500 block">Min. Totales</label>
-                                        <input type="number" id="cfg-canon-head-minutes" oninput="saveMasterConfigFromUI()"
-                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="space-y-1 pt-1 border-t border-teal-950">
-                                <div class="flex justify-between items-center text-slate-300 font-semibold">
-                                    <span>Almohadillas:</span>
-                                    <span id="lbl-amort-canon-pads" class="font-mono text-emerald-400">$0.0428/min</span>
-                                </div>
-                                <div class="grid grid-cols-2 gap-2 text-[11px]">
-                                    <div>
-                                        <label class="text-slate-500 block">Costo ($)</label>
-                                        <input type="number" id="cfg-canon-pads-cost" oninput="saveMasterConfigFromUI()"
-                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
-                                    </div>
-                                    <div>
-                                        <label class="text-slate-500 block">Min. Totales</label>
-                                        <input type="number" id="cfg-canon-pads-minutes" oninput="saveMasterConfigFromUI()"
-                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Epson Amort -->
-                        <div class="bg-[#061215] p-4 rounded-xl border border-teal-900/60 space-y-3">
-                            <h4 class="font-bold text-teal-300 border-b border-teal-900/60 pb-1">Epson L14150</h4>
-                            
-                            <div class="flex justify-between items-center">
-                                <span class="text-slate-400">Velocidad:</span>
-                                <div class="flex items-center gap-1">
-                                    <input type="number" step="0.01" id="cfg-printer-epson-speed" oninput="saveMasterConfigFromUI()"
-                                        class="w-16 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-bold text-white">
-                                    <span class="text-slate-500">min/hoja</span>
-                                </div>
-                            </div>
-
-                            <div class="space-y-1 pt-1 border-t border-teal-950">
-                                <div class="flex justify-between items-center text-slate-300 font-semibold">
-                                    <span>Equipamiento Epson:</span>
-                                    <span id="lbl-amort-epson-eq" class="font-mono text-emerald-400">$4.2808/min</span>
-                                </div>
-                                <div class="grid grid-cols-2 gap-2 text-[11px]">
-                                    <div>
-                                        <label class="text-slate-500 block">Costo ($)</label>
-                                        <input type="number" id="cfg-epson-machine-cost" oninput="saveMasterConfigFromUI()"
-                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
-                                    </div>
-                                    <div>
-                                        <label class="text-slate-500 block">Min. Totales</label>
-                                        <input type="number" id="cfg-epson-machine-minutes" oninput="saveMasterConfigFromUI()"
-                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="space-y-1 pt-1 border-t border-teal-950">
-                                <div class="flex justify-between items-center text-slate-300 font-semibold">
-                                    <span>Chip Mantenimiento:</span>
-                                    <span id="lbl-amort-epson-chip" class="font-mono text-emerald-400">$0.3653/min</span>
-                                </div>
-                                <div class="grid grid-cols-2 gap-2 text-[11px]">
-                                    <div>
-                                        <label class="text-slate-500 block">Costo ($)</label>
-                                        <input type="number" id="cfg-epson-chip-cost" oninput="saveMasterConfigFromUI()"
-                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
-                                    </div>
-                                    <div>
-                                        <label class="text-slate-500 block">Min. Totales</label>
-                                        <input type="number" id="cfg-epson-chip-minutes" oninput="saveMasterConfigFromUI()"
-                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Luz, Mano de Obra y % Imprevistos -->
-                        <div class="bg-[#061215] p-4 rounded-xl border border-teal-900/60 space-y-3">
-                            <h4 class="font-bold text-teal-300 border-b border-teal-900/60 pb-1">Luz, Honorarios e Imprevistos</h4>
-                            
-                            <div class="space-y-1">
-                                <div class="flex justify-between items-center text-slate-300 font-semibold">
-                                    <span>Servicio de Luz:</span>
-                                    <span id="lbl-amort-luz" class="font-mono text-emerald-400">$0.5787/min</span>
-                                </div>
-                                <div class="grid grid-cols-2 gap-2 text-[11px]">
-                                    <div>
-                                        <label class="text-slate-500 block">Factura Mensual ($)</label>
-                                        <input type="number" id="cfg-luz-monthly" oninput="saveMasterConfigFromUI()"
-                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
-                                    </div>
-                                    <div>
-                                        <label class="text-slate-500 block">Minutos Mes</label>
-                                        <input type="number" id="cfg-luz-minutes" oninput="saveMasterConfigFromUI()"
-                                            class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="space-y-1 pt-2 border-t border-teal-950">
-                                <div class="flex justify-between items-center text-slate-300 font-semibold">
-                                    <span>Valor Hora Impresión:</span>
-                                    <span id="lbl-min-labor" class="font-mono text-teal-300">$125.00/min</span>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-slate-400 text-xs">Precio por Hora ($):</span>
-                                    <input type="number" id="cfg-labor-print-hourly" oninput="saveMasterConfigFromUI()"
-                                        class="w-28 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-bold text-emerald-400">
-                                </div>
-                            </div>
-
-                            <div class="space-y-1 pt-2 border-t border-teal-950">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-amber-300 text-xs font-bold">% Imprevistos Base:</span>
-                                    <div class="flex items-center gap-1">
-                                        <input type="number" id="cfg-contingency-default-pct" oninput="saveMasterConfigFromUI()"
-                                            class="w-20 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-center font-bold text-amber-300">
-                                        <span class="text-amber-400">%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Modal Tirada por Cantidad -->
-    <div id="batch-modal" class="fixed inset-0 bg-[#061215]/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-[#0a1a1f] border border-teal-900/60 rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-5 relative">
-            <button onclick="closeBatchModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-
-            <div class="flex items-center gap-3 border-b border-teal-900/60 pb-3">
-                <div class="w-10 h-10 rounded-xl bg-teal-500/20 border border-teal-500/30 text-teal-300 flex items-center justify-center font-bold text-lg">
-                    <i class="fa-solid fa-layer-group"></i>
-                </div>
-                <div>
-                    <h3 id="batch-modal-title" class="text-base font-bold text-white">Simular Tirada INPERU</h3>
-                    <p class="text-xs text-teal-200/60">Calcula costos totales, ganancias y lista de insumos requeridos</p>
-                </div>
-            </div>
-
-            <div class="bg-[#061215] p-4 rounded-xl border border-teal-900/60 flex items-center justify-between">
-                <label class="text-xs font-semibold text-slate-300">Cantidad de Ejemplares:</label>
-                <div class="flex items-center gap-2">
-                    <button onclick="changeBatchQty(-5)" class="bg-teal-950 hover:bg-teal-900 text-teal-200 w-8 h-8 rounded-lg font-bold border border-teal-800/40">-</button>
-                    <input type="number" id="batch-qty-input" value="20" min="1" oninput="recalculateBatchModal()"
-                        class="w-20 bg-[#0a1a1f] border border-teal-700/80 rounded-lg py-1 px-2 text-center font-black text-emerald-400 focus:outline-none">
-                    <button onclick="changeBatchQty(5)" class="bg-teal-950 hover:bg-teal-900 text-teal-200 w-8 h-8 rounded-lg font-bold border border-teal-800/40">+</button>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-3 gap-3">
-                <div class="bg-[#061215] p-3 rounded-xl border border-teal-900/60 text-center">
-                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">Total Venta</span>
-                    <span id="batch-total-sale" class="text-base font-black text-emerald-400">$0</span>
-                </div>
-                <div class="bg-[#061215] p-3 rounded-xl border border-teal-900/60 text-center">
-                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">Costo Directo</span>
-                    <span id="batch-total-cost" class="text-base font-black text-rose-400">$0</span>
-                </div>
-                <div class="bg-[#061215] p-3 rounded-xl border border-teal-900/60 text-center">
-                    <span class="text-[10px] text-teal-300 uppercase font-semibold block">Ganancia Neta</span>
-                    <span id="batch-total-profit" class="text-base font-black text-teal-300">$0</span>
-                </div>
-            </div>
-
-            <div class="bg-teal-950/40 border border-teal-800/40 rounded-xl p-3 flex items-center justify-between text-xs">
-                <span class="text-teal-300"><i class="fa-solid fa-clock mr-1.5"></i> Tiempo de Impresión Continuo:</span>
-                <span id="batch-total-time" class="font-bold text-teal-200">0 horas 0 min</span>
-            </div>
-
-            <div class="space-y-2">
-                <h4 class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-                    <i class="fa-solid fa-clipboard-list text-amber-400"></i> Insumos Totales Requeridos:
-                </h4>
-                <div id="batch-materials-list" class="bg-[#061215] p-3 rounded-xl border border-teal-900/60 text-xs space-y-1.5 font-mono text-slate-300 max-h-48 overflow-y-auto"></div>
-            </div>
-
-            <div class="pt-2 flex justify-end">
-                <button onclick="closeBatchModal()" class="bg-teal-950 hover:bg-teal-900 text-teal-200 border border-teal-800/60 text-xs font-semibold px-4 py-2 rounded-xl">
-                    Cerrar
-                </button>
             </div>
         </div>
-    </div>
 
-    <!-- Modal Confirmar Eliminación -->
-    <div id="delete-modal" class="fixed inset-0 bg-[#061215]/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-[#0a1a1f] border border-rose-900/60 rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-lg">
-                    <i class="fa-solid fa-trash-can"></i>
-                </div>
-                <div>
-                    <h3 class="text-sm font-bold text-white">¿Eliminar Libro?</h3>
-                    <p id="delete-modal-title" class="text-xs text-slate-400 truncate max-w-[200px]">Título del libro</p>
-                </div>
-            </div>
-            <p class="text-xs text-slate-300">Esta acción quitará el libro de la biblioteca en la nube para ambos usuarios.</p>
-            <div class="flex items-center justify-end gap-2 pt-2">
-                <button onclick="closeDeleteModal()" class="px-3.5 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white bg-[#061215]">Cancelar</button>
-                <button id="confirm-delete-btn" class="px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 shadow-md">Eliminar</button>
-            </div>
-        </div>
     </div>
 
     <!-- Firebase App Logic -->
     <script>
-        // Credenciales oficiales de Firebase de INPERU
         const firebaseConfig = {
             apiKey: "AIzaSyBMqyAp0dQ3vM0Z7ZZp2p8Htixcjx5HyVo",
             authDomain: "inperu-cotizador.firebaseapp.com",
@@ -873,9 +867,20 @@
             appId: "1:76240882727:web:6e73ee4f7228b77e789202"
         };
 
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+        let firebaseInitialized = false;
+        let auth = null;
+        let db = null;
+
+        try {
+            if (typeof firebase !== 'undefined') {
+                firebase.initializeApp(firebaseConfig);
+                auth = firebase.auth();
+                db = firebase.firestore();
+                firebaseInitialized = true;
+            }
+        } catch (err) {
+            console.warn("Firebase no se pudo conectar en este entorno de previsualización:", err);
+        }
 
         const DEFAULT_CONFIG = {
             contingencyPercent: 15,
@@ -961,76 +966,160 @@
         ];
 
         let masterConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
-        let catalog = [];
+        let catalog = JSON.parse(JSON.stringify(DEFAULT_CATALOG));
         let currentCoverBase64 = null;
         let breakdownManualQty = null;
         let activeBatchBookId = null;
         let pendingDeleteBookId = null;
+        let firebaseRealtimeUnsubscribers = [];
+
+        function deepMergeConfig(defaultValue, savedValue) {
+            if (Array.isArray(defaultValue)) {
+                return Array.isArray(savedValue) && savedValue.length
+                    ? JSON.parse(JSON.stringify(savedValue))
+                    : JSON.parse(JSON.stringify(defaultValue));
+            }
+
+            if (defaultValue && typeof defaultValue === 'object') {
+                const savedObject = savedValue && typeof savedValue === 'object' ? savedValue : {};
+                return Object.keys(defaultValue).reduce((merged, key) => {
+                    merged[key] = deepMergeConfig(defaultValue[key], savedObject[key]);
+                    return merged;
+                }, {});
+            }
+
+            return savedValue === undefined || savedValue === null ? defaultValue : savedValue;
+        }
+
+        function setLoginPending(isPending) {
+            const submitBtn = document.getElementById('auth-submit-btn');
+            if (!submitBtn) return;
+            submitBtn.disabled = isPending;
+            submitBtn.innerHTML = isPending
+                ? `<i class="fa-solid fa-circle-notch fa-spin"></i> Conectando...`
+                : `<i class="fa-solid fa-arrow-right-to-bracket"></i><span>Ingresar al Sistema</span>`;
+        }
+
+        function stopFirebaseRealtimeSync() {
+            firebaseRealtimeUnsubscribers.forEach(unsubscribe => unsubscribe());
+            firebaseRealtimeUnsubscribers = [];
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, character => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            })[character]);
+        }
+
+        function getSafeImageSource(value) {
+            const source = String(value || '');
+            return /^(?:data:image\/(?:png|jpe?g|webp|gif);base64,|https:\/\/)/i.test(source) ? source : '';
+        }
 
         // Listener de Autenticación
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                document.getElementById('auth-screen').classList.add('hidden');
-                initFirebaseRealtimeSync();
-            } else {
-                document.getElementById('auth-screen').classList.remove('hidden');
-            }
-        });
+        if (firebaseInitialized && auth) {
+            auth.onAuthStateChanged(user => {
+                const authScreen = document.getElementById('auth-screen');
+                const appMainContent = document.getElementById('app-main-content');
+
+                if (user) {
+                    authScreen.classList.add('hidden');
+                    appMainContent.classList.remove('hidden');
+                    initFirebaseRealtimeSync();
+                } else {
+                    stopFirebaseRealtimeSync();
+                    authScreen.classList.remove('hidden');
+                    appMainContent.classList.add('hidden');
+                    setLoginPending(false);
+                }
+            });
+        }
 
         async function handleLogin(e) {
             e.preventDefault();
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value;
             const errorDiv = document.getElementById('auth-error');
-            const submitBtn = document.getElementById('auth-submit-btn');
 
             errorDiv.classList.add('hidden');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Conectando...`;
+            setLoginPending(true);
 
-            try {
-                await auth.signInWithEmailAndPassword(email, password);
-            } catch (err) {
-                errorDiv.textContent = "Usuario o contraseña incorrectos. Verifica en la consola de Firebase.";
-                errorDiv.classList.remove('hidden');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = `<i class="fa-solid fa-arrow-right-to-bracket"></i> Iniciar Sesión`;
+            if (firebaseInitialized && auth) {
+                try {
+                    await auth.signInWithEmailAndPassword(email, password);
+                } catch (err) {
+                    let msg = "Usuario o contraseña incorrectos.";
+                    if (err.code === 'auth/user-not-found') msg = "El usuario no existe en Firebase.";
+                    else if (err.code === 'auth/wrong-password') msg = "Contraseña incorrecta.";
+                    else if (err.code === 'auth/invalid-email') msg = "Correo electrónico no válido.";
+                    
+                    errorDiv.textContent = msg;
+                    errorDiv.classList.remove('hidden');
+                } finally {
+                    setLoginPending(false);
+                }
+            } else {
+                // Modo fallback si Firebase no está disponible en la vista previa
+                bypassLoginForPreview();
+                setLoginPending(false);
             }
         }
 
+        function bypassLoginForPreview() {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('app-main-content').classList.remove('hidden');
+            const cloudBadge = document.getElementById('cloud-status-badge');
+            if (cloudBadge) {
+                cloudBadge.innerHTML = `<i class="fa-solid fa-laptop text-[9px]"></i> Modo Local`;
+                cloudBadge.className = `inline-flex items-center gap-1.5 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-950/80 text-amber-300 border border-amber-700/50`;
+            }
+            renderConfigToUI();
+            calculateQuote();
+            renderCatalog();
+        }
+
         function handleLogout() {
-            auth.signOut();
+            if (firebaseInitialized && auth) {
+                auth.signOut();
+            } else {
+                document.getElementById('auth-screen').classList.remove('hidden');
+                document.getElementById('app-main-content').classList.add('hidden');
+            }
         }
 
         function initFirebaseRealtimeSync() {
-            // Sincronizar Configuración de Costos Base en Tiempo Real
-            db.collection('config').doc('master').onSnapshot(docSnap => {
+            if (!db || firebaseRealtimeUnsubscribers.length) return;
+            const unsubscribeConfig = db.collection('config').doc('master').onSnapshot(docSnap => {
                 if (docSnap.exists) {
-                    masterConfig = { ...DEFAULT_CONFIG, ...docSnap.data() };
+                    masterConfig = deepMergeConfig(DEFAULT_CONFIG, docSnap.data());
                 } else {
                     db.collection('config').doc('master').set(DEFAULT_CONFIG);
                 }
                 renderConfigToUI();
                 calculateQuote();
                 renderCatalog();
-            });
+            }, err => console.warn("Error leyendo config de Firebase:", err));
 
-            // Sincronizar Catálogo de Libros en Tiempo Real
-            db.collection('catalog').onSnapshot(snapshot => {
+            const unsubscribeCatalog = db.collection('catalog').onSnapshot(snapshot => {
                 if (!snapshot.empty) {
                     catalog = [];
                     snapshot.forEach(docSnap => {
                         catalog.push({ id: docSnap.id, ...docSnap.data() });
                     });
                 } else {
-                    // Cargar catálogo inicial de muestra si está vacío
                     DEFAULT_CATALOG.forEach(b => {
                         db.collection('catalog').doc(b.id).set(b);
                     });
                 }
                 document.getElementById('catalog-count').textContent = catalog.length;
                 renderCatalog();
-            });
+            }, err => console.warn("Error leyendo catálogo de Firebase:", err));
+
+            firebaseRealtimeUnsubscribers = [unsubscribeConfig, unsubscribeCatalog];
         }
 
         function getUnitPrices() {
@@ -1184,7 +1273,9 @@
         }
 
         function calculateQuote() {
-            const pages = document.getElementById('quote-pages').value;
+            const pages = document.getElementById('quote-pages')?.value;
+            if (!pages) return;
+
             const printMode = document.getElementById('quote-print-mode').value;
             const format = document.getElementById('quote-format').value;
             const printerKey = document.getElementById('quote-printer').value;
@@ -1398,13 +1489,24 @@
                 targetPrice: parseFloat(document.getElementById('quote-custom-price').value) || 0
             };
 
-            await db.collection('catalog').doc(newBook.id).set(newBook);
+            try {
+                if (db) {
+                    await db.collection('catalog').doc(newBook.id).set(newBook);
+                } else {
+                    catalog.push(newBook);
+                }
+            } catch (err) {
+                console.warn('No se pudo guardar el libro en Firebase:', err);
+                showToastMessage('No se pudo guardar el libro. Revisa la conexión e inténtalo nuevamente.');
+                return;
+            }
             switchTab('catalog');
-            showToastMessage('¡Libro guardado y sincronizado en la nube!');
+            showToastMessage('¡Libro guardado en la biblioteca!');
         }
 
         function renderCatalog() {
             const grid = document.getElementById('catalog-grid');
+            if (!grid) return;
             const searchVal = (document.getElementById('catalog-search')?.value || '').toLowerCase();
             document.getElementById('catalog-count').textContent = catalog.length;
 
@@ -1423,17 +1525,24 @@
 
             grid.innerHTML = filtered.map(book => {
                 const metrics = calculateBookMetrics(book.pages, book.printMode, book.format, book.printerKey, book.inkType, book.colorMode || 'bw', book.targetPrice, null, masterConfig.contingencyPercent, 1);
+                const safeTitle = escapeHtml(book.title || 'Sin título');
+                const safeDescription = escapeHtml(book.description || 'Sin descripción');
+                const safeDeliverables = escapeHtml(book.deliverables || '');
+                const safeFormat = escapeHtml(book.format || '');
+                const safePages = escapeHtml(book.pages || '');
+                const safeCoverImage = getSafeImageSource(book.coverImage);
+                const encodedBookId = encodeURIComponent(String(book.id)).replace(/'/g, '%27');
 
                 return `
                     <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl overflow-hidden shadow-xl hover:border-teal-700/60 transition-all flex flex-col justify-between">
                         <div>
                             <div class="h-36 bg-[#061215] border-b border-teal-900/60 relative flex items-center justify-center overflow-hidden">
-                                ${book.coverImage ? `
-                                    <img src="${book.coverImage}" class="w-full h-full object-cover">
+                                ${safeCoverImage ? `
+                                    <img src="${escapeHtml(safeCoverImage)}" class="w-full h-full object-cover" alt="Portada de ${safeTitle}">
                                 ` : `
                                     <div class="text-center p-4">
                                         <i class="fa-solid fa-book text-3xl text-teal-500/30 mb-1"></i>
-                                        <span class="text-[11px] text-slate-600 block uppercase font-mono">${book.format} • ${book.pages} págs</span>
+                                        <span class="text-[11px] text-slate-600 block uppercase font-mono">${safeFormat} • ${safePages} págs</span>
                                     </div>
                                 `}
                                 <div class="absolute top-2 right-2 bg-[#061215]/90 backdrop-blur-md px-2.5 py-1 rounded-lg text-[10px] font-bold text-teal-300 border border-teal-800/60">
@@ -1443,12 +1552,12 @@
 
                             <div class="p-4 space-y-3">
                                 <div>
-                                    <h3 class="font-bold text-white text-sm line-clamp-1">${book.title}</h3>
-                                    <p class="text-xs text-slate-400 line-clamp-2 mt-0.5">${book.description || 'Sin descripción'}</p>
+                                    <h3 class="font-bold text-white text-sm line-clamp-1">${safeTitle}</h3>
+                                    <p class="text-xs text-slate-400 line-clamp-2 mt-0.5">${safeDescription}</p>
                                     ${book.deliverables ? `
                                         <div class="mt-2 text-[11px] bg-[#061215] p-2 rounded-lg border border-teal-900/60 text-teal-300 font-medium flex items-start gap-1.5">
                                             <i class="fa-solid fa-box-open text-teal-400 mt-0.5 shrink-0"></i>
-                                            <span class="line-clamp-2">${book.deliverables}</span>
+                                            <span class="line-clamp-2">${safeDeliverables}</span>
                                         </div>
                                     ` : ''}
                                 </div>
@@ -1471,15 +1580,15 @@
                         </div>
 
                         <div class="p-4 pt-0 space-y-2">
-                            <button onclick="openBatchModal('${book.id}')" class="w-full bg-teal-600/20 hover:bg-teal-600/30 text-teal-300 border border-teal-500/30 font-semibold text-xs py-2 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
+                            <button onclick="openBatchModal(decodeURIComponent('${encodedBookId}'))" class="w-full bg-teal-600/20 hover:bg-teal-600/30 text-teal-300 border border-teal-500/30 font-semibold text-xs py-2 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-layer-group"></i>
                                 <span>Simular Tirada INPERU</span>
                             </button>
                             <div class="flex items-center gap-2">
-                                <button onclick="loadBookIntoQuoter('${book.id}')" class="flex-1 bg-[#061215] hover:bg-teal-950 text-slate-200 text-[11px] font-medium py-1.5 rounded-lg border border-teal-900/60 transition-colors">
+                                <button onclick="loadBookIntoQuoter(decodeURIComponent('${encodedBookId}'))" class="flex-1 bg-[#061215] hover:bg-teal-950 text-slate-200 text-[11px] font-medium py-1.5 rounded-lg border border-teal-900/60 transition-colors">
                                     <i class="fa-solid fa-pen-to-square mr-1"></i> Cargar
                                 </button>
-                                <button onclick="promptDeleteBook('${book.id}')" class="text-slate-500 hover:text-red-400 p-1.5 text-xs transition-colors">
+                                <button onclick="promptDeleteBook(decodeURIComponent('${encodedBookId}'))" class="text-slate-500 hover:text-red-400 p-1.5 text-xs transition-colors">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </div>
@@ -1505,9 +1614,20 @@
         document.getElementById('confirm-delete-btn').addEventListener('click', async () => {
             if (!pendingDeleteBookId) return;
             const id = pendingDeleteBookId;
-            await db.collection('catalog').doc(id).delete();
+            try {
+                if (db) {
+                    await db.collection('catalog').doc(id).delete();
+                } else {
+                    catalog = catalog.filter(b => b.id !== id);
+                }
+            } catch (err) {
+                console.warn('No se pudo eliminar el libro de Firebase:', err);
+                showToastMessage('No se pudo eliminar el libro. Revisa la conexión e inténtalo nuevamente.');
+                return;
+            }
             closeDeleteModal();
-            showToastMessage('Libro eliminado en la nube.');
+            renderCatalog();
+            showToastMessage('Libro eliminado.');
         });
 
         function loadBookIntoQuoter(id) {
@@ -1525,9 +1645,10 @@
             document.getElementById('quote-deliverables').value = book.deliverables || '';
             document.getElementById('quote-custom-price').value = book.targetPrice || '';
             
-            if (book.coverImage) {
-                currentCoverBase64 = book.coverImage;
-                document.getElementById('cover-preview-container').innerHTML = `<img src="${book.coverImage}" class="w-full h-full object-cover">`;
+            const safeCoverImage = getSafeImageSource(book.coverImage);
+            if (safeCoverImage) {
+                currentCoverBase64 = safeCoverImage;
+                document.getElementById('cover-preview-container').innerHTML = `<img src="${escapeHtml(safeCoverImage)}" class="w-full h-full object-cover" alt="Portada seleccionada">`;
             } else {
                 resetCoverImage();
             }
@@ -1586,6 +1707,7 @@
         }
 
         function renderConfigToUI() {
+            if (!document.getElementById('cfg-paper-price')) return;
             document.getElementById('cfg-paper-price').value = masterConfig.paper.packPrice;
             document.getElementById('cfg-paper-packsheets').value = masterConfig.paper.packSheets || 500;
 
@@ -1757,7 +1879,9 @@
         }
 
         function saveMasterConfigToStorageAndRecalc() {
-            db.collection('config').doc('master').set(masterConfig).catch(e => console.warn("Error guardando en Firestore:", e));
+            if (db) {
+                db.collection('config').doc('master').set(masterConfig).catch(e => console.warn("Error guardando en Firestore:", e));
+            }
             calculateQuote();
             renderCatalog();
         }
@@ -1804,7 +1928,15 @@
         window.onload = function() {
             renderConfigToUI();
             calculateQuote();
+            renderCatalog();
         };
+
+        if ('serviceWorker' in navigator && window.isSecureContext) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .catch(err => console.warn('No se pudo registrar el modo instalable:', err));
+            });
+        }
     </script>
 </body>
 </html>

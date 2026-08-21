@@ -1,0 +1,24 @@
+INPERU Producciones - archivos para publicar
+================================================
+
+Sube juntos, conservando esta estructura:
+
+  index.html
+  manifest.webmanifest
+  service-worker.js
+  icons/
+    apple-touch-icon.png
+    favicon-32.png
+    icon-192.png
+    icon-512.png
+    icon-maskable-192.png
+    icon-maskable-512.png
+
+Importante:
+
+- Publica index.html como archivo principal del sitio.
+- El sitio debe abrirse por HTTPS para que Chrome permita instalarlo como app.
+- No cambies las rutas ni separes la carpeta icons de los otros archivos.
+- La configuración y las credenciales existentes de Firebase se conservaron sin cambios.
+- Después de subir, abre el sitio una vez con conexión para que los recursos externos
+  queden disponibles en la caché de la app.
