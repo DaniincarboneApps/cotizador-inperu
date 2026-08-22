@@ -10,6 +10,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="INPERU">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" type="image/png" sizes="48x48" href="./icons/favicon-48.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -54,11 +57,11 @@
             #app-nav {
                 position: fixed; z-index: 60; left: .75rem; right: .75rem;
                 bottom: calc(.65rem + env(safe-area-inset-bottom));
-                display: grid; grid-template-columns: repeat(3, minmax(0,1fr));
+                display: grid; grid-template-columns: repeat(4, minmax(0,1fr));
                 box-shadow: 0 18px 55px rgba(0,0,0,.6); backdrop-filter: blur(18px);
             }
-            #app-nav button { min-height: 3.25rem; padding: .5rem .35rem; justify-content: center; }
-            #app-nav button > span { display: block; font-size: .65rem; }
+            #app-nav button { min-width: 0; min-height: 3.25rem; padding: .45rem .2rem; justify-content: center; gap: .25rem; flex-direction: column; }
+            #app-nav button > span { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .58rem; }
         }
     </style>
 
@@ -189,6 +192,10 @@
                         </div>
                     </div>
                 </div>
+
+                <button id="install-app-btn" type="button" onclick="installApp()" class="hidden ml-auto sm:ml-0 bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold px-3 py-2 rounded-xl shadow-lg items-center gap-2 shrink-0">
+                    <i class="fa-solid fa-download"></i><span class="hidden sm:inline">Instalar</span>
+                </button>
 
                 <nav id="app-nav" class="flex items-center gap-1 bg-[#061215]/80 p-1.5 rounded-xl border border-teal-900/50 max-w-full overflow-x-auto">
                     <button onclick="switchTab('quoter')" id="tab-btn-quoter" class="px-3.5 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 bg-[#28838d] text-white shadow-md shadow-teal-900/40">
@@ -2202,6 +2209,38 @@
             renderCatalog();
             renderSales();
         };
+
+        let deferredInstallPrompt = null;
+        window.addEventListener('beforeinstallprompt', event => {
+            event.preventDefault();
+            deferredInstallPrompt = event;
+            const installButton = document.getElementById('install-app-btn');
+            installButton.classList.remove('hidden');
+            installButton.classList.add('flex');
+        });
+
+        async function installApp() {
+            if (!deferredInstallPrompt) {
+                showToastMessage('En Chrome, abre el menú y elige “Instalar aplicación” o “Agregar a pantalla principal”.');
+                return;
+            }
+            deferredInstallPrompt.prompt();
+            await deferredInstallPrompt.userChoice;
+            deferredInstallPrompt = null;
+            document.getElementById('install-app-btn').classList.add('hidden');
+        }
+
+        window.addEventListener('appinstalled', () => {
+            deferredInstallPrompt = null;
+            document.getElementById('install-app-btn').classList.add('hidden');
+            showToastMessage('INPERU se instaló correctamente.');
+        });
+
+        if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js').catch(error => console.warn('No se pudo registrar el modo instalable:', error));
+            });
+        }
     </script>
 </body>
 </html>
