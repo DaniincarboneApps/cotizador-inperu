@@ -1285,7 +1285,10 @@
             const autoSheets = printMode === 'doble' ? Math.ceil(numPages / 2) : numPages;
             const printer = masterConfig.printers[printerKey] || masterConfig.printers.canon;
             
-            const autoMinutes = autoSheets * printer.speedMinPerPage;
+            // La impresora consume tinta y tiempo por cada cara/página impresa.
+            // En doble faz se reduce el papel físico, no la cantidad de impresiones.
+            const printedPages = numPages;
+            const autoMinutes = printedPages * printer.speedMinPerPage;
             const units = getUnitPrices();
             let baseInkRate = inkType === 'eternity' ? units.inkEteUnitPrice : units.inkStdUnitPrice;
             const activeInkUnitPrice = colorMode === 'bw' ? (baseInkRate / 2) : baseInkRate;
@@ -1296,11 +1299,11 @@
 
             const q = {
                 paperSheets: (manualQty && manualQty.paperSheets !== undefined) ? parseFloat(manualQty.paperSheets) : paperSheetsCount,
-                inkPages: (manualQty && manualQty.inkPages !== undefined) ? parseFloat(manualQty.inkPages) : autoSheets,
+                inkPages: (manualQty && manualQty.inkPages !== undefined) ? parseFloat(manualQty.inkPages) : printedPages,
                 tapasQty: (manualQty && manualQty.tapasQty !== undefined) ? parseFloat(manualQty.tapasQty) : 0,
                 photoQty: (manualQty && manualQty.photoQty !== undefined) ? parseFloat(manualQty.photoQty) : photoCount,
                 spiralQty: (manualQty && manualQty.spiralQty !== undefined) ? parseFloat(manualQty.spiralQty) : 1,
-                laminateQty: (manualQty && manualQty.laminateQty !== undefined) ? parseFloat(manualQty.laminateQty) : 1,
+                laminateQty: (manualQty && manualQty.laminateQty !== undefined) ? parseFloat(manualQty.laminateQty) : (format === 'A4' ? 2 : 1),
                 printerMin: (manualQty && manualQty.printerMin !== undefined) ? parseFloat(manualQty.printerMin) : autoMinutes,
                 luzMin: (manualQty && manualQty.luzMin !== undefined) ? parseFloat(manualQty.luzMin) : autoMinutes,
                 laborMin: (manualQty && manualQty.laborMin !== undefined) ? parseFloat(manualQty.laborMin) : autoMinutes
@@ -1375,10 +1378,10 @@
         function updateManualQuantityFromTable(fieldKey, newValue) {
             if (!breakdownManualQty) breakdownManualQty = {};
             breakdownManualQty[fieldKey] = Math.max(0, parseFloat(newValue) || 0);
-            calculateQuote();
+            calculateQuote(true);
         }
 
-        function calculateQuote() {
+        function calculateQuote(forceBreakdownRender = false) {
             const pages = document.getElementById('quote-pages')?.value;
             if (!pages) return;
 
@@ -1450,12 +1453,12 @@
 
             const breakdownTableBody = document.getElementById('quote-breakdown-tbody');
             const isEditingBreakdown = breakdownTableBody && breakdownTableBody.contains(document.activeElement);
-            if (!isEditingBreakdown) breakdownTableBody.innerHTML = `
+            if (forceBreakdownRender || !isEditingBreakdown) breakdownTableBody.innerHTML = `
                 <tr class="hover:bg-teal-950/30">
                     <td class="px-3 py-1.5 font-medium text-slate-200">Hoja 80g (A4 equivalentes)</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.units.paperUnitPrice.toFixed(2)}</td>
                     <td class="px-3 py-1.5 text-center">
-                        <input type="number" step="0.5" value="${res.q.paperSheets}" oninput="updateManualQuantityFromTable('paperSheets', this.value)"
+                        <input type="number" step="0.5" value="${res.q.paperSheets}" onchange="updateManualQuantityFromTable('paperSheets', this.value)"
                             class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
                     </td>
                     <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.paperCost.toFixed(2)}</td>
@@ -1464,7 +1467,7 @@
                     <td class="px-3 py-1.5 font-medium text-slate-200">Tinta (${inkType === 'eternity' ? 'Eternity' : 'Estándar'} ${colorMode === 'bw' ? 'B&N' : 'Color'})</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.activeInkUnitPrice.toFixed(2)}</td>
                     <td class="px-3 py-1.5 text-center">
-                        <input type="number" step="1" value="${res.q.inkPages}" oninput="updateManualQuantityFromTable('inkPages', this.value)"
+                        <input type="number" step="1" value="${res.q.inkPages}" onchange="updateManualQuantityFromTable('inkPages', this.value)"
                             class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
                     </td>
                     <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.inkCost.toFixed(2)}</td>
@@ -1473,7 +1476,7 @@
                     <td class="px-3 py-1.5 font-medium text-slate-200">Tapas Plásticas (${format})</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${(res.units.tapasUnitPrice / (format === 'A5' ? 4 : 2)).toFixed(2)}</td>
                     <td class="px-3 py-1.5 text-center">
-                        <input type="number" step="1" value="${res.q.tapasQty}" oninput="updateManualQuantityFromTable('tapasQty', this.value)"
+                        <input type="number" step="1" value="${res.q.tapasQty}" onchange="updateManualQuantityFromTable('tapasQty', this.value)"
                             class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
                     </td>
                     <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.tapasCost.toFixed(2)}</td>
@@ -1482,7 +1485,7 @@
                     <td class="px-3 py-1.5 font-medium text-slate-200">Papel Fotográfico 230g (${format})</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.units.photoUnitPrice.toFixed(2)}</td>
                     <td class="px-3 py-1.5 text-center">
-                        <input type="number" step="1" value="${res.q.photoQty}" oninput="updateManualQuantityFromTable('photoQty', this.value)"
+                        <input type="number" step="1" value="${res.q.photoQty}" onchange="updateManualQuantityFromTable('photoQty', this.value)"
                             class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
                     </td>
                     <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.photoCost.toFixed(2)}</td>
@@ -1491,7 +1494,7 @@
                     <td class="px-3 py-1.5 font-medium text-slate-200">Espiral Plástico (${res.spiralObj.mm}mm)</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.spiralObj.unitPrice.toFixed(2)}</td>
                     <td class="px-3 py-1.5 text-center">
-                        <input type="number" step="1" value="${res.q.spiralQty}" oninput="updateManualQuantityFromTable('spiralQty', this.value)"
+                        <input type="number" step="1" value="${res.q.spiralQty}" onchange="updateManualQuantityFromTable('spiralQty', this.value)"
                             class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
                     </td>
                     <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.spiralCost.toFixed(2)}</td>
@@ -1500,7 +1503,7 @@
                     <td class="px-3 py-1.5 font-medium text-slate-200">Laminado 35u</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.units.laminateUnitPrice.toFixed(2)}</td>
                     <td class="px-3 py-1.5 text-center">
-                        <input type="number" step="1" value="${res.q.laminateQty}" oninput="updateManualQuantityFromTable('laminateQty', this.value)"
+                        <input type="number" step="1" value="${res.q.laminateQty}" onchange="updateManualQuantityFromTable('laminateQty', this.value)"
                             class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
                     </td>
                     <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.laminateCost.toFixed(2)}</td>
@@ -1509,7 +1512,7 @@
                     <td class="px-3 py-1.5 font-medium text-slate-200">Amortización Impresora (${res.printerName})</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${(res.printerAmort / Math.max(0.001, res.q.printerMin)).toFixed(2)}/m</td>
                     <td class="px-3 py-1.5 text-center">
-                        <input type="number" step="0.1" value="${res.q.printerMin.toFixed(1)}" oninput="updateManualQuantityFromTable('printerMin', this.value)"
+                        <input type="number" step="0.1" value="${res.q.printerMin.toFixed(1)}" onchange="updateManualQuantityFromTable('printerMin', this.value)"
                             class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
                     </td>
                     <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.printerAmort.toFixed(2)}</td>
@@ -1531,7 +1534,7 @@
                     <td class="px-3 py-1.5 font-medium text-slate-200">Servicio de Luz</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.units.luzMinRate.toFixed(2)}/m</td>
                     <td class="px-3 py-1.5 text-center">
-                        <input type="number" step="0.1" value="${res.q.luzMin.toFixed(1)}" oninput="updateManualQuantityFromTable('luzMin', this.value)"
+                        <input type="number" step="0.1" value="${res.q.luzMin.toFixed(1)}" onchange="updateManualQuantityFromTable('luzMin', this.value)"
                             class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
                     </td>
                     <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.luzCost.toFixed(2)}</td>
@@ -1540,7 +1543,7 @@
                     <td class="px-3 py-1.5 font-medium text-teal-300">Honorarios Impresión (Ganancia)</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.units.laborMinRate.toFixed(2)}/m</td>
                     <td class="px-3 py-1.5 text-center">
-                        <input type="number" step="0.1" value="${res.q.laborMin.toFixed(1)}" oninput="updateManualQuantityFromTable('laborMin', this.value)"
+                        <input type="number" step="0.1" value="${res.q.laborMin.toFixed(1)}" onchange="updateManualQuantityFromTable('laborMin', this.value)"
                             class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
                     </td>
                     <td class="px-3 py-1.5 text-right font-mono text-teal-300 font-bold">$${res.laborCost.toFixed(2)}</td>
@@ -2201,4 +2204,5 @@
     </script>
 </body>
 </html>
+
 
