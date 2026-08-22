@@ -1285,15 +1285,16 @@
             const autoSheets = printMode === 'doble' ? Math.ceil(numPages / 2) : numPages;
             const printer = masterConfig.printers[printerKey] || masterConfig.printers.canon;
             
-            // La impresora consume tinta y tiempo por cada cara/página impresa.
-            // En doble faz se reduce el papel físico, no la cantidad de impresiones.
-            const printedPages = numPages;
+            // La impresora consume tinta y tiempo por cada cara A4 impresa.
+            // En A5 caben dos páginas del libro por cada cara A4; en A4 cabe una.
+            // El doble faz reduce las hojas físicas, no la cantidad de caras impresas.
+            const printedPages = format === 'A5' ? Math.ceil(numPages / 2) : numPages;
             const autoMinutes = printedPages * printer.speedMinPerPage;
             const units = getUnitPrices();
             let baseInkRate = inkType === 'eternity' ? units.inkEteUnitPrice : units.inkStdUnitPrice;
             const activeInkUnitPrice = colorMode === 'bw' ? (baseInkRate / 2) : baseInkRate;
 
-            const paperSheetsCount = format === 'A5' ? (autoSheets / 2) : autoSheets;
+            const paperSheetsCount = format === 'A5' ? Math.ceil(autoSheets / 2) : autoSheets;
             const photoCount = format === 'A5' ? 1 : 2;
             const spiralObj = getSpiralForSheets(autoSheets);
 
