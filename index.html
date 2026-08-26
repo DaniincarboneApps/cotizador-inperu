@@ -475,6 +475,9 @@
                     <div class="flex items-center gap-3 w-full sm:w-auto">
                         <input type="text" id="catalog-search" placeholder="Buscar por título..." oninput="renderCatalog()"
                             class="bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-teal-400 w-full sm:w-64">
+                        <button onclick="startNewCatalogBook()" class="shrink-0 bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5">
+                            <i class="fa-solid fa-plus"></i><span>Nuevo Libro</span>
+                        </button>
                     </div>
                 </div>
 
@@ -972,6 +975,35 @@
                     <button type="submit" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-teal-600 hover:bg-teal-500"><i class="fa-solid fa-cloud-arrow-up mr-1"></i>Guardar venta</button>
                 </div>
             </form>
+        </div>
+
+        <div id="book-detail-modal" class="fixed inset-0 bg-[#061215]/90 backdrop-blur-sm z-[70] flex items-center justify-center p-3 sm:p-5 hidden" onclick="closeBookDetail(event)">
+            <div class="bg-[#0a1a1f] border border-teal-800/60 rounded-2xl max-w-4xl w-full max-h-[92vh] overflow-y-auto shadow-2xl relative" onclick="event.stopPropagation()">
+                <button type="button" onclick="closeBookDetail()" class="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-[#061215]/90 text-slate-300 hover:text-white border border-teal-900/60"><i class="fa-solid fa-xmark"></i></button>
+                <div class="grid grid-cols-1 md:grid-cols-2">
+                    <div id="book-detail-cover" class="min-h-72 md:min-h-[560px] bg-[#061215] flex items-center justify-center overflow-hidden md:rounded-l-2xl"></div>
+                    <div class="p-5 sm:p-7 space-y-5">
+                        <div>
+                            <span id="book-detail-format" class="inline-flex text-[10px] font-bold text-teal-300 border border-teal-800/60 bg-teal-950/50 rounded-lg px-2 py-1 mb-2"></span>
+                            <h3 id="book-detail-title" class="text-xl font-black text-white"></h3>
+                            <p id="book-detail-description" class="text-sm text-slate-400 mt-2 whitespace-pre-line"></p>
+                        </div>
+                        <div class="bg-[#061215] border border-teal-900/60 rounded-xl p-3">
+                            <div class="text-[10px] uppercase font-bold text-slate-500 mb-1">Detalles de entrega</div>
+                            <p id="book-detail-deliverables" class="text-xs text-teal-200 leading-relaxed whitespace-pre-line"></p>
+                        </div>
+                        <div id="book-detail-specs" class="grid grid-cols-2 gap-2 text-xs"></div>
+                        <div class="grid grid-cols-2 gap-3 border-t border-teal-900/50 pt-4">
+                            <div><span class="block text-[10px] text-slate-500">Costo actual</span><strong id="book-detail-cost" class="text-rose-400"></strong></div>
+                            <div><span class="block text-[10px] text-slate-500">Precio de venta</span><strong id="book-detail-price" class="text-xl text-emerald-400"></strong></div>
+                        </div>
+                        <div class="flex gap-2 pt-1">
+                            <button id="book-detail-sale-btn" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-2.5 rounded-xl"><i class="fa-solid fa-cart-plus mr-1"></i>Registrar Venta</button>
+                            <button id="book-detail-edit-btn" class="flex-1 bg-teal-950 hover:bg-teal-900 text-teal-200 border border-teal-800/60 text-xs font-bold py-2.5 rounded-xl"><i class="fa-solid fa-pen-to-square mr-1"></i>Editar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="delete-modal" class="fixed inset-0 bg-[#061215]/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
@@ -1570,14 +1602,33 @@
 
         function handleCoverUpload(event) {
             const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    currentCoverBase64 = e.target.result;
-                    document.getElementById('cover-preview-container').innerHTML = `<img src="${currentCoverBase64}" class="w-full h-full object-cover">`;
-                }
-                reader.readAsDataURL(file);
+            if (!file) return;
+            if (!file.type.startsWith('image/')) {
+                showToastMessage('Selecciona una imagen válida.');
+                return;
             }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const image = new Image();
+                image.onload = function() {
+                    const maxSide = 1200;
+                    const scale = Math.min(1, maxSide / Math.max(image.width, image.height));
+                    const canvas = document.createElement('canvas');
+                    canvas.width = Math.max(1, Math.round(image.width * scale));
+                    canvas.height = Math.max(1, Math.round(image.height * scale));
+                    canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
+                    currentCoverBase64 = canvas.toDataURL('image/jpeg', 0.8);
+                    if (currentCoverBase64.length > 850000) {
+                        showToastMessage('La portada sigue siendo demasiado grande. Prueba con otra imagen.');
+                        resetCoverImage();
+                        return;
+                    }
+                    document.getElementById('cover-preview-container').innerHTML = `<img src="${currentCoverBase64}" class="w-full h-full object-cover">`;
+                    showToastMessage('Portada optimizada correctamente.');
+                };
+                image.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         }
 
         function resetCoverImage() {
@@ -1609,18 +1660,54 @@
                 priceMode: document.getElementById('quote-custom-price').dataset.auto === 'false' ? 'manual' : 'auto'
             };
 
-            if (db) {
-                await db.collection('catalog').doc(newBook.id).set(newBook);
-            } else {
-                const existingIndex = catalog.findIndex(book => book.id === newBook.id);
-                if (existingIndex >= 0) catalog[existingIndex] = newBook;
-                else catalog.push(newBook);
-            }
+            const saveButton = document.getElementById('save-catalog-btn');
+            const saveLabel = document.getElementById('save-catalog-btn-label');
             const wasEditing = Boolean(activeEditingBookId);
+            saveButton.disabled = true;
+            saveLabel.textContent = wasEditing ? 'Actualizando...' : 'Guardando...';
+            try {
+                if (db) {
+                    await db.collection('catalog').doc(newBook.id).set(newBook);
+                } else {
+                    const existingIndex = catalog.findIndex(book => book.id === newBook.id);
+                    if (existingIndex >= 0) catalog[existingIndex] = newBook;
+                    else catalog.push(newBook);
+                }
+                activeEditingBookId = null;
+                saveLabel.textContent = 'Guardar Libro en Catálogo INPERU';
+                switchTab('catalog');
+                renderCatalog();
+                showToastMessage(wasEditing ? 'Libro actualizado correctamente.' : '¡Libro nuevo guardado correctamente!');
+            } catch (error) {
+                console.error('Error guardando libro:', error);
+                saveLabel.textContent = wasEditing ? 'Actualizar Libro en Catálogo' : 'Guardar Libro en Catálogo INPERU';
+                showToastMessage(`No se pudo guardar el libro: ${error.message || 'error de Firebase'}`);
+            } finally {
+                saveButton.disabled = false;
+            }
+        }
+
+        function startNewCatalogBook() {
             activeEditingBookId = null;
+            breakdownManualQty = null;
+            currentCoverBase64 = null;
             document.getElementById('save-catalog-btn-label').textContent = 'Guardar Libro en Catálogo INPERU';
-            switchTab('catalog');
-            showToastMessage(wasEditing ? 'Libro actualizado correctamente.' : '¡Libro guardado en la biblioteca!');
+            document.getElementById('quote-title').value = '';
+            document.getElementById('quote-pages').value = 150;
+            document.getElementById('quote-print-mode').value = 'doble';
+            document.getElementById('quote-format').value = 'A5';
+            document.getElementById('quote-printer').value = 'canon';
+            document.getElementById('quote-ink-type').value = 'standard';
+            document.getElementById('quote-color-mode').value = 'bw';
+            document.getElementById('quote-description').value = '';
+            document.getElementById('quote-deliverables').value = 'Se entrega impreso en hojas de 80g a Color, Editado para una mejor lectura y con las imagenes a Color, espiral plástico Negro o transparente segun stock, tapas laminadas como libro original y el nombre del alumno en la Tapa.';
+            const customPrice = document.getElementById('quote-custom-price');
+            customPrice.value = '';
+            customPrice.dataset.auto = 'true';
+            resetCoverImage();
+            switchTab('quoter');
+            calculateQuote();
+            document.getElementById('quote-title').focus();
         }
 
         function renderCatalog() {
@@ -1647,7 +1734,7 @@
                 const metrics = calculateBookMetrics(book.pages, book.printMode, book.format, book.printerKey, book.inkType, book.colorMode || 'bw', catalogPrice, null, masterConfig.contingencyPercent, 1);
 
                 return `
-                    <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl overflow-hidden shadow-xl hover:border-teal-700/60 transition-all flex flex-col justify-between">
+                    <div onclick="openBookDetail('${book.id}')" class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl overflow-hidden shadow-xl hover:border-teal-700/60 transition-all flex flex-col justify-between cursor-pointer">
                         <div>
                             <div class="h-36 bg-[#061215] border-b border-teal-900/60 relative flex items-center justify-center overflow-hidden">
                                 ${book.coverImage ? `
@@ -1694,19 +1781,19 @@
                         </div>
 
                         <div class="p-4 pt-0 space-y-2">
-                            <button onclick="openSaleModal('${book.id}')" class="w-full bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 font-semibold text-xs py-2 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
+                            <button onclick="event.stopPropagation(); openSaleModal('${book.id}')" class="w-full bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 font-semibold text-xs py-2 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-cart-plus"></i>
                                 <span>Registrar Venta</span>
                             </button>
-                            <button onclick="openBatchModal('${book.id}')" class="w-full bg-teal-600/20 hover:bg-teal-600/30 text-teal-300 border border-teal-500/30 font-semibold text-xs py-2 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
+                            <button onclick="event.stopPropagation(); openBatchModal('${book.id}')" class="w-full bg-teal-600/20 hover:bg-teal-600/30 text-teal-300 border border-teal-500/30 font-semibold text-xs py-2 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-layer-group"></i>
                                 <span>Simular Tirada INPERU</span>
                             </button>
                             <div class="flex items-center gap-2">
-                                <button onclick="loadBookIntoQuoter('${book.id}')" class="flex-1 bg-[#061215] hover:bg-teal-950 text-slate-200 text-[11px] font-medium py-1.5 rounded-lg border border-teal-900/60 transition-colors">
+                                <button onclick="event.stopPropagation(); loadBookIntoQuoter('${book.id}')" class="flex-1 bg-[#061215] hover:bg-teal-950 text-slate-200 text-[11px] font-medium py-1.5 rounded-lg border border-teal-900/60 transition-colors">
                                     <i class="fa-solid fa-pen-to-square mr-1"></i> Editar
                                 </button>
-                                <button onclick="promptDeleteBook('${book.id}')" class="text-slate-500 hover:text-red-400 p-1.5 text-xs transition-colors">
+                                <button onclick="event.stopPropagation(); promptDeleteBook('${book.id}')" class="text-slate-500 hover:text-red-400 p-1.5 text-xs transition-colors">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </div>
@@ -1714,6 +1801,38 @@
                     </div>
                 `;
             }).join('');
+        }
+
+        function openBookDetail(id) {
+            const book = catalog.find(item => item.id === id);
+            if (!book) return;
+            const currentPrice = book.priceMode === 'manual' ? book.targetPrice : null;
+            const metrics = calculateBookMetrics(book.pages, book.printMode, book.format, book.printerKey, book.inkType, book.colorMode || 'bw', currentPrice, null, masterConfig.contingencyPercent, 1);
+            const cover = document.getElementById('book-detail-cover');
+            cover.innerHTML = book.coverImage
+                ? `<img src="${book.coverImage}" alt="Portada completa de ${escapeHtml(book.title)}" class="w-full h-full max-h-[78vh] object-contain bg-black/20">`
+                : `<div class="text-center text-teal-800/60"><i class="fa-solid fa-book-open text-7xl"></i><p class="text-xs mt-3">Sin imagen de portada</p></div>`;
+            document.getElementById('book-detail-title').textContent = book.title || '';
+            document.getElementById('book-detail-description').textContent = book.description || 'Sin descripción.';
+            document.getElementById('book-detail-deliverables').textContent = book.deliverables || 'Sin detalles adicionales.';
+            document.getElementById('book-detail-format').textContent = `${book.format} · ${book.pages} páginas`;
+            document.getElementById('book-detail-specs').innerHTML = `
+                <div class="bg-[#061215] rounded-lg p-2 border border-teal-900/50"><span class="text-slate-500 block text-[10px]">Impresión</span><strong class="text-slate-200">${book.printMode === 'doble' ? 'Doble faz' : 'Simple faz'}</strong></div>
+                <div class="bg-[#061215] rounded-lg p-2 border border-teal-900/50"><span class="text-slate-500 block text-[10px]">Color</span><strong class="text-slate-200">${book.colorMode === 'color' ? 'Color' : 'Blanco y negro'}</strong></div>
+                <div class="bg-[#061215] rounded-lg p-2 border border-teal-900/50"><span class="text-slate-500 block text-[10px]">Impresora</span><strong class="text-slate-200">${escapeHtml(metrics.printerName)}</strong></div>
+                <div class="bg-[#061215] rounded-lg p-2 border border-teal-900/50"><span class="text-slate-500 block text-[10px]">Tinta</span><strong class="text-slate-200">${book.inkType === 'eternity' ? 'Eternity' : 'Estándar'}</strong></div>`;
+            document.getElementById('book-detail-cost').textContent = formatMoney(metrics.directCost);
+            document.getElementById('book-detail-price').textContent = formatMoney(metrics.finalSalePrice);
+            document.getElementById('book-detail-sale-btn').onclick = () => { closeBookDetail(); openSaleModal(id); };
+            document.getElementById('book-detail-edit-btn').onclick = () => { closeBookDetail(); loadBookIntoQuoter(id); };
+            document.getElementById('book-detail-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeBookDetail(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('book-detail-modal').classList.add('hidden');
+            document.body.style.overflow = '';
         }
 
         function promptDeleteBook(id) {
@@ -1839,6 +1958,24 @@
             showToastMessage('Venta eliminada.');
         }
 
+        function openReadyWhatsApp(id) {
+            const sale = sales.find(item => item.id === id);
+            if (!sale) return;
+            let phone = String(sale.phone || '').replace(/\D/g, '');
+            if (!phone) {
+                showToastMessage('Este pedido no tiene un celular cargado.');
+                return;
+            }
+            if (phone.startsWith('00')) phone = phone.slice(2);
+            if (!phone.startsWith('54')) {
+                phone = phone.replace(/^0+/, '');
+                phone = `549${phone}`;
+            }
+            const quantityText = Number(sale.qty) === 1 ? '1 ejemplar' : `${Number(sale.qty) || 0} ejemplares`;
+            const message = `Hola ${sale.customer || ''}, te avisamos desde INPERU Producciones que tu pedido de ${quantityText} de “${sale.bookTitle || 'tu libro'}” ya está listo para retirar. Muchas gracias.`;
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
+        }
+
         function renderSales() {
             const list = document.getElementById('sales-list');
             if (!list) return;
@@ -1860,7 +1997,7 @@
                 const normalizedStatus = sale.status === 'Entregado' ? 'Finalizado' : sale.status === 'Pagado' ? 'Pagado sin entregar' : (sale.status || 'Pendiente');
                 const statusColor = normalizedStatus === 'Finalizado' ? 'text-emerald-300 border-emerald-700/50' : normalizedStatus === 'Pagado sin entregar' ? 'text-teal-300 border-teal-700/50' : 'text-amber-300 border-amber-700/50';
                 return `<div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-4 grid grid-cols-1 lg:grid-cols-12 gap-3 items-center">
-                    <div class="lg:col-span-3"><div class="font-bold text-white text-sm">${escapeHtml(sale.customer)}</div><div class="text-xs text-slate-400 mt-1"><i class="fa-solid fa-phone mr-1"></i>${escapeHtml(sale.phone || 'Sin celular')}</div></div>
+                    <div class="lg:col-span-3"><div class="font-bold text-white text-sm">${escapeHtml(sale.customer)}</div><div class="text-xs text-slate-400 mt-1 flex items-center gap-2"><span><i class="fa-solid fa-phone mr-1"></i>${escapeHtml(sale.phone || 'Sin celular')}</span>${sale.phone ? `<button onclick="openReadyWhatsApp('${sale.id}')" class="w-7 h-7 rounded-full bg-emerald-600/20 border border-emerald-500/40 text-emerald-400 hover:bg-emerald-600/30" title="Avisar por WhatsApp que está listo"><i class="fa-brands fa-whatsapp"></i></button>` : ''}</div></div>
                     <div class="lg:col-span-3"><div class="text-xs font-semibold text-teal-200">${escapeHtml(sale.bookTitle)}</div><div class="text-[11px] text-slate-500 mt-1">${Number(sale.qty) || 0} ejemplar(es) × ${formatMoney(sale.unitPrice)}</div></div>
                     <div class="lg:col-span-2"><div class="font-black text-emerald-400">${formatMoney(sale.total)}</div><div class="text-[11px] text-slate-500">${escapeHtml(sale.date || '')}</div></div>
                     <div class="lg:col-span-2"><select onchange="updateSaleStatus('${sale.id}', this.value)" class="w-full bg-[#061215] border rounded-lg px-2 py-1.5 text-xs ${statusColor}"><option value="Pendiente" ${normalizedStatus === 'Pendiente' ? 'selected' : ''}>Pendiente</option><option value="Pagado sin entregar" ${normalizedStatus === 'Pagado sin entregar' ? 'selected' : ''}>Pagado sin entregar</option><option value="Finalizado" ${normalizedStatus === 'Finalizado' ? 'selected' : ''}>Entregado / Finalizado</option></select></div>
