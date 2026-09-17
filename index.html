@@ -150,7 +150,7 @@
                 </button>
             </form>
             
-            <div class="border-t border-teal-900/40 pt-3">
+            <div id="local-preview-access" class="border-t border-teal-900/40 pt-3 hidden">
                 <button type="button" onclick="bypassLoginForPreview()" class="text-xs text-teal-300 hover:text-teal-200 underline font-medium">
                     <i class="fa-solid fa-eye mr-1"></i> Previsualizar App (Modo Prueba / Offline)
                 </button>
@@ -234,7 +234,7 @@
 
                         <div>
                             <label class="block text-xs font-medium text-slate-300 mb-1">Nombre / Título del Libro *</label>
-                            <input type="text" id="quote-title" placeholder="Ej. El Principito - Edición Anillada" value="Manual de Anatomía Humana"
+                            <input type="text" id="quote-title" placeholder="Ej. El Principito - Edición Anillada" value=""
                                 class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400 transition-colors">
                         </div>
 
@@ -292,8 +292,8 @@
                                 <label class="block text-xs font-medium text-slate-300 mb-1">Tamaño / Formato</label>
                                 <select id="quote-format" onchange="onParametersChange()"
                                     class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400">
-                                    <option value="A5" selected>A5 (37.5 A4 / 1 foto / 1 tapa)</option>
-                                    <option value="A4">A4 (75 A4 / 2 fotos / 2 tapas)</option>
+                                    <option value="A5" selected>A5 (2 páginas por cara A4)</option>
+                                    <option value="A4">A4 (1 página por cara A4)</option>
                                 </select>
                             </div>
 
@@ -328,10 +328,35 @@
 
                         <div class="border-t border-teal-900/40 pt-4 space-y-3">
                             <span class="text-xs font-semibold text-teal-300/80 uppercase tracking-wider block">Ficha de Biblioteca INPERU</span>
-                            
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-300 mb-1">Autor / Institución</label>
+                                    <input type="text" id="quote-author" maxlength="160" placeholder="Ej. J. K. Rowling"
+                                        class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-teal-400">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-300 mb-1">Género</label>
+                                    <input type="text" id="quote-genre" maxlength="80" list="book-genre-options" placeholder="Ej. Medicina"
+                                        class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-teal-400">
+                                    <datalist id="book-genre-options">
+                                        <option value="Medicina y Salud"></option>
+                                        <option value="Educación"></option>
+                                        <option value="Derecho"></option>
+                                        <option value="Psicología"></option>
+                                        <option value="Administración y Economía"></option>
+                                        <option value="Ciencias"></option>
+                                        <option value="Tecnología"></option>
+                                        <option value="Arquitectura y Diseño"></option>
+                                        <option value="Literatura"></option>
+                                        <option value="Otros"></option>
+                                    </datalist>
+                                </div>
+                            </div>
+                             
                             <div>
-                                <label class="block text-xs font-medium text-slate-300 mb-1">Descripción corta o Autor</label>
-                                <input type="text" id="quote-description" placeholder="Ej. Anillado espiral, tapa dura..." value="Anillado espiral plástico, tapa transparente y contratapa opaca."
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Descripción corta propia</label>
+                                <input type="text" id="quote-description" placeholder="Resumen breve escrito por INPERU" value=""
                                     class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-teal-400">
                             </div>
 
@@ -342,7 +367,7 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs font-medium text-slate-300 mb-1">Imagen de Portada (Opcional)</label>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Imagen interna (Opcional, no se publica)</label>
                                 <div class="flex items-center gap-3">
                                     <label class="cursor-pointer bg-teal-950/60 hover:bg-teal-900/60 border border-teal-700/50 text-xs text-teal-200 px-3 py-2 rounded-xl transition-colors flex items-center gap-2">
                                         <i class="fa-solid fa-upload"></i>
@@ -355,6 +380,14 @@
                                     <button type="button" onclick="resetCoverImage()" class="text-xs text-slate-500 hover:text-red-400">Quitar</button>
                                 </div>
                             </div>
+
+                            <label class="flex items-start gap-3 bg-cyan-950/30 border border-cyan-700/40 rounded-xl p-3 cursor-pointer">
+                                <input type="checkbox" id="quote-featured" class="mt-0.5 accent-cyan-400 h-4 w-4">
+                                <span>
+                                    <strong class="block text-xs text-cyan-200">Destacar en “Nuestra biblioteca”</strong>
+                                    <small class="block text-[10px] text-slate-400 mt-1">Si no se marca, el libro igualmente aparecerá al buscarlo o al abrir el catálogo completo.</small>
+                                </span>
+                            </label>
                         </div>
 
                         <div class="border-t border-teal-900/40 pt-4">
@@ -364,7 +397,7 @@
                             </div>
                             <div class="relative">
                                 <span class="absolute left-3.5 top-2.5 text-slate-400 font-bold">$</span>
-                                <input type="number" id="quote-custom-price" step="50" oninput="onCustomPriceInput()"
+                                <input type="number" id="quote-custom-price" min="0" step="50" oninput="onCustomPriceInput()" onblur="onCustomPriceBlur()"
                                     class="w-full bg-teal-950/50 border border-teal-500/50 rounded-xl pl-8 pr-3.5 py-2 text-base font-extrabold text-emerald-400 focus:outline-none focus:border-emerald-400">
                             </div>
                         </div>
@@ -475,6 +508,9 @@
                     <div class="flex items-center gap-3 w-full sm:w-auto">
                         <input type="text" id="catalog-search" placeholder="Buscar por título..." oninput="renderCatalog()"
                             class="bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-teal-400 w-full sm:w-64">
+                        <button onclick="openPublicSettingsModal()" class="shrink-0 bg-[#061215] hover:bg-teal-950 text-teal-200 border border-teal-800/60 text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5">
+                            <i class="fa-solid fa-globe"></i><span class="hidden sm:inline">Catálogo Público</span>
+                        </button>
                         <button onclick="startNewCatalogBook()" class="shrink-0 bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5">
                             <i class="fa-solid fa-plus"></i><span>Nuevo Libro</span>
                         </button>
@@ -972,7 +1008,7 @@
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
                     <button type="button" onclick="closeSaleModal()" class="px-4 py-2 rounded-xl text-xs text-slate-300 bg-[#061215]">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-teal-600 hover:bg-teal-500"><i class="fa-solid fa-cloud-arrow-up mr-1"></i>Guardar venta</button>
+                    <button id="save-sale-btn" type="submit" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-teal-600 hover:bg-teal-500 disabled:opacity-60 disabled:cursor-wait"><i class="fa-solid fa-cloud-arrow-up mr-1"></i>Guardar venta</button>
                 </div>
             </form>
         </div>
@@ -1006,6 +1042,31 @@
             </div>
         </div>
 
+        <div id="public-settings-modal" class="fixed inset-0 bg-[#061215]/90 backdrop-blur-sm z-[75] flex items-center justify-center p-4 hidden">
+            <form onsubmit="savePublicSettings(event)" class="bg-[#0a1a1f] border border-teal-800/60 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-5 relative">
+                <button type="button" onclick="closePublicSettingsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+                <div>
+                    <h3 class="text-base font-bold text-white"><i class="fa-solid fa-globe text-teal-400 mr-2"></i>Catálogo Público</h3>
+                    <p class="text-xs text-slate-400 mt-1">Este número recibirá los pedidos realizados desde la web pública.</p>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-300 mb-1">WhatsApp comercial</label>
+                    <input id="public-whatsapp-number" type="tel" inputmode="tel" placeholder="Ej. +54 9 11 1234-5678" required class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400">
+                    <p class="text-[10px] text-slate-500 mt-1">Incluye el código de país. Para Argentina recomendamos +54 9.</p>
+                </div>
+                <div class="bg-teal-950/30 border border-teal-900/50 rounded-xl p-3 text-xs text-teal-200">
+                    <i class="fa-solid fa-shield-halved mr-1"></i> Solo se publican portada, información comercial y precio de venta. Los costos, ganancias, ventas y clientes permanecen privados.
+                </div>
+                <a href="./catalogo/" target="_blank" rel="noopener" class="block text-center text-xs text-teal-300 hover:text-teal-200 underline">
+                    <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i>Abrir catálogo público
+                </a>
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="closePublicSettingsModal()" class="px-4 py-2 rounded-xl text-xs text-slate-300 bg-[#061215]">Cancelar</button>
+                    <button type="submit" id="save-public-settings-btn" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-teal-600 hover:bg-teal-500"><i class="fa-solid fa-cloud-arrow-up mr-1"></i>Guardar y Publicar</button>
+                </div>
+            </form>
+        </div>
+
         <div id="delete-modal" class="fixed inset-0 bg-[#061215]/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
             <div class="bg-[#0a1a1f] border border-rose-900/60 rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4">
                 <div class="flex items-center gap-3">
@@ -1019,8 +1080,8 @@
                 </div>
                 <p class="text-xs text-slate-300">Esta acción quitará el libro de la biblioteca en la nube para ambos usuarios.</p>
                 <div class="flex items-center justify-end gap-2 pt-2">
-                    <button onclick="closeDeleteModal()" class="px-3.5 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white bg-[#061215]">Cancelar</button>
-                    <button id="confirm-delete-btn" class="px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 shadow-md">Eliminar</button>
+                    <button type="button" onclick="closeDeleteModal()" class="px-3.5 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white bg-[#061215]">Cancelar</button>
+                    <button type="button" id="confirm-delete-btn" class="px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 shadow-md disabled:opacity-60 disabled:cursor-wait">Eliminar</button>
                 </div>
             </div>
         </div>
@@ -1041,6 +1102,8 @@
         let firebaseInitialized = false;
         let auth = null;
         let db = null;
+        let localPreviewActive = false;
+        const isLocalPreview = location.protocol === 'file:' || ['localhost', '127.0.0.1'].includes(location.hostname);
 
         try {
             if (typeof firebase !== 'undefined') {
@@ -1052,6 +1115,8 @@
         } catch (err) {
             console.warn("Firebase no se pudo conectar en este entorno de previsualización:", err);
         }
+
+        if (isLocalPreview) document.getElementById('local-preview-access')?.classList.remove('hidden');
 
         const DEFAULT_CONFIG = {
             contingencyPercent: 15,
@@ -1105,50 +1170,25 @@
             }
         };
 
-        const DEFAULT_CATALOG = [
-            {
-                id: 'book-1',
-                title: 'Manual de Anatomía Humana',
-                pages: 150,
-                printMode: 'doble',
-                format: 'A5',
-                printerKey: 'canon',
-                inkType: 'standard',
-                colorMode: 'bw',
-                description: 'Anillado espiral plástico, tapa transparente y contratapa opaca.',
-                deliverables: 'Se entrega impreso en hojas de 80g, espiral plástico de 17mm y tapas de polipropileno.',
-                coverImage: null,
-                targetPrice: 8100,
-                priceMode: 'auto'
-            },
-            {
-                id: 'book-2',
-                title: 'Libro Ejemplo Epson L14150 + Eternity',
-                pages: 150,
-                printMode: 'doble',
-                format: 'A5',
-                printerKey: 'epson',
-                inkType: 'eternity',
-                colorMode: 'bw',
-                description: 'Simulación de impresión con tinta pigmentada Eternity.',
-                deliverables: 'Se entrega en hojas de 80g, espiral plástico de 17mm y tapas con tinta Eternity resistente al agua.',
-                coverImage: null,
-                targetPrice: 6600,
-                priceMode: 'auto'
-            }
-        ];
-
         let masterConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
-        let catalog = JSON.parse(JSON.stringify(DEFAULT_CATALOG));
+        let catalog = [];
         let sales = [];
         let currentCoverBase64 = null;
         let breakdownManualQty = null;
         let activeBatchBookId = null;
         let pendingDeleteBookId = null;
         let masterConfigSaveTimer = null;
+        let lastConfigSaveErrorAt = 0;
         let activeSaleBookId = null;
         let activeSaleId = null;
         let activeEditingBookId = null;
+        let publicSettings = { whatsapp: '' };
+        let configReadyForPublicSync = false;
+        let catalogReadyForPublicSync = false;
+        let publicCatalogSyncTimer = null;
+        let publicCatalogSyncQueue = Promise.resolve();
+        let lastPublicSyncErrorAt = 0;
+        let firebaseUnsubscribers = [];
 
         function togglePasswordVisibility() {
             const input = document.getElementById('auth-password');
@@ -1169,10 +1209,12 @@
                 const appMainContent = document.getElementById('app-main-content');
 
                 if (user) {
+                    localPreviewActive = false;
                     authScreen.classList.add('hidden');
                     appMainContent.classList.remove('hidden');
                     initFirebaseRealtimeSync();
                 } else {
+                    stopFirebaseRealtimeSync();
                     authScreen.classList.remove('hidden');
                     appMainContent.classList.add('hidden');
                 }
@@ -1201,16 +1243,29 @@
                     
                     errorDiv.textContent = msg;
                     errorDiv.classList.remove('hidden');
+                } finally {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = `<i class="fa-solid fa-arrow-right-to-bracket"></i> Ingresar al Sistema`;
                 }
             } else {
-                // Modo fallback si Firebase no está disponible en la vista previa
-                bypassLoginForPreview();
+                if (isLocalPreview) {
+                    bypassLoginForPreview();
+                } else {
+                    errorDiv.textContent = 'No se pudo conectar con Firebase. Revisa Internet e intenta nuevamente.';
+                    errorDiv.classList.remove('hidden');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = `<i class="fa-solid fa-arrow-right-to-bracket"></i> Ingresar al Sistema`;
+                }
             }
         }
 
         function bypassLoginForPreview() {
+            if (!isLocalPreview) {
+                document.getElementById('auth-error').textContent = 'La previsualización sin acceso está disponible únicamente en modo local.';
+                document.getElementById('auth-error').classList.remove('hidden');
+                return;
+            }
+            localPreviewActive = true;
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('app-main-content').classList.remove('hidden');
             const cloudBadge = document.getElementById('cloud-status-badge');
@@ -1224,9 +1279,20 @@
             renderSales();
         }
 
-        function handleLogout() {
+        async function handleLogout() {
+            if (localPreviewActive) {
+                localPreviewActive = false;
+                document.getElementById('auth-screen').classList.remove('hidden');
+                document.getElementById('app-main-content').classList.add('hidden');
+                return;
+            }
             if (firebaseInitialized && auth) {
-                auth.signOut();
+                try {
+                    await auth.signOut();
+                } catch (error) {
+                    console.error('Error cerrando sesión:', error);
+                    showToastMessage('No se pudo cerrar la sesión. Intenta nuevamente.');
+                }
             } else {
                 document.getElementById('auth-screen').classList.remove('hidden');
                 document.getElementById('app-main-content').classList.add('hidden');
@@ -1235,66 +1301,118 @@
 
         function initFirebaseRealtimeSync() {
             if (!db) return;
-            db.collection('config').doc('master').onSnapshot(docSnap => {
+            stopFirebaseRealtimeSync();
+            configReadyForPublicSync = false;
+            catalogReadyForPublicSync = false;
+
+            firebaseUnsubscribers.push(db.collection('config').doc('master').onSnapshot({ includeMetadataChanges: true }, docSnap => {
                 if (docSnap.exists) {
-                    masterConfig = { ...DEFAULT_CONFIG, ...docSnap.data() };
+                    masterConfig = mergeWithDefaults(DEFAULT_CONFIG, docSnap.data());
                 } else {
-                    db.collection('config').doc('master').set(DEFAULT_CONFIG);
+                    db.collection('config').doc('master').set(DEFAULT_CONFIG).catch(error => {
+                        console.warn('Error creando la configuración inicial:', error);
+                        showToastMessage('No se pudo crear la configuración inicial en Firebase.');
+                    });
                 }
                 renderConfigToUI({ preserveFocusedInput: true });
                 calculateQuote();
                 renderCatalog();
-            }, err => console.warn("Error leyendo config de Firebase:", err));
+                configReadyForPublicSync = docSnap.exists && !docSnap.metadata.fromCache && !docSnap.metadata.hasPendingWrites;
+                schedulePublicCatalogSync();
+            }, err => {
+                console.warn("Error leyendo config de Firebase:", err);
+                showToastMessage('No se pudieron cargar los Costos Base desde Firebase.');
+            }));
 
-            db.collection('catalog').onSnapshot(snapshot => {
-                if (!snapshot.empty) {
-                    catalog = [];
-                    snapshot.forEach(docSnap => {
-                        catalog.push({ id: docSnap.id, ...docSnap.data() });
-                    });
-                } else {
-                    DEFAULT_CATALOG.forEach(b => {
-                        db.collection('catalog').doc(b.id).set(b);
-                    });
-                }
+            firebaseUnsubscribers.push(db.collection('catalog').onSnapshot({ includeMetadataChanges: true }, snapshot => {
+                catalog = [];
+                snapshot.forEach(docSnap => {
+                    catalog.push({ id: docSnap.id, ...docSnap.data() });
+                });
                 document.getElementById('catalog-count').textContent = catalog.length;
                 renderCatalog();
-            }, err => console.warn("Error leyendo catálogo de Firebase:", err));
+                catalogReadyForPublicSync = !snapshot.metadata.fromCache && !snapshot.metadata.hasPendingWrites;
+                schedulePublicCatalogSync();
+            }, err => {
+                console.warn("Error leyendo catálogo de Firebase:", err);
+                showToastMessage('No se pudo cargar el catálogo desde Firebase.');
+            }));
 
-            db.collection('sales').orderBy('date', 'desc').onSnapshot(snapshot => {
+            firebaseUnsubscribers.push(db.collection('publicSettings').doc('contact').onSnapshot(docSnap => {
+                publicSettings = docSnap.exists ? { ...publicSettings, ...docSnap.data() } : { whatsapp: '' };
+                const input = document.getElementById('public-whatsapp-number');
+                if (input && document.activeElement !== input) input.value = publicSettings.whatsapp || '';
+            }, err => console.warn("Error leyendo configuración pública:", err)));
+
+            firebaseUnsubscribers.push(db.collection('sales').orderBy('date', 'desc').onSnapshot(snapshot => {
                 sales = [];
                 snapshot.forEach(docSnap => sales.push({ id: docSnap.id, ...docSnap.data() }));
                 renderSales();
-            }, err => console.warn("Error leyendo ventas de Firebase:", err));
+            }, err => {
+                console.warn("Error leyendo ventas de Firebase:", err);
+                showToastMessage('No se pudieron cargar las ventas desde Firebase.');
+            }));
+        }
+
+        function canUseCloud() {
+            return Boolean(db && auth?.currentUser && !localPreviewActive);
+        }
+
+        function stopFirebaseRealtimeSync() {
+            firebaseUnsubscribers.forEach(unsubscribe => {
+                try { unsubscribe(); } catch (error) { console.warn('Error cerrando una sincronización:', error); }
+            });
+            firebaseUnsubscribers = [];
+            clearTimeout(publicCatalogSyncTimer);
+            configReadyForPublicSync = false;
+            catalogReadyForPublicSync = false;
+        }
+
+        function mergeWithDefaults(defaultValue, incomingValue) {
+            if (Array.isArray(defaultValue)) {
+                return Array.isArray(incomingValue)
+                    ? incomingValue.map(item => (item && typeof item === 'object' ? { ...item } : item))
+                    : JSON.parse(JSON.stringify(defaultValue));
+            }
+            if (defaultValue && typeof defaultValue === 'object') {
+                const incomingObject = incomingValue && typeof incomingValue === 'object' ? incomingValue : {};
+                return Object.keys(defaultValue).reduce((result, key) => {
+                    result[key] = mergeWithDefaults(defaultValue[key], incomingObject[key]);
+                    return result;
+                }, {});
+            }
+            return incomingValue === undefined || incomingValue === null ? defaultValue : incomingValue;
         }
 
         function getUnitPrices() {
-            const paperUnitPrice = masterConfig.paper.packPrice / (masterConfig.paper.packSheets || 500);
+            const numberOr = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
+            const positiveOr = (value, fallback) => numberOr(value, fallback) > 0 ? numberOr(value, fallback) : fallback;
+            const paperUnitPrice = numberOr(masterConfig.paper.packPrice) / positiveOr(masterConfig.paper.packSheets, 500);
             
-            const stdBottles = masterConfig.inkStandard.bottlesQty || 14;
-            const stdYield = masterConfig.inkStandard.pageYield || 1000;
-            const inkStdUnitPrice = (masterConfig.inkStandard.packPrice / stdBottles) / stdYield;
+            const stdBottles = positiveOr(masterConfig.inkStandard.bottlesQty, 14);
+            const stdYield = positiveOr(masterConfig.inkStandard.pageYield, 1000);
+            const inkStdUnitPrice = (numberOr(masterConfig.inkStandard.packPrice) / stdBottles) / stdYield;
 
-            const eteBottles = masterConfig.inkEternity.bottlesQty || 14;
-            const eteYield = masterConfig.inkEternity.pageYield || 1500;
-            const inkEteUnitPrice = (masterConfig.inkEternity.packPrice / eteBottles) / eteYield;
+            const eteBottles = positiveOr(masterConfig.inkEternity.bottlesQty, 14);
+            const eteYield = positiveOr(masterConfig.inkEternity.pageYield, 1500);
+            const inkEteUnitPrice = (numberOr(masterConfig.inkEternity.packPrice) / eteBottles) / eteYield;
 
-            const tapasUnitPrice = masterConfig.tapas.packPrice / (masterConfig.tapas.packQty || 50);
-            const photoUnitPrice = masterConfig.photoPaper.packPrice / (masterConfig.photoPaper.packQty || 100);
-            const laminateUnitPrice = masterConfig.laminado.unitPrice || 160;
+            const tapasUnitPrice = numberOr(masterConfig.tapas.packPrice) / positiveOr(masterConfig.tapas.packQty, 50);
+            const photoUnitPrice = numberOr(masterConfig.photoPaper.packPrice) / positiveOr(masterConfig.photoPaper.packQty, 100);
+            const laminateUnitPrice = numberOr(masterConfig.laminado.unitPrice);
 
             const canon = masterConfig.printers.canon || {};
             const epson = masterConfig.printers.epson || {};
 
-            const canonMachineCostPerMin = (canon.machineCost || 500000) / (canon.machineMinutes || 350400);
-            const canonHeadCostPerMin = (canon.headCost || 140000) / (canon.headMinutes || 87600);
-            const canonPadsCostPerMin = (canon.padsCost || 7500) / (canon.padsMinutes || 175200);
+            const canonMachineCostPerMin = numberOr(canon.machineCost) / positiveOr(canon.machineMinutes, 350400);
+            const canonHeadCostPerMin = numberOr(canon.headCost) / positiveOr(canon.headMinutes, 87600);
+            const canonPadsCostPerMin = numberOr(canon.padsCost) / positiveOr(canon.padsMinutes, 175200);
 
-            const epsonMachineCostPerMin = (epson.machineCost || 1500000) / (epson.machineMinutes || 350400);
-            const epsonChipCostPerMin = (epson.chipCost || 32000) / (epson.chipMinutes || 87600);
+            const epsonMachineCostPerMin = numberOr(epson.machineCost) / positiveOr(epson.machineMinutes, 350400);
+            const epsonChipCostPerMin = numberOr(epson.chipCost) / positiveOr(epson.chipMinutes, 87600);
 
-            const luzMinRate = (masterConfig.services.luzMonthly || 250000) / (masterConfig.services.luzMinutes || 43200);
-            const laborMinRate = (masterConfig.labor.hourlyRatePrint || 7500) / 60;
+            const luzMinRate = numberOr(masterConfig.services.luzMonthly) / positiveOr(masterConfig.services.luzMinutes, 43200);
+            const laborMinRate = numberOr(masterConfig.labor.hourlyRatePrint) / 60;
 
             return {
                 paperUnitPrice,
@@ -1400,14 +1518,35 @@
             };
         }
 
+        function calculateCatalogBookMetrics(book, orderQty = 1) {
+            const args = [book.pages, book.printMode, book.format, book.printerKey, book.inkType, book.colorMode || 'bw'];
+            const automatic = calculateBookMetrics(...args, null, null, masterConfig.contingencyPercent, orderQty);
+            if (book.priceMode !== 'manual') return automatic;
+            // El ajuste elegido al guardar se mantiene, pero el costo base vuelve a calcularse.
+            const adjustment = typeof book.priceAdjustment === 'number' && Number.isFinite(book.priceAdjustment)
+                ? book.priceAdjustment
+                : (Number(book.targetPrice) || automatic.suggestedRounded) - automatic.suggestedRounded;
+            const adjustedPrice = Math.max(1, automatic.suggestedRounded + adjustment);
+            return calculateBookMetrics(...args, adjustedPrice, null, masterConfig.contingencyPercent, orderQty);
+        }
+
         function onParametersChange() {
             breakdownManualQty = null;
             calculateQuote();
         }
 
         function onCustomPriceInput() {
-            document.getElementById('quote-custom-price').dataset.auto = 'false';
+            const input = document.getElementById('quote-custom-price');
+            input.dataset.auto = 'false';
             calculateQuote();
+        }
+
+        function onCustomPriceBlur() {
+            const input = document.getElementById('quote-custom-price');
+            if (input.value === '' || !Number.isFinite(Number(input.value)) || Number(input.value) <= 0) {
+                input.dataset.auto = 'true';
+            }
+            calculateQuote(false, true);
         }
 
         function resetBreakdownQuantitiesToAuto() {
@@ -1418,10 +1557,10 @@
         function updateManualQuantityFromTable(fieldKey, newValue) {
             if (!breakdownManualQty) breakdownManualQty = {};
             breakdownManualQty[fieldKey] = Math.max(0, parseFloat(newValue) || 0);
-            calculateQuote(true);
+            calculateQuote();
         }
 
-        function calculateQuote(forceBreakdownRender = false) {
+        function calculateQuote(forceBreakdownRender = false, forcePriceInputUpdate = false) {
             const pages = document.getElementById('quote-pages')?.value;
             if (!pages) return;
 
@@ -1438,26 +1577,23 @@
             const calculatedSheets = printMode === 'doble' ? Math.ceil(numPages / 2) : numPages;
             document.getElementById('calc-sheets-badge').textContent = `${calculatedSheets} Hojas (${printMode === 'doble' ? 'Doble Faz' : 'Simple Faz'})`;
 
-            let customPrice = parseFloat(customPriceInput.value);
-            if (isNaN(customPrice) || customPrice <= 0) customPrice = null;
+            const parsedPrice = Number(customPriceInput.value);
+            const customPrice = customPriceInput.dataset.auto === 'false' && customPriceInput.value !== '' && Number.isFinite(parsedPrice) && parsedPrice > 0
+                ? parsedPrice : null;
 
             const res = calculateBookMetrics(numPages, printMode, format, printerKey, inkType, colorMode, customPrice, breakdownManualQty, contingencyPct, orderQty);
 
-            if (customPriceInput.value === '' || customPriceInput.dataset.auto === 'true') {
-                customPriceInput.value = res.suggestedRounded;
+            if (customPriceInput.dataset.auto !== 'false') {
+                if (forcePriceInputUpdate || document.activeElement !== customPriceInput) customPriceInput.value = res.suggestedRounded;
                 customPriceInput.dataset.auto = 'true';
-                res.finalSalePrice = res.suggestedRounded;
-                res.netProfit = res.finalSalePrice - res.directCost;
-                res.totalBatchSale = res.finalSalePrice * res.qtyBatch;
-                res.totalBatchProfit = res.netProfit * res.qtyBatch;
             }
 
             document.getElementById('res-costo-total').textContent = `$${res.totalBatchCost.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            document.getElementById('res-costo-batch-sub').textContent = res.qtyBatch > 1 ? `x1 un: $${res.directCost.toFixed(2)}` : `x1 un: $0.00`;
+            document.getElementById('res-costo-batch-sub').textContent = `x1 un: $${res.directCost.toFixed(2)}`;
             document.getElementById('res-venta-total').textContent = `$${res.totalBatchSale.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            document.getElementById('res-venta-batch-sub').textContent = res.qtyBatch > 1 ? `x1 un: $${res.finalSalePrice.toFixed(2)}` : `x1 un: $0.00`;
+            document.getElementById('res-venta-batch-sub').textContent = `x1 un: $${res.finalSalePrice.toFixed(2)}`;
             document.getElementById('res-ganancia-total').textContent = `$${res.totalBatchProfit.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            document.getElementById('res-ganancia-batch-sub').textContent = res.qtyBatch > 1 ? `x1 un: +$${res.netProfit.toFixed(2)}` : `x1 un: $0.00`;
+            document.getElementById('res-ganancia-batch-sub').textContent = `x1 un: +$${res.netProfit.toFixed(2)}`;
 
             document.getElementById('stock-batch-qty-label').textContent = res.qtyBatch;
             const hrs = Math.floor(res.totalBatchMinutes / 60);
@@ -1467,7 +1603,7 @@
             document.getElementById('stock-materials-grid').innerHTML = `
                 <div class="bg-[#061215] p-2.5 rounded-xl border border-teal-900/60 flex flex-col justify-between">
                     <span class="text-slate-400 font-medium text-[10px]"><i class="fa-solid fa-file text-teal-400 mr-1"></i> Hojas A4 80g:</span>
-                    <span class="font-bold text-white text-xs mt-1">${res.totalPaperSheetsA4.toLocaleString('es-AR')} págs <span class="text-teal-300 font-normal">(${res.totalPaperReams} resmas)</span></span>
+                    <span class="font-bold text-white text-xs mt-1">${res.totalPaperSheetsA4.toLocaleString('es-AR')} hojas <span class="text-teal-300 font-normal">(${res.totalPaperReams} resmas)</span></span>
                 </div>
                 <div class="bg-[#061215] p-2.5 rounded-xl border border-teal-900/60 flex flex-col justify-between">
                     <span class="text-slate-400 font-medium text-[10px]"><i class="fa-solid fa-ring text-amber-400 mr-1"></i> Espirales ${res.spiralObj.mm}mm:</span>
@@ -1498,97 +1634,115 @@
                     <td class="px-3 py-1.5 font-medium text-slate-200">Hoja 80g (A4 equivalentes)</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.units.paperUnitPrice.toFixed(2)}</td>
                     <td class="px-3 py-1.5 text-center">
-                        <input type="number" step="0.5" value="${res.q.paperSheets}" onchange="updateManualQuantityFromTable('paperSheets', this.value)"
+                        <input type="number" step="0.5" value="${res.q.paperSheets}" oninput="updateManualQuantityFromTable('paperSheets', this.value)"
                             class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
                     </td>
-                    <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.paperCost.toFixed(2)}</td>
+                    <td id="breakdown-subtotal-paper" class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.paperCost.toFixed(2)}</td>
                 </tr>
                 <tr class="hover:bg-teal-950/30">
                     <td class="px-3 py-1.5 font-medium text-slate-200">Tinta (${inkType === 'eternity' ? 'Eternity' : 'Estándar'} ${colorMode === 'bw' ? 'B&N' : 'Color'})</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.activeInkUnitPrice.toFixed(2)}</td>
                     <td class="px-3 py-1.5 text-center">
-                        <input type="number" step="1" value="${res.q.inkPages}" onchange="updateManualQuantityFromTable('inkPages', this.value)"
+                        <input type="number" step="1" value="${res.q.inkPages}" oninput="updateManualQuantityFromTable('inkPages', this.value)"
                             class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
                     </td>
-                    <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.inkCost.toFixed(2)}</td>
+                    <td id="breakdown-subtotal-ink" class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.inkCost.toFixed(2)}</td>
                 </tr>
                 <tr class="hover:bg-teal-950/30">
                     <td class="px-3 py-1.5 font-medium text-slate-200">Tapas Plásticas (${format})</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${(res.units.tapasUnitPrice / (format === 'A5' ? 4 : 2)).toFixed(2)}</td>
                     <td class="px-3 py-1.5 text-center">
-                        <input type="number" step="1" value="${res.q.tapasQty}" onchange="updateManualQuantityFromTable('tapasQty', this.value)"
+                        <input type="number" step="1" value="${res.q.tapasQty}" oninput="updateManualQuantityFromTable('tapasQty', this.value)"
                             class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
                     </td>
-                    <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.tapasCost.toFixed(2)}</td>
+                    <td id="breakdown-subtotal-covers" class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.tapasCost.toFixed(2)}</td>
                 </tr>
                 <tr class="hover:bg-teal-950/30">
                     <td class="px-3 py-1.5 font-medium text-slate-200">Papel Fotográfico 230g (${format})</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.units.photoUnitPrice.toFixed(2)}</td>
                     <td class="px-3 py-1.5 text-center">
-                        <input type="number" step="1" value="${res.q.photoQty}" onchange="updateManualQuantityFromTable('photoQty', this.value)"
+                        <input type="number" step="1" value="${res.q.photoQty}" oninput="updateManualQuantityFromTable('photoQty', this.value)"
                             class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
                     </td>
-                    <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.photoCost.toFixed(2)}</td>
+                    <td id="breakdown-subtotal-photo" class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.photoCost.toFixed(2)}</td>
                 </tr>
                 <tr class="hover:bg-teal-950/30">
                     <td class="px-3 py-1.5 font-medium text-slate-200">Espiral Plástico (${res.spiralObj.mm}mm)</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.spiralObj.unitPrice.toFixed(2)}</td>
                     <td class="px-3 py-1.5 text-center">
-                        <input type="number" step="1" value="${res.q.spiralQty}" onchange="updateManualQuantityFromTable('spiralQty', this.value)"
+                        <input type="number" step="1" value="${res.q.spiralQty}" oninput="updateManualQuantityFromTable('spiralQty', this.value)"
                             class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
                     </td>
-                    <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.spiralCost.toFixed(2)}</td>
+                    <td id="breakdown-subtotal-spiral" class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.spiralCost.toFixed(2)}</td>
                 </tr>
                 <tr class="hover:bg-teal-950/30">
                     <td class="px-3 py-1.5 font-medium text-slate-200">Laminado 35u</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.units.laminateUnitPrice.toFixed(2)}</td>
                     <td class="px-3 py-1.5 text-center">
-                        <input type="number" step="1" value="${res.q.laminateQty}" onchange="updateManualQuantityFromTable('laminateQty', this.value)"
+                        <input type="number" step="1" value="${res.q.laminateQty}" oninput="updateManualQuantityFromTable('laminateQty', this.value)"
                             class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
                     </td>
-                    <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.laminateCost.toFixed(2)}</td>
+                    <td id="breakdown-subtotal-laminate" class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.laminateCost.toFixed(2)}</td>
                 </tr>
                 <tr class="hover:bg-teal-950/30">
                     <td class="px-3 py-1.5 font-medium text-slate-200">Amortización Impresora (${res.printerName})</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${(res.printerAmort / Math.max(0.001, res.q.printerMin)).toFixed(2)}/m</td>
                     <td class="px-3 py-1.5 text-center">
-                        <input type="number" step="0.1" value="${res.q.printerMin.toFixed(1)}" onchange="updateManualQuantityFromTable('printerMin', this.value)"
+                        <input type="number" step="0.1" value="${res.q.printerMin.toFixed(1)}" oninput="updateManualQuantityFromTable('printerMin', this.value)"
                             class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
                     </td>
-                    <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.printerAmort.toFixed(2)}</td>
+                    <td id="breakdown-subtotal-printer" class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.printerAmort.toFixed(2)}</td>
                 </tr>
                 <tr class="hover:bg-teal-950/30">
                     <td class="px-3 py-1.5 font-medium text-slate-200">Amortización Repuesto (Cabezal / Chip)</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${(res.partsAmort / Math.max(0.001, res.q.printerMin)).toFixed(2)}/m</td>
                     <td class="px-3 py-1.5 text-center"><span class="text-slate-500 font-mono">${res.q.printerMin.toFixed(1)}m</span></td>
-                    <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.partsAmort.toFixed(2)}</td>
+                    <td id="breakdown-subtotal-parts" class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.partsAmort.toFixed(2)}</td>
                 </tr>
                 ${res.padsAmort > 0 ? `
                 <tr class="hover:bg-teal-950/30">
                     <td class="px-3 py-1.5 font-medium text-slate-200">Amortización Almohadillas</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${(res.padsAmort / Math.max(0.001, res.q.printerMin)).toFixed(2)}/m</td>
                     <td class="px-3 py-1.5 text-center"><span class="text-slate-500 font-mono">${res.q.printerMin.toFixed(1)}m</span></td>
-                    <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.padsAmort.toFixed(2)}</td>
+                    <td id="breakdown-subtotal-pads" class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.padsAmort.toFixed(2)}</td>
                 </tr>` : ''}
                 <tr class="hover:bg-teal-950/30">
                     <td class="px-3 py-1.5 font-medium text-slate-200">Servicio de Luz</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.units.luzMinRate.toFixed(2)}/m</td>
                     <td class="px-3 py-1.5 text-center">
-                        <input type="number" step="0.1" value="${res.q.luzMin.toFixed(1)}" onchange="updateManualQuantityFromTable('luzMin', this.value)"
+                        <input type="number" step="0.1" value="${res.q.luzMin.toFixed(1)}" oninput="updateManualQuantityFromTable('luzMin', this.value)"
                             class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
                     </td>
-                    <td class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.luzCost.toFixed(2)}</td>
+                    <td id="breakdown-subtotal-power" class="px-3 py-1.5 text-right font-mono text-emerald-400 font-bold">$${res.luzCost.toFixed(2)}</td>
                 </tr>
                 <tr class="hover:bg-teal-950/30 bg-teal-950/20">
                     <td class="px-3 py-1.5 font-medium text-teal-300">Honorarios Impresión (Ganancia)</td>
                     <td class="px-3 py-1.5 text-right font-mono text-slate-400">$${res.units.laborMinRate.toFixed(2)}/m</td>
                     <td class="px-3 py-1.5 text-center">
-                        <input type="number" step="0.1" value="${res.q.laborMin.toFixed(1)}" onchange="updateManualQuantityFromTable('laborMin', this.value)"
+                        <input type="number" step="0.1" value="${res.q.laborMin.toFixed(1)}" oninput="updateManualQuantityFromTable('laborMin', this.value)"
                             class="w-20 bg-[#061215] border border-teal-800/80 rounded px-2 py-0.5 text-center font-bold text-white focus:border-teal-400 focus:outline-none">
                     </td>
-                    <td class="px-3 py-1.5 text-right font-mono text-teal-300 font-bold">$${res.laborCost.toFixed(2)}</td>
+                    <td id="breakdown-subtotal-labor" class="px-3 py-1.5 text-right font-mono text-teal-300 font-bold">$${res.laborCost.toFixed(2)}</td>
                 </tr>
             `;
+
+            const breakdownSubtotals = {
+                'breakdown-subtotal-paper': res.paperCost,
+                'breakdown-subtotal-ink': res.inkCost,
+                'breakdown-subtotal-covers': res.tapasCost,
+                'breakdown-subtotal-photo': res.photoCost,
+                'breakdown-subtotal-spiral': res.spiralCost,
+                'breakdown-subtotal-laminate': res.laminateCost,
+                'breakdown-subtotal-printer': res.printerAmort,
+                'breakdown-subtotal-parts': res.partsAmort,
+                'breakdown-subtotal-pads': res.padsAmort,
+                'breakdown-subtotal-power': res.luzCost,
+                'breakdown-subtotal-labor': res.laborCost
+            };
+            Object.entries(breakdownSubtotals).forEach(([id, value]) => {
+                const cell = document.getElementById(id);
+                if (cell) cell.textContent = `$${value.toFixed(2)}`;
+            });
 
             document.getElementById('res-subtotal-base').textContent = `$${res.directCost.toFixed(2)}`;
             document.getElementById('res-lbl-tax-pct').textContent = `${res.activeContingencyPct}%`;
@@ -1623,10 +1777,18 @@
                         resetCoverImage();
                         return;
                     }
-                    document.getElementById('cover-preview-container').innerHTML = `<img src="${currentCoverBase64}" class="w-full h-full object-cover">`;
+                    document.getElementById('cover-preview-container').innerHTML = `<img src="${currentCoverBase64}" class="w-full h-full object-cover" alt="Vista previa de la portada">`;
                     showToastMessage('Portada optimizada correctamente.');
                 };
+                image.onerror = function() {
+                    showToastMessage('No se pudo leer la imagen. Prueba con JPG, PNG o WebP.');
+                    resetCoverImage();
+                };
                 image.src = e.target.result;
+            };
+            reader.onerror = function() {
+                showToastMessage('No se pudo abrir el archivo de portada.');
+                resetCoverImage();
             };
             reader.readAsDataURL(file);
         }
@@ -1643,21 +1805,62 @@
                 showToastMessage('Ingresa un título para el libro.');
                 return;
             }
+            if (title.length > 200) {
+                showToastMessage('El título no puede superar los 200 caracteres.');
+                return;
+            }
+            const pages = parseInt(document.getElementById('quote-pages').value, 10);
+            if (!Number.isInteger(pages) || pages < 1 || pages > 10000) {
+                showToastMessage('La cantidad de páginas debe estar entre 1 y 10.000.');
+                return;
+            }
+            const description = document.getElementById('quote-description').value.trim();
+            const deliverables = document.getElementById('quote-deliverables').value.trim();
+            const author = document.getElementById('quote-author').value.trim();
+            const genre = document.getElementById('quote-genre').value.trim();
+            if (author.length > 160 || genre.length > 80) {
+                showToastMessage('El autor o el género son demasiado extensos.');
+                return;
+            }
+            if (description.length > 3000 || deliverables.length > 5000) {
+                showToastMessage('La descripción o los detalles de entrega son demasiado extensos.');
+                return;
+            }
+            const safeCover = safeImageSource(currentCoverBase64);
+            if (currentCoverBase64 && !safeCover) {
+                showToastMessage('La portada no tiene un formato seguro. Vuelve a seleccionarla.');
+                return;
+            }
+            if (safeCover && safeCover.length > 850000) {
+                showToastMessage('La portada es demasiado grande para guardarla en Firebase.');
+                return;
+            }
 
+            const priceInput = document.getElementById('quote-custom-price');
+            const enteredPrice = Number(priceInput.value);
+            const manualPrice = priceInput.dataset.auto === 'false' && priceInput.value !== '' && Number.isFinite(enteredPrice) && enteredPrice > 0;
+            const automaticPrice = calculateBookMetrics(pages, document.getElementById('quote-print-mode').value,
+                document.getElementById('quote-format').value, document.getElementById('quote-printer').value,
+                document.getElementById('quote-ink-type').value, document.getElementById('quote-color-mode').value,
+                null, null, masterConfig.contingencyPercent, 1).suggestedRounded;
             const newBook = {
-                id: activeEditingBookId || ('book-' + Date.now()),
+                id: activeEditingBookId || createRecordId('book'),
                 title,
-                pages: parseInt(document.getElementById('quote-pages').value) || 10,
+                pages,
                 printMode: document.getElementById('quote-print-mode').value,
                 format: document.getElementById('quote-format').value,
                 printerKey: document.getElementById('quote-printer').value,
                 inkType: document.getElementById('quote-ink-type').value,
                 colorMode: document.getElementById('quote-color-mode').value,
-                description: document.getElementById('quote-description').value,
-                deliverables: document.getElementById('quote-deliverables').value,
-                coverImage: currentCoverBase64,
-                targetPrice: parseFloat(document.getElementById('quote-custom-price').value) || 0,
-                priceMode: document.getElementById('quote-custom-price').dataset.auto === 'false' ? 'manual' : 'auto'
+                author,
+                genre,
+                description,
+                deliverables,
+                coverImage: safeCover,
+                featured: document.getElementById('quote-featured').checked,
+                targetPrice: manualPrice ? enteredPrice : automaticPrice,
+                priceMode: manualPrice ? 'manual' : 'auto',
+                priceAdjustment: manualPrice ? enteredPrice - automaticPrice : 0
             };
 
             const saveButton = document.getElementById('save-catalog-btn');
@@ -1666,7 +1869,7 @@
             saveButton.disabled = true;
             saveLabel.textContent = wasEditing ? 'Actualizando...' : 'Guardando...';
             try {
-                if (db) {
+                if (canUseCloud()) {
                     await db.collection('catalog').doc(newBook.id).set(newBook);
                 } else {
                     const existingIndex = catalog.findIndex(book => book.id === newBook.id);
@@ -1699,8 +1902,11 @@
             document.getElementById('quote-printer').value = 'canon';
             document.getElementById('quote-ink-type').value = 'standard';
             document.getElementById('quote-color-mode').value = 'bw';
+            document.getElementById('quote-author').value = '';
+            document.getElementById('quote-genre').value = '';
             document.getElementById('quote-description').value = '';
             document.getElementById('quote-deliverables').value = 'Se entrega impreso en hojas de 80g a Color, Editado para una mejor lectura y con las imagenes a Color, espiral plástico Negro o transparente segun stock, tapas laminadas como libro original y el nombre del alumno en la Tapa.';
+            document.getElementById('quote-featured').checked = false;
             const customPrice = document.getElementById('quote-custom-price');
             customPrice.value = '';
             customPrice.dataset.auto = 'true';
@@ -1710,13 +1916,128 @@
             document.getElementById('quote-title').focus();
         }
 
+        function buildPublicBook(book) {
+            const metrics = calculateCatalogBookMetrics(book);
+            return {
+                title: book.title || '',
+                author: book.author || '',
+                genre: book.genre || 'Otros',
+                description: book.description || '',
+                deliverables: book.deliverables || '',
+                pages: Number(book.pages) || 0,
+                format: book.format || 'A5',
+                printMode: book.printMode || 'doble',
+                colorMode: book.colorMode || 'bw',
+                coverImage: null,
+                price: Number(metrics.finalSalePrice) || 0,
+                available: true,
+                featured: book.featured === true,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+        }
+
+        function schedulePublicCatalogSync() {
+            clearTimeout(publicCatalogSyncTimer);
+            if (!db || !configReadyForPublicSync || !catalogReadyForPublicSync) return;
+            publicCatalogSyncTimer = setTimeout(() => publishCatalogToPublic(false), 900);
+        }
+
+        function publishCatalogToPublic(notifyUser = false) {
+            const task = publicCatalogSyncQueue.catch(() => {}).then(() => performPublicCatalogSync(notifyUser));
+            publicCatalogSyncQueue = task;
+            return task;
+        }
+
+        async function performPublicCatalogSync(notifyUser = false) {
+            if (!db || !auth?.currentUser) {
+                if (notifyUser) showToastMessage('Debes iniciar sesión para publicar el catálogo.');
+                return false;
+            }
+            try {
+                const publicSnapshot = await db.collection('publicCatalog').get();
+                const currentIds = new Set(catalog.map(book => book.id));
+                const operations = [];
+                catalog.forEach(book => {
+                    if (book.priceMode === 'manual' && !(typeof book.priceAdjustment === 'number' && Number.isFinite(book.priceAdjustment))) {
+                        const automatic = calculateBookMetrics(book.pages, book.printMode, book.format, book.printerKey,
+                            book.inkType, book.colorMode || 'bw', null, null, masterConfig.contingencyPercent, 1);
+                        book.priceAdjustment = (Number(book.targetPrice) || automatic.suggestedRounded) - automatic.suggestedRounded;
+                        operations.push({ type: 'merge', ref: db.collection('catalog').doc(book.id), data: { priceAdjustment: book.priceAdjustment } });
+                    }
+                    operations.push({ type: 'set', ref: db.collection('publicCatalog').doc(book.id), data: buildPublicBook(book) });
+                });
+                publicSnapshot.forEach(docSnap => {
+                    if (!currentIds.has(docSnap.id)) operations.push({ type: 'delete', ref: docSnap.ref });
+                });
+                for (let offset = 0; offset < operations.length; offset += 450) {
+                    const batch = db.batch();
+                    operations.slice(offset, offset + 450).forEach(operation => {
+                        if (operation.type === 'set') batch.set(operation.ref, operation.data);
+                        else if (operation.type === 'merge') batch.set(operation.ref, operation.data, { merge: true });
+                        else batch.delete(operation.ref);
+                    });
+                    await batch.commit();
+                }
+                if (notifyUser) showToastMessage('Catálogo público actualizado correctamente.');
+                return true;
+            } catch (error) {
+                console.warn('No se pudo publicar el catálogo público:', error);
+                if (notifyUser || Date.now() - lastPublicSyncErrorAt > 30000) {
+                    lastPublicSyncErrorAt = Date.now();
+                    showToastMessage(`No se pudo actualizar el catálogo público: ${error.message || 'revisa las reglas de Firebase'}`);
+                }
+                return false;
+            }
+        }
+
+        function openPublicSettingsModal() {
+            document.getElementById('public-whatsapp-number').value = publicSettings.whatsapp || '';
+            document.getElementById('public-settings-modal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('public-whatsapp-number').focus(), 0);
+        }
+
+        function closePublicSettingsModal() {
+            document.getElementById('public-settings-modal').classList.add('hidden');
+        }
+
+        async function savePublicSettings(event) {
+            event.preventDefault();
+            const button = document.getElementById('save-public-settings-btn');
+            const rawPhone = document.getElementById('public-whatsapp-number').value.trim();
+            const digits = rawPhone.replace(/\D/g, '');
+            if (digits.length < 10 || digits.length > 15) {
+                showToastMessage('Revisa el número de WhatsApp e incluye el código de país.');
+                return;
+            }
+            if (!db || !auth?.currentUser) {
+                showToastMessage('La configuración pública requiere conexión con Firebase.');
+                return;
+            }
+            button.disabled = true;
+            button.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i>Publicando...';
+            try {
+                publicSettings.whatsapp = digits;
+                await db.collection('publicSettings').doc('contact').set({ whatsapp: digits, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
+                const published = await publishCatalogToPublic(false);
+                if (!published) throw new Error('No se pudo actualizar publicCatalog');
+                closePublicSettingsModal();
+                showToastMessage('WhatsApp guardado y catálogo público actualizado.');
+            } catch (error) {
+                console.error('Error configurando catálogo público:', error);
+                showToastMessage(`No se pudo configurar: ${error.message || 'error de Firebase'}`);
+            } finally {
+                button.disabled = false;
+                button.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-1"></i>Guardar y Publicar';
+            }
+        }
+
         function renderCatalog() {
             const grid = document.getElementById('catalog-grid');
             if (!grid) return;
             const searchVal = (document.getElementById('catalog-search')?.value || '').toLowerCase();
             document.getElementById('catalog-count').textContent = catalog.length;
 
-            const filtered = catalog.filter(b => (b.title || '').toLowerCase().includes(searchVal) || (b.description && b.description.toLowerCase().includes(searchVal)) || (b.deliverables && b.deliverables.toLowerCase().includes(searchVal)));
+            const filtered = catalog.filter(b => `${b.title || ''} ${b.author || ''} ${b.genre || ''} ${b.description || ''} ${b.deliverables || ''}`.toLowerCase().includes(searchVal));
 
             if (filtered.length === 0) {
                 grid.innerHTML = `
@@ -1730,19 +2051,22 @@
             }
 
             grid.innerHTML = filtered.map(book => {
-                const catalogPrice = book.priceMode === 'manual' ? book.targetPrice : null;
-                const metrics = calculateBookMetrics(book.pages, book.printMode, book.format, book.printerKey, book.inkType, book.colorMode || 'bw', catalogPrice, null, masterConfig.contingencyPercent, 1);
+                const metrics = calculateCatalogBookMetrics(book);
+                const coverSource = safeImageSource(book.coverImage);
+                const actionBookId = encodeURIComponent(String(book.id)).replace(/'/g, '%27');
+                const safeFormat = escapeHtml(book.format || '');
+                const safePages = escapeHtml(book.pages || 0);
 
                 return `
-                    <div onclick="openBookDetail('${book.id}')" class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl overflow-hidden shadow-xl hover:border-teal-700/60 transition-all flex flex-col justify-between cursor-pointer">
+                    <div onclick="openBookDetail(decodeURIComponent('${actionBookId}'))" class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl overflow-hidden shadow-xl hover:border-teal-700/60 transition-all flex flex-col justify-between cursor-pointer">
                         <div>
                             <div class="h-36 bg-[#061215] border-b border-teal-900/60 relative flex items-center justify-center overflow-hidden">
-                                ${book.coverImage ? `
-                                    <img src="${book.coverImage}" class="w-full h-full object-cover">
+                                ${coverSource ? `
+                                    <img src="${escapeHtml(coverSource)}" class="w-full h-full object-cover" alt="Portada de ${escapeHtml(book.title)}">
                                 ` : `
                                     <div class="text-center p-4">
                                         <i class="fa-solid fa-book text-3xl text-teal-500/30 mb-1"></i>
-                                        <span class="text-[11px] text-slate-600 block uppercase font-mono">${book.format} • ${book.pages} págs</span>
+                                        <span class="text-[11px] text-slate-600 block uppercase font-mono">${safeFormat} • ${safePages} págs</span>
                                     </div>
                                 `}
                                 <div class="absolute top-2 right-2 bg-[#061215]/90 backdrop-blur-md px-2.5 py-1 rounded-lg text-[10px] font-bold text-teal-300 border border-teal-800/60">
@@ -1752,12 +2076,14 @@
 
                             <div class="p-4 space-y-3">
                                 <div>
-                                    <h3 class="font-bold text-white text-sm line-clamp-1">${book.title}</h3>
-                                    <p class="text-xs text-slate-400 line-clamp-2 mt-0.5">${book.description || 'Sin descripción'}</p>
+                                    <h3 class="font-bold text-white text-sm line-clamp-1">${escapeHtml(book.title)}</h3>
+                                    <p class="text-[10px] text-teal-400 mt-1">${escapeHtml(book.author || 'Autor no informado')}${book.genre ? ` · ${escapeHtml(book.genre)}` : ''}</p>
+                                    <p class="text-xs text-slate-400 line-clamp-2 mt-0.5">${escapeHtml(book.description || 'Sin descripción')}</p>
+                                    ${book.featured === true ? '<span class="inline-flex mt-2 text-[9px] font-bold text-cyan-300 bg-cyan-950/50 border border-cyan-700/40 rounded-full px-2 py-1"><i class="fa-solid fa-star mr-1"></i>Destacado público</span>' : ''}
                                     ${book.deliverables ? `
                                         <div class="mt-2 text-[11px] bg-[#061215] p-2 rounded-lg border border-teal-900/60 text-teal-300 font-medium flex items-start gap-1.5">
                                             <i class="fa-solid fa-box-open text-teal-400 mt-0.5 shrink-0"></i>
-                                            <span class="line-clamp-2">${book.deliverables}</span>
+                                            <span class="line-clamp-2">${escapeHtml(book.deliverables)}</span>
                                         </div>
                                     ` : ''}
                                 </div>
@@ -1770,7 +2096,7 @@
                                     <div>
                                         <span class="text-slate-500 block">Precio Venta:</span>
                                         <span class="font-bold text-emerald-400">$${metrics.finalSalePrice.toFixed(2)}</span>
-                                        <span class="block text-[9px] mt-0.5 ${book.priceMode === 'manual' ? 'text-amber-400' : 'text-teal-500'}">${book.priceMode === 'manual' ? 'Precio manual' : 'Actualizado con Costos Base'}</span>
+                                        <span class="block text-[9px] mt-0.5 ${book.priceMode === 'manual' ? 'text-amber-400' : 'text-teal-500'}">${book.priceMode === 'manual' ? 'Ajuste manual sobre Costos Base' : 'Actualizado con Costos Base'}</span>
                                     </div>
                                     <div class="col-span-2 pt-1 border-t border-teal-950 flex justify-between items-center text-teal-300 font-semibold">
                                         <span>Ganancia Real Neta:</span>
@@ -1781,19 +2107,19 @@
                         </div>
 
                         <div class="p-4 pt-0 space-y-2">
-                            <button onclick="event.stopPropagation(); openSaleModal('${book.id}')" class="w-full bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 font-semibold text-xs py-2 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
+                            <button onclick="event.stopPropagation(); openSaleModal(decodeURIComponent('${actionBookId}'))" class="w-full bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 font-semibold text-xs py-2 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-cart-plus"></i>
                                 <span>Registrar Venta</span>
                             </button>
-                            <button onclick="event.stopPropagation(); openBatchModal('${book.id}')" class="w-full bg-teal-600/20 hover:bg-teal-600/30 text-teal-300 border border-teal-500/30 font-semibold text-xs py-2 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
+                            <button onclick="event.stopPropagation(); openBatchModal(decodeURIComponent('${actionBookId}'))" class="w-full bg-teal-600/20 hover:bg-teal-600/30 text-teal-300 border border-teal-500/30 font-semibold text-xs py-2 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-layer-group"></i>
                                 <span>Simular Tirada INPERU</span>
                             </button>
                             <div class="flex items-center gap-2">
-                                <button onclick="event.stopPropagation(); loadBookIntoQuoter('${book.id}')" class="flex-1 bg-[#061215] hover:bg-teal-950 text-slate-200 text-[11px] font-medium py-1.5 rounded-lg border border-teal-900/60 transition-colors">
+                                <button onclick="event.stopPropagation(); loadBookIntoQuoter(decodeURIComponent('${actionBookId}'))" class="flex-1 bg-[#061215] hover:bg-teal-950 text-slate-200 text-[11px] font-medium py-1.5 rounded-lg border border-teal-900/60 transition-colors">
                                     <i class="fa-solid fa-pen-to-square mr-1"></i> Editar
                                 </button>
-                                <button onclick="event.stopPropagation(); promptDeleteBook('${book.id}')" class="text-slate-500 hover:text-red-400 p-1.5 text-xs transition-colors">
+                                <button onclick="event.stopPropagation(); promptDeleteBook(decodeURIComponent('${actionBookId}'))" class="text-slate-500 hover:text-red-400 p-1.5 text-xs transition-colors">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </div>
@@ -1806,16 +2132,16 @@
         function openBookDetail(id) {
             const book = catalog.find(item => item.id === id);
             if (!book) return;
-            const currentPrice = book.priceMode === 'manual' ? book.targetPrice : null;
-            const metrics = calculateBookMetrics(book.pages, book.printMode, book.format, book.printerKey, book.inkType, book.colorMode || 'bw', currentPrice, null, masterConfig.contingencyPercent, 1);
+            const metrics = calculateCatalogBookMetrics(book);
             const cover = document.getElementById('book-detail-cover');
-            cover.innerHTML = book.coverImage
-                ? `<img src="${book.coverImage}" alt="Portada completa de ${escapeHtml(book.title)}" class="w-full h-full max-h-[78vh] object-contain bg-black/20">`
+            const coverSource = safeImageSource(book.coverImage);
+            cover.innerHTML = coverSource
+                ? `<img src="${escapeHtml(coverSource)}" alt="Portada completa de ${escapeHtml(book.title)}" class="w-full h-full max-h-[78vh] object-contain bg-black/20">`
                 : `<div class="text-center text-teal-800/60"><i class="fa-solid fa-book-open text-7xl"></i><p class="text-xs mt-3">Sin imagen de portada</p></div>`;
             document.getElementById('book-detail-title').textContent = book.title || '';
             document.getElementById('book-detail-description').textContent = book.description || 'Sin descripción.';
             document.getElementById('book-detail-deliverables').textContent = book.deliverables || 'Sin detalles adicionales.';
-            document.getElementById('book-detail-format').textContent = `${book.format} · ${book.pages} páginas`;
+            document.getElementById('book-detail-format').textContent = `${book.author ? `${book.author} · ` : ''}${book.genre ? `${book.genre} · ` : ''}${book.format} · ${book.pages} páginas`;
             document.getElementById('book-detail-specs').innerHTML = `
                 <div class="bg-[#061215] rounded-lg p-2 border border-teal-900/50"><span class="text-slate-500 block text-[10px]">Impresión</span><strong class="text-slate-200">${book.printMode === 'doble' ? 'Doble faz' : 'Simple faz'}</strong></div>
                 <div class="bg-[#061215] rounded-lg p-2 border border-teal-900/50"><span class="text-slate-500 block text-[10px]">Color</span><strong class="text-slate-200">${book.colorMode === 'color' ? 'Color' : 'Blanco y negro'}</strong></div>
@@ -1851,6 +2177,39 @@
             return String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
         }
 
+        function safeImageSource(value) {
+            const source = typeof value === 'string' ? value.trim() : '';
+            if (/^data:image\/(?:png|jpe?g|webp);base64,[a-z0-9+/=]+$/i.test(source)) return source;
+            if (/^https:\/\//i.test(source)) {
+                try {
+                    const url = new URL(source);
+                    return url.protocol === 'https:' ? url.href : null;
+                } catch (error) {
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        function createRecordId(prefix) {
+            const uniquePart = globalThis.crypto?.randomUUID
+                ? globalThis.crypto.randomUUID()
+                : `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+            return `${prefix}-${uniquePart}`;
+        }
+
+        function waitForCloudOperation(promise, timeoutMs = 8000) {
+            let timeoutId;
+            const timeout = new Promise((resolve, reject) => {
+                timeoutId = setTimeout(() => {
+                    const error = new Error('La confirmación de Firebase está demorando.');
+                    error.code = 'cloud-timeout';
+                    reject(error);
+                }, timeoutMs);
+            });
+            return Promise.race([promise, timeout]).finally(() => clearTimeout(timeoutId));
+        }
+
         function openSaleModal(bookId) {
             const book = catalog.find(item => item.id === bookId);
             if (!book) return;
@@ -1878,8 +2237,7 @@
         function getActiveSaleUnitPrice() {
             const book = catalog.find(item => item.id === activeSaleBookId);
             if (!book) return 0;
-            const salePrice = book.priceMode === 'manual' ? book.targetPrice : null;
-            return calculateBookMetrics(book.pages, book.printMode, book.format, book.printerKey, book.inkType, book.colorMode || 'bw', salePrice, null, masterConfig.contingencyPercent, 1).finalSalePrice;
+            return calculateCatalogBookMetrics(book).finalSalePrice;
         }
 
         function updateSaleTotalPreview() {
@@ -1913,49 +2271,105 @@
             if (!book && !previousSale) return;
             const qty = Math.max(1, parseInt(document.getElementById('sale-qty').value, 10) || 1);
             const unitPrice = Math.max(0, parseFloat(document.getElementById('sale-unit-price').value) || 0);
+            const customer = document.getElementById('sale-customer').value.trim();
+            const phone = document.getElementById('sale-phone').value.trim();
+            const phoneDigits = phone.replace(/\D/g, '');
+            const notes = document.getElementById('sale-notes').value.trim();
+            if (!customer || customer.length > 200) {
+                showToastMessage('Ingresa un nombre de cliente válido.');
+                return;
+            }
+            if (phoneDigits.length < 6 || phoneDigits.length > 15) {
+                showToastMessage('Ingresa un celular válido, con código de área.');
+                return;
+            }
+            if (notes.length > 3000) {
+                showToastMessage('Las notas no pueden superar los 3.000 caracteres.');
+                return;
+            }
             const sale = {
-                id: activeSaleId || ('sale-' + Date.now()),
+                id: activeSaleId || createRecordId('sale'),
                 bookId: book?.id || previousSale.bookId,
                 bookTitle: book?.title || previousSale.bookTitle,
-                customer: document.getElementById('sale-customer').value.trim(),
-                phone: document.getElementById('sale-phone').value.trim(),
+                customer,
+                phone,
                 date: document.getElementById('sale-date').value,
                 qty,
                 unitPrice,
                 total: unitPrice * qty,
                 status: document.getElementById('sale-status').value,
-                notes: document.getElementById('sale-notes').value.trim(),
+                notes,
                 createdAt: previousSale?.createdAt || new Date().toISOString(),
                 updatedAt: new Date().toISOString()
             };
-            if (!sale.customer) return;
-            if (db) await db.collection('sales').doc(sale.id).set(sale);
-            else {
-                const existingIndex = sales.findIndex(item => item.id === sale.id);
-                if (existingIndex >= 0) sales[existingIndex] = sale;
-                else sales.unshift(sale);
+            const saveButton = document.getElementById('save-sale-btn');
+            const originalButtonHtml = saveButton?.innerHTML;
+            if (saveButton) {
+                saveButton.disabled = true;
+                saveButton.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i>Guardando...';
             }
             const wasEditing = Boolean(activeSaleId);
-            closeSaleModal();
-            renderSales();
-            switchTab('sales');
-            showToastMessage(wasEditing ? 'Venta actualizada correctamente.' : 'Venta registrada correctamente.');
+            try {
+                if (canUseCloud()) await db.collection('sales').doc(sale.id).set(sale);
+                else {
+                    const existingIndex = sales.findIndex(item => item.id === sale.id);
+                    if (existingIndex >= 0) sales[existingIndex] = sale;
+                    else sales.unshift(sale);
+                }
+                closeSaleModal();
+                renderSales();
+                switchTab('sales');
+                showToastMessage(wasEditing ? 'Venta actualizada correctamente.' : 'Venta registrada correctamente.');
+            } catch (error) {
+                console.error('Error guardando la venta:', error);
+                showToastMessage(`No se pudo guardar la venta: ${error.message || 'error de Firebase'}`);
+            } finally {
+                if (saveButton) {
+                    saveButton.disabled = false;
+                    saveButton.innerHTML = originalButtonHtml;
+                }
+            }
         }
 
         async function updateSaleStatus(id, status) {
             const sale = sales.find(item => item.id === id);
             if (!sale) return;
+            const previousStatus = sale.status;
             sale.status = status;
-            if (db) await db.collection('sales').doc(id).update({ status });
             renderSales();
+            try {
+                if (canUseCloud()) await db.collection('sales').doc(id).update({ status, updatedAt: new Date().toISOString() });
+            } catch (error) {
+                sale.status = previousStatus;
+                renderSales();
+                console.error('Error actualizando el estado de la venta:', error);
+                showToastMessage('No se pudo cambiar el estado del pedido.');
+            }
         }
 
         async function deleteSale(id) {
             if (!confirm('¿Eliminar este registro de venta?')) return;
-            if (db) await db.collection('sales').doc(id).delete();
-            else sales = sales.filter(item => item.id !== id);
-            renderSales();
-            showToastMessage('Venta eliminada.');
+            try {
+                if (canUseCloud()) {
+                    const deleteOperation = db.collection('sales').doc(id).delete();
+                    try {
+                        await waitForCloudOperation(deleteOperation);
+                    } catch (error) {
+                        if (error.code !== 'cloud-timeout') throw error;
+                        deleteOperation.catch(lateError => {
+                            console.error('La venta no pudo eliminarse al recuperar conexión:', lateError);
+                            showToastMessage('Firebase rechazó la eliminación de la venta.');
+                        });
+                        showToastMessage('Eliminación pendiente de sincronización con Firebase.');
+                        return;
+                    }
+                } else sales = sales.filter(item => item.id !== id);
+                renderSales();
+                showToastMessage('Venta eliminada.');
+            } catch (error) {
+                console.error('Error eliminando la venta:', error);
+                showToastMessage('No se pudo eliminar la venta.');
+            }
         }
 
         function openReadyWhatsApp(id) {
@@ -1996,12 +2410,13 @@
             list.innerHTML = filtered.map(sale => {
                 const normalizedStatus = sale.status === 'Entregado' ? 'Finalizado' : sale.status === 'Pagado' ? 'Pagado sin entregar' : (sale.status || 'Pendiente');
                 const statusColor = normalizedStatus === 'Finalizado' ? 'text-emerald-300 border-emerald-700/50' : normalizedStatus === 'Pagado sin entregar' ? 'text-teal-300 border-teal-700/50' : 'text-amber-300 border-amber-700/50';
+                const actionSaleId = encodeURIComponent(String(sale.id)).replace(/'/g, '%27');
                 return `<div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-4 grid grid-cols-1 lg:grid-cols-12 gap-3 items-center">
-                    <div class="lg:col-span-3"><div class="font-bold text-white text-sm">${escapeHtml(sale.customer)}</div><div class="text-xs text-slate-400 mt-1 flex items-center gap-2"><span><i class="fa-solid fa-phone mr-1"></i>${escapeHtml(sale.phone || 'Sin celular')}</span>${sale.phone ? `<button onclick="openReadyWhatsApp('${sale.id}')" class="w-7 h-7 rounded-full bg-emerald-600/20 border border-emerald-500/40 text-emerald-400 hover:bg-emerald-600/30" title="Avisar por WhatsApp que está listo"><i class="fa-brands fa-whatsapp"></i></button>` : ''}</div></div>
+                    <div class="lg:col-span-3"><div class="font-bold text-white text-sm">${escapeHtml(sale.customer)}</div><div class="text-xs text-slate-400 mt-1 flex items-center gap-2"><span><i class="fa-solid fa-phone mr-1"></i>${escapeHtml(sale.phone || 'Sin celular')}</span>${sale.phone ? `<button onclick="openReadyWhatsApp(decodeURIComponent('${actionSaleId}'))" class="w-7 h-7 rounded-full bg-emerald-600/20 border border-emerald-500/40 text-emerald-400 hover:bg-emerald-600/30" title="Avisar por WhatsApp que está listo"><i class="fa-brands fa-whatsapp"></i></button>` : ''}</div></div>
                     <div class="lg:col-span-3"><div class="text-xs font-semibold text-teal-200">${escapeHtml(sale.bookTitle)}</div><div class="text-[11px] text-slate-500 mt-1">${Number(sale.qty) || 0} ejemplar(es) × ${formatMoney(sale.unitPrice)}</div></div>
                     <div class="lg:col-span-2"><div class="font-black text-emerald-400">${formatMoney(sale.total)}</div><div class="text-[11px] text-slate-500">${escapeHtml(sale.date || '')}</div></div>
-                    <div class="lg:col-span-2"><select onchange="updateSaleStatus('${sale.id}', this.value)" class="w-full bg-[#061215] border rounded-lg px-2 py-1.5 text-xs ${statusColor}"><option value="Pendiente" ${normalizedStatus === 'Pendiente' ? 'selected' : ''}>Pendiente</option><option value="Pagado sin entregar" ${normalizedStatus === 'Pagado sin entregar' ? 'selected' : ''}>Pagado sin entregar</option><option value="Finalizado" ${normalizedStatus === 'Finalizado' ? 'selected' : ''}>Entregado / Finalizado</option></select></div>
-                    <div class="lg:col-span-2 flex lg:justify-end items-center gap-2"><span class="text-[11px] text-slate-500 line-clamp-2">${escapeHtml(sale.notes || '')}</span><button onclick="openEditSaleModal('${sale.id}')" class="text-slate-400 hover:text-teal-300 p-2" title="Editar venta"><i class="fa-solid fa-pen-to-square"></i></button><button onclick="deleteSale('${sale.id}')" class="text-slate-500 hover:text-rose-400 p-2" title="Eliminar venta"><i class="fa-solid fa-trash"></i></button></div>
+                    <div class="lg:col-span-2"><select onchange="updateSaleStatus(decodeURIComponent('${actionSaleId}'), this.value)" class="w-full bg-[#061215] border rounded-lg px-2 py-1.5 text-xs ${statusColor}"><option value="Pendiente" ${normalizedStatus === 'Pendiente' ? 'selected' : ''}>Pendiente</option><option value="Pagado sin entregar" ${normalizedStatus === 'Pagado sin entregar' ? 'selected' : ''}>Pagado sin entregar</option><option value="Finalizado" ${normalizedStatus === 'Finalizado' ? 'selected' : ''}>Entregado / Finalizado</option></select></div>
+                    <div class="lg:col-span-2 flex lg:justify-end items-center gap-2"><span class="text-[11px] text-slate-500 line-clamp-2">${escapeHtml(sale.notes || '')}</span><button onclick="openEditSaleModal(decodeURIComponent('${actionSaleId}'))" class="text-slate-400 hover:text-teal-300 p-2" title="Editar venta"><i class="fa-solid fa-pen-to-square"></i></button><button onclick="deleteSale(decodeURIComponent('${actionSaleId}'))" class="text-slate-500 hover:text-rose-400 p-2" title="Eliminar venta"><i class="fa-solid fa-trash"></i></button></div>
                 </div>`;
             }).join('');
         }
@@ -2014,14 +2429,40 @@
         document.getElementById('confirm-delete-btn').addEventListener('click', async () => {
             if (!pendingDeleteBookId) return;
             const id = pendingDeleteBookId;
-            if (db) {
-                await db.collection('catalog').doc(id).delete();
-            } else {
-                catalog = catalog.filter(b => b.id !== id);
+            const deleteButton = document.getElementById('confirm-delete-btn');
+            const originalButtonHtml = deleteButton.innerHTML;
+            deleteButton.disabled = true;
+            deleteButton.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i>Eliminando...';
+            try {
+                if (canUseCloud()) {
+                    const deleteOperation = db.collection('catalog').doc(id).delete();
+                    closeDeleteModal();
+                    renderCatalog();
+                    try {
+                        await waitForCloudOperation(deleteOperation);
+                    } catch (error) {
+                        if (error.code !== 'cloud-timeout') throw error;
+                        deleteOperation.catch(lateError => {
+                            console.error('El libro no pudo eliminarse al recuperar conexión:', lateError);
+                            showToastMessage('Firebase rechazó la eliminación. El libro seguirá en el catálogo.');
+                        });
+                        showToastMessage('Eliminación pendiente: se completará al recuperar conexión.');
+                        return;
+                    }
+                } else {
+                    catalog = catalog.filter(b => b.id !== id);
+                    closeDeleteModal();
+                    renderCatalog();
+                }
+                showToastMessage('Libro eliminado.');
+            } catch (error) {
+                console.error('Error eliminando el libro:', error);
+                closeDeleteModal();
+                showToastMessage(`No se pudo eliminar el libro: ${error.message || 'revisa la conexión y los permisos'}`);
+            } finally {
+                deleteButton.disabled = false;
+                deleteButton.innerHTML = originalButtonHtml;
             }
-            closeDeleteModal();
-            renderCatalog();
-            showToastMessage('Libro eliminado.');
         });
 
         function loadBookIntoQuoter(id) {
@@ -2037,14 +2478,19 @@
             document.getElementById('quote-printer').value = book.printerKey;
             document.getElementById('quote-ink-type').value = book.inkType;
             document.getElementById('quote-color-mode').value = book.colorMode || 'bw';
+            document.getElementById('quote-author').value = book.author || '';
+            document.getElementById('quote-genre').value = book.genre || '';
             document.getElementById('quote-description').value = book.description || '';
             document.getElementById('quote-deliverables').value = book.deliverables || '';
-            document.getElementById('quote-custom-price').value = book.targetPrice || '';
+            document.getElementById('quote-featured').checked = book.featured === true;
+            const currentBookPrice = calculateCatalogBookMetrics(book).finalSalePrice;
+            document.getElementById('quote-custom-price').value = currentBookPrice;
             document.getElementById('quote-custom-price').dataset.auto = book.priceMode === 'manual' ? 'false' : 'true';
             
-            if (book.coverImage) {
-                currentCoverBase64 = book.coverImage;
-                document.getElementById('cover-preview-container').innerHTML = `<img src="${book.coverImage}" class="w-full h-full object-cover">`;
+            const coverSource = safeImageSource(book.coverImage);
+            if (coverSource) {
+                currentCoverBase64 = coverSource;
+                document.getElementById('cover-preview-container').innerHTML = `<img src="${escapeHtml(coverSource)}" class="w-full h-full object-cover" alt="Vista previa de la portada">`;
             } else {
                 resetCoverImage();
             }
@@ -2082,8 +2528,7 @@
             if (!book) return;
 
             const qty = parseInt(document.getElementById('batch-qty-input').value) || 1;
-            const batchPrice = book.priceMode === 'manual' ? book.targetPrice : null;
-            const unitRes = calculateBookMetrics(book.pages, book.printMode, book.format, book.printerKey, book.inkType, book.colorMode || 'bw', batchPrice, null, masterConfig.contingencyPercent, qty);
+            const unitRes = calculateCatalogBookMetrics(book, qty);
 
             document.getElementById('batch-total-sale').textContent = `$${unitRes.totalBatchSale.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
             document.getElementById('batch-total-cost').textContent = `$${unitRes.totalBatchCost.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
@@ -2111,46 +2556,46 @@
                 if (input && !(preserveFocusedInput && document.activeElement === input)) input.value = value;
             };
             setConfigValue('cfg-paper-price', masterConfig.paper.packPrice);
-            document.getElementById('cfg-paper-packsheets').value = masterConfig.paper.packSheets || 500;
+            setConfigValue('cfg-paper-packsheets', masterConfig.paper.packSheets ?? 500);
 
-            document.getElementById('cfg-ink-standard-price').value = masterConfig.inkStandard.packPrice;
-            document.getElementById('cfg-ink-standard-bottles').value = masterConfig.inkStandard.bottlesQty || 14;
-            document.getElementById('cfg-ink-standard-yield').value = masterConfig.inkStandard.pageYield || 1000;
+            setConfigValue('cfg-ink-standard-price', masterConfig.inkStandard.packPrice);
+            setConfigValue('cfg-ink-standard-bottles', masterConfig.inkStandard.bottlesQty ?? 14);
+            setConfigValue('cfg-ink-standard-yield', masterConfig.inkStandard.pageYield ?? 1000);
 
-            document.getElementById('cfg-ink-eternity-price').value = masterConfig.inkEternity.packPrice;
-            document.getElementById('cfg-ink-eternity-bottles').value = masterConfig.inkEternity.bottlesQty || 14;
-            document.getElementById('cfg-ink-eternity-yield').value = masterConfig.inkEternity.pageYield || 1500;
+            setConfigValue('cfg-ink-eternity-price', masterConfig.inkEternity.packPrice);
+            setConfigValue('cfg-ink-eternity-bottles', masterConfig.inkEternity.bottlesQty ?? 14);
+            setConfigValue('cfg-ink-eternity-yield', masterConfig.inkEternity.pageYield ?? 1500);
 
             setConfigValue('cfg-tapas-price', masterConfig.tapas.packPrice);
-            document.getElementById('cfg-tapas-packqty').value = masterConfig.tapas.packQty || 50;
+            setConfigValue('cfg-tapas-packqty', masterConfig.tapas.packQty ?? 50);
 
-            document.getElementById('cfg-photo-price').value = masterConfig.photoPaper.packPrice;
-            document.getElementById('cfg-photo-packqty').value = masterConfig.photoPaper.packQty || 100;
+            setConfigValue('cfg-photo-price', masterConfig.photoPaper.packPrice);
+            setConfigValue('cfg-photo-packqty', masterConfig.photoPaper.packQty ?? 100);
 
-            document.getElementById('cfg-laminate-price').value = masterConfig.laminado.unitPrice;
+            setConfigValue('cfg-laminate-price', masterConfig.laminado.unitPrice);
 
-            document.getElementById('cfg-printer-canon-speed').value = masterConfig.printers.canon.speedMinPerPage;
-            document.getElementById('cfg-printer-epson-speed').value = masterConfig.printers.epson.speedMinPerPage;
+            setConfigValue('cfg-printer-canon-speed', masterConfig.printers.canon.speedMinPerPage);
+            setConfigValue('cfg-printer-epson-speed', masterConfig.printers.epson.speedMinPerPage);
 
-            document.getElementById('cfg-canon-machine-cost').value = masterConfig.printers.canon.machineCost || 500000;
-            document.getElementById('cfg-canon-machine-minutes').value = masterConfig.printers.canon.machineMinutes || 350400;
+            setConfigValue('cfg-canon-machine-cost', masterConfig.printers.canon.machineCost ?? 500000);
+            setConfigValue('cfg-canon-machine-minutes', masterConfig.printers.canon.machineMinutes ?? 350400);
 
-            document.getElementById('cfg-canon-head-cost').value = masterConfig.printers.canon.headCost || 140000;
-            document.getElementById('cfg-canon-head-minutes').value = masterConfig.printers.canon.headMinutes || 87600;
+            setConfigValue('cfg-canon-head-cost', masterConfig.printers.canon.headCost ?? 140000);
+            setConfigValue('cfg-canon-head-minutes', masterConfig.printers.canon.headMinutes ?? 87600);
 
-            document.getElementById('cfg-canon-pads-cost').value = masterConfig.printers.canon.padsCost || 7500;
-            document.getElementById('cfg-canon-pads-minutes').value = masterConfig.printers.canon.padsMinutes || 175200;
+            setConfigValue('cfg-canon-pads-cost', masterConfig.printers.canon.padsCost ?? 7500);
+            setConfigValue('cfg-canon-pads-minutes', masterConfig.printers.canon.padsMinutes ?? 175200);
 
-            document.getElementById('cfg-epson-machine-cost').value = masterConfig.printers.epson.machineCost || 1500000;
-            document.getElementById('cfg-epson-machine-minutes').value = masterConfig.printers.epson.machineMinutes || 350400;
+            setConfigValue('cfg-epson-machine-cost', masterConfig.printers.epson.machineCost ?? 1500000);
+            setConfigValue('cfg-epson-machine-minutes', masterConfig.printers.epson.machineMinutes ?? 350400);
 
-            document.getElementById('cfg-epson-chip-cost').value = masterConfig.printers.epson.chipCost || 32000;
-            document.getElementById('cfg-epson-chip-minutes').value = masterConfig.printers.epson.chipMinutes || 87600;
+            setConfigValue('cfg-epson-chip-cost', masterConfig.printers.epson.chipCost ?? 32000);
+            setConfigValue('cfg-epson-chip-minutes', masterConfig.printers.epson.chipMinutes ?? 87600);
 
-            document.getElementById('cfg-luz-monthly').value = masterConfig.services.luzMonthly || 250000;
-            document.getElementById('cfg-luz-minutes').value = masterConfig.services.luzMinutes || 43200;
-            document.getElementById('cfg-labor-print-hourly').value = masterConfig.labor.hourlyRatePrint || 7500;
-            document.getElementById('cfg-contingency-default-pct').value = masterConfig.contingencyPercent || 15;
+            setConfigValue('cfg-luz-monthly', masterConfig.services.luzMonthly ?? 250000);
+            setConfigValue('cfg-luz-minutes', masterConfig.services.luzMinutes ?? 43200);
+            setConfigValue('cfg-labor-print-hourly', masterConfig.labor.hourlyRatePrint ?? 7500);
+            setConfigValue('cfg-contingency-default-pct', masterConfig.contingencyPercent ?? 15);
 
             renderUnitLabelsInConfig();
             const spiralsTable = document.getElementById('config-spirals-tbody');
@@ -2181,11 +2626,15 @@
             const spirTbody = document.getElementById('config-spirals-tbody');
             if (!spirTbody) return;
 
-            spirTbody.innerHTML = masterConfig.spirals.map((sp, idx) => `
+            spirTbody.innerHTML = masterConfig.spirals.map((sp, idx) => {
+                const mm = Number.isFinite(Number(sp.mm)) ? Number(sp.mm) : 0;
+                const maxSheets = Number.isFinite(Number(sp.maxSheets)) ? Number(sp.maxSheets) : 0;
+                const unitPrice = Number.isFinite(Number(sp.unitPrice)) ? Number(sp.unitPrice) : 0;
+                return `
                 <tr class="hover:bg-teal-950/40 transition-colors">
                     <td class="px-3 py-1.5 font-bold text-teal-300">
                         <div class="flex items-center gap-1">
-                            <input type="number" value="${sp.mm}" oninput="updateSpiralRow(${idx}, 'mm', this.value)"
+                            <input type="number" value="${mm}" oninput="updateSpiralRow(${idx}, 'mm', this.value)"
                                 class="w-16 bg-[#061215] border border-teal-800/80 rounded px-2 py-1 text-xs text-teal-300 font-bold text-center focus:border-teal-400 focus:outline-none">
                             <span class="text-xs text-slate-400">mm</span>
                         </div>
@@ -2193,7 +2642,7 @@
                     <td class="px-3 py-1.5">
                         <div class="flex items-center gap-1.5">
                             <span class="text-slate-400 text-xs">Hasta</span>
-                            <input type="number" value="${sp.maxSheets}" oninput="updateSpiralRow(${idx}, 'maxSheets', this.value)"
+                            <input type="number" value="${maxSheets}" oninput="updateSpiralRow(${idx}, 'maxSheets', this.value)"
                                 class="w-24 bg-[#061215] border border-teal-800/80 rounded px-2 py-1 text-xs text-white font-semibold text-center focus:border-teal-400 focus:outline-none">
                             <span class="text-slate-400 text-xs">hojas</span>
                         </div>
@@ -2201,7 +2650,7 @@
                     <td class="px-3 py-1.5">
                         <div class="flex items-center gap-1 justify-end">
                             <span class="text-slate-400 text-xs">$</span>
-                            <input type="number" step="1" value="${sp.unitPrice}" oninput="updateSpiralRow(${idx}, 'unitPrice', this.value)"
+                            <input type="number" step="1" value="${unitPrice}" oninput="updateSpiralRow(${idx}, 'unitPrice', this.value)"
                                 class="w-24 bg-[#061215] border border-teal-800/80 rounded px-2 py-1 text-xs text-emerald-400 font-bold text-right focus:border-teal-400 focus:outline-none">
                         </div>
                     </td>
@@ -2211,12 +2660,17 @@
                         </button>
                     </td>
                 </tr>
-            `).join('');
+            `;
+            }).join('');
         }
 
         function updateSpiralRow(idx, field, value) {
-            masterConfig.spirals[idx][field] = parseFloat(value) || 0;
-            saveMasterConfigToStorageAndRecalc();
+            const parsed = parseFloat(value);
+            if (Number.isFinite(parsed)) masterConfig.spirals[idx][field] = parsed;
+            clearTimeout(masterConfigSaveTimer);
+            masterConfigSaveTimer = setTimeout(saveMasterConfigFromUI, 350);
+            calculateQuote();
+            renderCatalog();
         }
 
         function addNewSpiralRow() {
@@ -2241,44 +2695,44 @@
             masterConfig.paper.packPrice = readNumber('cfg-paper-price', masterConfig.paper.packPrice);
             masterConfig.paper.packSheets = readNumber('cfg-paper-packsheets', masterConfig.paper.packSheets, true);
 
-            masterConfig.inkStandard.packPrice = parseFloat(document.getElementById('cfg-ink-standard-price')?.value) || 64000;
-            masterConfig.inkStandard.bottlesQty = parseFloat(document.getElementById('cfg-ink-standard-bottles')?.value) || 14;
-            masterConfig.inkStandard.pageYield = parseFloat(document.getElementById('cfg-ink-standard-yield')?.value) || 1000;
+            masterConfig.inkStandard.packPrice = readNumber('cfg-ink-standard-price', masterConfig.inkStandard.packPrice);
+            masterConfig.inkStandard.bottlesQty = readNumber('cfg-ink-standard-bottles', masterConfig.inkStandard.bottlesQty);
+            masterConfig.inkStandard.pageYield = readNumber('cfg-ink-standard-yield', masterConfig.inkStandard.pageYield);
 
-            masterConfig.inkEternity.packPrice = parseFloat(document.getElementById('cfg-ink-eternity-price')?.value) || 240000;
-            masterConfig.inkEternity.bottlesQty = parseFloat(document.getElementById('cfg-ink-eternity-bottles')?.value) || 14;
-            masterConfig.inkEternity.pageYield = parseFloat(document.getElementById('cfg-ink-eternity-yield')?.value) || 1500;
+            masterConfig.inkEternity.packPrice = readNumber('cfg-ink-eternity-price', masterConfig.inkEternity.packPrice);
+            masterConfig.inkEternity.bottlesQty = readNumber('cfg-ink-eternity-bottles', masterConfig.inkEternity.bottlesQty);
+            masterConfig.inkEternity.pageYield = readNumber('cfg-ink-eternity-yield', masterConfig.inkEternity.pageYield);
 
             masterConfig.tapas.packPrice = readNumber('cfg-tapas-price', masterConfig.tapas.packPrice);
             masterConfig.tapas.packQty = readNumber('cfg-tapas-packqty', masterConfig.tapas.packQty, true);
 
-            masterConfig.photoPaper.packPrice = parseFloat(document.getElementById('cfg-photo-price')?.value) || 13500;
-            masterConfig.photoPaper.packQty = parseInt(document.getElementById('cfg-photo-packqty')?.value) || 100;
+            masterConfig.photoPaper.packPrice = readNumber('cfg-photo-price', masterConfig.photoPaper.packPrice);
+            masterConfig.photoPaper.packQty = readNumber('cfg-photo-packqty', masterConfig.photoPaper.packQty, true);
 
-            masterConfig.laminado.unitPrice = parseFloat(document.getElementById('cfg-laminate-price')?.value) || 160;
+            masterConfig.laminado.unitPrice = readNumber('cfg-laminate-price', masterConfig.laminado.unitPrice);
 
             if (masterConfig.printers.canon) {
-                masterConfig.printers.canon.speedMinPerPage = parseFloat(document.getElementById('cfg-printer-canon-speed')?.value) || 0.55;
-                masterConfig.printers.canon.machineCost = parseFloat(document.getElementById('cfg-canon-machine-cost')?.value) || 500000;
-                masterConfig.printers.canon.machineMinutes = parseFloat(document.getElementById('cfg-canon-machine-minutes')?.value) || 350400;
-                masterConfig.printers.canon.headCost = parseFloat(document.getElementById('cfg-canon-head-cost')?.value) || 140000;
-                masterConfig.printers.canon.headMinutes = parseFloat(document.getElementById('cfg-canon-head-minutes')?.value) || 87600;
-                masterConfig.printers.canon.padsCost = parseFloat(document.getElementById('cfg-canon-pads-cost')?.value) || 7500;
-                masterConfig.printers.canon.padsMinutes = parseFloat(document.getElementById('cfg-canon-pads-minutes')?.value) || 175200;
+                masterConfig.printers.canon.speedMinPerPage = readNumber('cfg-printer-canon-speed', masterConfig.printers.canon.speedMinPerPage);
+                masterConfig.printers.canon.machineCost = readNumber('cfg-canon-machine-cost', masterConfig.printers.canon.machineCost);
+                masterConfig.printers.canon.machineMinutes = readNumber('cfg-canon-machine-minutes', masterConfig.printers.canon.machineMinutes);
+                masterConfig.printers.canon.headCost = readNumber('cfg-canon-head-cost', masterConfig.printers.canon.headCost);
+                masterConfig.printers.canon.headMinutes = readNumber('cfg-canon-head-minutes', masterConfig.printers.canon.headMinutes);
+                masterConfig.printers.canon.padsCost = readNumber('cfg-canon-pads-cost', masterConfig.printers.canon.padsCost);
+                masterConfig.printers.canon.padsMinutes = readNumber('cfg-canon-pads-minutes', masterConfig.printers.canon.padsMinutes);
             }
 
             if (masterConfig.printers.epson) {
-                masterConfig.printers.epson.speedMinPerPage = parseFloat(document.getElementById('cfg-printer-epson-speed')?.value) || 0.36;
-                masterConfig.printers.epson.machineCost = parseFloat(document.getElementById('cfg-epson-machine-cost')?.value) || 1500000;
-                masterConfig.printers.epson.machineMinutes = parseFloat(document.getElementById('cfg-epson-machine-minutes')?.value) || 350400;
-                masterConfig.printers.epson.chipCost = parseFloat(document.getElementById('cfg-epson-chip-cost')?.value) || 32000;
-                masterConfig.printers.epson.chipMinutes = parseFloat(document.getElementById('cfg-epson-chip-minutes')?.value) || 87600;
+                masterConfig.printers.epson.speedMinPerPage = readNumber('cfg-printer-epson-speed', masterConfig.printers.epson.speedMinPerPage);
+                masterConfig.printers.epson.machineCost = readNumber('cfg-epson-machine-cost', masterConfig.printers.epson.machineCost);
+                masterConfig.printers.epson.machineMinutes = readNumber('cfg-epson-machine-minutes', masterConfig.printers.epson.machineMinutes);
+                masterConfig.printers.epson.chipCost = readNumber('cfg-epson-chip-cost', masterConfig.printers.epson.chipCost);
+                masterConfig.printers.epson.chipMinutes = readNumber('cfg-epson-chip-minutes', masterConfig.printers.epson.chipMinutes);
             }
 
-            masterConfig.services.luzMonthly = parseFloat(document.getElementById('cfg-luz-monthly')?.value) || 250000;
-            masterConfig.services.luzMinutes = parseFloat(document.getElementById('cfg-luz-minutes')?.value) || 43200;
-            masterConfig.labor.hourlyRatePrint = parseFloat(document.getElementById('cfg-labor-print-hourly')?.value) || 7500;
-            masterConfig.contingencyPercent = parseFloat(document.getElementById('cfg-contingency-default-pct')?.value) || 15;
+            masterConfig.services.luzMonthly = readNumber('cfg-luz-monthly', masterConfig.services.luzMonthly);
+            masterConfig.services.luzMinutes = readNumber('cfg-luz-minutes', masterConfig.services.luzMinutes);
+            masterConfig.labor.hourlyRatePrint = readNumber('cfg-labor-print-hourly', masterConfig.labor.hourlyRatePrint);
+            masterConfig.contingencyPercent = readNumber('cfg-contingency-default-pct', masterConfig.contingencyPercent);
 
             const quoterContingencyInput = document.getElementById('quote-contingency-pct');
             if (quoterContingencyInput) quoterContingencyInput.value = masterConfig.contingencyPercent;
@@ -2293,8 +2747,15 @@
         }
 
         function saveMasterConfigToStorageAndRecalc() {
-            if (db) {
-                db.collection('config').doc('master').set(masterConfig).catch(e => console.warn("Error guardando en Firestore:", e));
+            if (canUseCloud()) {
+                db.collection('config').doc('master').set(masterConfig).catch(error => {
+                    console.warn("Error guardando en Firestore:", error);
+                    const now = Date.now();
+                    if (now - lastConfigSaveErrorAt > 5000) {
+                        lastConfigSaveErrorAt = now;
+                        showToastMessage('No se pudieron guardar los Costos Base en Firebase.');
+                    }
+                });
             }
             calculateQuote();
             renderCatalog();

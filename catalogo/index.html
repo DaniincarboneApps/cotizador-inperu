@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#041115">
+    <meta name="description" content="Catálogo público de libros impresos de INPERU Producciones. Consultá precios y pedí por WhatsApp.">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+    <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+    <title>Biblioteca INPERU | Catálogo de libros</title>
+    <link rel="icon" type="image/png" href="../icons/favicon-48.png">
+    <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+    <link rel="stylesheet" href="./styles.css?v=2">
+    <script defer src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script defer src="./app.js?v=2"></script>
+</head>
+<body>
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+
+    <header class="site-header">
+        <a class="brand" href="#inicio" aria-label="Ir al inicio de Biblioteca INPERU">
+            <span class="brand-logo"><img src="../icons/icon-192.png" alt="" width="58" height="58"></span>
+            <span class="brand-copy"><strong>INPERU</strong><small>PRODUCCIONES</small></span>
+        </a>
+        <nav class="desktop-nav" aria-label="Navegación principal">
+            <a href="#biblioteca">Biblioteca</a>
+            <a href="#como-pedir">Cómo pedir</a>
+        </nav>
+        <div class="header-actions">
+            <a id="header-whatsapp" class="header-contact is-disabled" href="#" aria-disabled="true">
+                <span class="status-dot" aria-hidden="true"></span> WhatsApp
+            </a>
+            <button id="open-cart" class="cart-button" type="button" aria-label="Abrir pedido">
+                <span aria-hidden="true">▣</span>
+                <span>Mi pedido</span>
+                <strong id="cart-count">0</strong>
+            </button>
+        </div>
+    </header>
+
+    <main id="inicio">
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-copy">
+                <span class="eyebrow"><i aria-hidden="true"></i> BIBLIOTECA DIGITAL INPERU</span>
+                <h1 id="hero-title">Libros impresos<br><em>para aprender sin límites.</em></h1>
+                <p>Explorá nuestro repositorio, conocé cada detalle y armá tu pedido. Los precios se mantienen sincronizados con nuestro catálogo.</p>
+                <div class="hero-actions">
+                    <a class="primary-link" href="#biblioteca">Explorar biblioteca <span aria-hidden="true">↓</span></a>
+                    <span class="live-label"><i aria-hidden="true"></i> Catálogo actualizado</span>
+                </div>
+                <div class="hero-stats" aria-label="Datos del catálogo">
+                    <div><strong id="hero-book-count">—</strong><span>títulos disponibles</span></div>
+                    <div><strong>24/7</strong><span>consulta en línea</span></div>
+                    <div><strong>Directo</strong><span>pedido por WhatsApp</span></div>
+                </div>
+            </div>
+            <div id="hero-library" class="hero-library" aria-hidden="true">
+                <div class="orbit orbit-one"></div>
+                <div class="orbit orbit-two"></div>
+                <div class="hero-book hero-book-back"><span>INPERU</span></div>
+                <div id="hero-featured-cover" class="hero-book hero-book-front"><span>CATÁLOGO</span></div>
+                <div class="scan-line"></div>
+                <div class="hero-chip"><i></i> SELECCIÓN INPERU</div>
+            </div>
+        </section>
+
+        <section id="biblioteca" class="library-section" aria-labelledby="catalog-title">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">SELECCIÓN INPERU</span>
+                    <h2 id="catalog-title">Nuestra biblioteca</h2>
+                    <p>Al ingresar mostramos nuestra selección. Buscá para consultar todo el repositorio.</p>
+                </div>
+                <label class="search-box">
+                    <span aria-hidden="true">⌕</span>
+                    <span class="sr-only">Buscar un libro</span>
+                    <input id="catalog-search" type="search" placeholder="Buscar título, autor, género…" autocomplete="off">
+                    <button id="clear-search" type="button" aria-label="Limpiar búsqueda" hidden>×</button>
+                </label>
+            </div>
+
+            <div id="catalog-filters" class="filter-row" aria-label="Filtros del catálogo">
+                <button class="filter-chip is-active" type="button" data-filter="featured">Selección INPERU</button>
+                <button class="filter-chip" type="button" data-filter="all">Ver todo</button>
+                <button class="filter-chip" type="button" data-filter="A5">Formato A5</button>
+                <button class="filter-chip" type="button" data-filter="A4">Formato A4</button>
+                <button class="filter-chip" type="button" data-filter="color">A color</button>
+                <button class="filter-chip" type="button" data-filter="bw">Blanco y negro</button>
+                <label class="genre-filter"><span class="sr-only">Filtrar por género</span><select id="genre-filter"><option value="all">Todos los géneros</option></select></label>
+            </div>
+
+            <div class="catalog-summary">
+                <div id="catalog-status" class="catalog-status" role="status">Conectando con la biblioteca…</div>
+                <span class="swipe-hint">Deslizá para explorar <span aria-hidden="true">→</span></span>
+            </div>
+            <div id="catalog-shelves" class="catalog-shelves" aria-live="polite"></div>
+        </section>
+
+        <section id="como-pedir" class="how-section" aria-labelledby="how-title">
+            <div>
+                <span class="section-kicker">SIMPLE Y DIRECTO</span>
+                <h2 id="how-title">Armá tu pedido en tres pasos</h2>
+            </div>
+            <ol class="steps">
+                <li><span>01</span><div><strong>Explorá</strong><p>Buscá el libro y abrí su ficha para conocer todos los detalles.</p></div></li>
+                <li><span>02</span><div><strong>Elegí</strong><p>Indicá la cantidad y agregá uno o varios títulos a tu pedido.</p></div></li>
+                <li><span>03</span><div><strong>Consultá</strong><p>Envianos la lista por WhatsApp para confirmar disponibilidad y entrega.</p></div></li>
+            </ol>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-brand">
+            <img src="../icons/icon-192.png" alt="" width="44" height="44">
+            <p><strong>INPERU Producciones</strong><br><span>Impresiones pensadas para acompañarte.</span></p>
+        </div>
+        <a href="#inicio">Volver arriba ↑</a>
+    </footer>
+
+    <dialog id="book-dialog" class="book-dialog" aria-labelledby="detail-title">
+        <button id="detail-close" class="dialog-close" type="button" aria-label="Cerrar detalle">×</button>
+        <div class="detail-layout">
+            <div class="detail-visual">
+                <span class="detail-grid" aria-hidden="true"></span>
+                <div id="detail-cover" class="detail-cover"></div>
+                <span class="detail-availability"><i aria-hidden="true"></i> Disponible para pedir</span>
+            </div>
+            <div class="detail-content">
+                <span id="detail-meta" class="detail-meta"></span>
+                <h2 id="detail-title"></h2>
+                <p id="detail-description" class="detail-description"></p>
+                <div class="spec-grid">
+                    <div><small>Formato</small><strong id="detail-format">—</strong></div>
+                    <div><small>Páginas</small><strong id="detail-pages">—</strong></div>
+                    <div><small>Impresión</small><strong id="detail-print">—</strong></div>
+                    <div><small>Interior</small><strong id="detail-color">—</strong></div>
+                </div>
+                <details class="delivery-box" open>
+                    <summary>Detalles de entrega y terminación</summary>
+                    <p id="detail-delivery"></p>
+                </details>
+                <div class="detail-bottom">
+                    <div><small>Precio por ejemplar</small><strong id="detail-price"></strong></div>
+                    <label class="quantity-control">Cantidad
+                        <span><button id="quantity-minus" type="button" aria-label="Restar uno">−</button><input id="detail-quantity" type="number" min="1" max="999" value="1" inputmode="numeric"><button id="quantity-plus" type="button" aria-label="Sumar uno">+</button></span>
+                    </label>
+                </div>
+                <button id="detail-add" class="add-button" type="button"><span aria-hidden="true">＋</span> Agregar a mi pedido</button>
+                <button id="detail-order" class="order-link" type="button">Pedir este libro por WhatsApp ↗</button>
+                <p id="whatsapp-note" class="whatsapp-note"></p>
+            </div>
+        </div>
+    </dialog>
+
+    <div id="drawer-backdrop" class="drawer-backdrop" hidden></div>
+    <aside id="order-drawer" class="order-drawer" aria-labelledby="drawer-title" aria-hidden="true">
+        <div class="drawer-header">
+            <div><span class="section-kicker">TU SELECCIÓN</span><h2 id="drawer-title">Mi pedido</h2></div>
+            <button id="close-cart" class="dialog-close" type="button" aria-label="Cerrar pedido">×</button>
+        </div>
+        <div id="cart-items" class="cart-items"></div>
+        <div class="drawer-footer">
+            <div class="cart-total"><span>Total estimado</span><strong id="cart-total">$ 0</strong></div>
+            <p>La disponibilidad, el precio final y la forma de entrega se confirman por WhatsApp.</p>
+            <button id="send-cart" class="order-button" type="button">Enviar pedido por WhatsApp <span aria-hidden="true">↗</span></button>
+            <button id="clear-cart" class="clear-cart" type="button">Vaciar pedido</button>
+        </div>
+    </aside>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <noscript>Necesitás habilitar JavaScript para ver el catálogo actualizado.</noscript>
+</body>
+</html>
