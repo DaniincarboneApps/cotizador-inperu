@@ -102,6 +102,10 @@ function updateContactLinks() {
 }
 
 function coverMarkup(book, className, altPrefix = 'Portada de') {
+    const coverSource = safeImageSource(book.coverImage);
+    if (coverSource) {
+        return `<img class="${escapeHtml(className)}" src="${escapeHtml(coverSource)}" alt="${escapeHtml(`${altPrefix} ${book.title || 'libro'}`.trim())}" loading="lazy" decoding="async">`;
+    }
     return `<span class="cover-placeholder ${coverTone(book)}" aria-hidden="true"><b>${escapeHtml(coverInitials(book))}</b><small>INPERU</small></span>`;
 }
 

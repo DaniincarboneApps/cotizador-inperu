@@ -367,7 +367,7 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs font-medium text-slate-300 mb-1">Imagen interna (Opcional, no se publica)</label>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Imagen del libro (opcional)</label>
                                 <div class="flex items-center gap-3">
                                     <label class="cursor-pointer bg-teal-950/60 hover:bg-teal-900/60 border border-teal-700/50 text-xs text-teal-200 px-3 py-2 rounded-xl transition-colors flex items-center gap-2">
                                         <i class="fa-solid fa-upload"></i>
@@ -380,6 +380,14 @@
                                     <button type="button" onclick="resetCoverImage()" class="text-xs text-slate-500 hover:text-red-400">Quitar</button>
                                 </div>
                             </div>
+
+                            <label class="flex items-start gap-3 bg-cyan-950/30 border border-cyan-700/40 rounded-xl p-3 cursor-pointer">
+                                <input type="checkbox" id="quote-public-cover" class="mt-0.5 accent-cyan-400 h-4 w-4">
+                                <span>
+                                    <strong class="block text-xs text-cyan-200">Mostrar tapa original en el catálogo público</strong>
+                                    <small class="block text-[10px] text-slate-400 mt-1">Solo si tenés autorización para publicarla. Si no se marca, se mantiene la tapa generada.</small>
+                                </span>
+                            </label>
 
                             <label class="flex items-start gap-3 bg-cyan-950/30 border border-cyan-700/40 rounded-xl p-3 cursor-pointer">
                                 <input type="checkbox" id="quote-featured" class="mt-0.5 accent-cyan-400 h-4 w-4">
@@ -1797,6 +1805,7 @@
             currentCoverBase64 = null;
             document.getElementById('quote-cover-input').value = '';
             document.getElementById('cover-preview-container').innerHTML = `<i class="fa-solid fa-image"></i>`;
+            document.getElementById('quote-public-cover').checked = false;
         }
 
         async function saveCurrentQuoteToCatalog() {
@@ -1835,6 +1844,11 @@
                 showToastMessage('La portada es demasiado grande para guardarla en Firebase.');
                 return;
             }
+            const publishCover = document.getElementById('quote-public-cover').checked;
+            if (publishCover && !safeCover) {
+                showToastMessage('Subí una tapa antes de mostrarla en el catálogo público.');
+                return;
+            }
 
             const priceInput = document.getElementById('quote-custom-price');
             const enteredPrice = Number(priceInput.value);
@@ -1857,6 +1871,7 @@
                 description,
                 deliverables,
                 coverImage: safeCover,
+                publicCover: publishCover,
                 featured: document.getElementById('quote-featured').checked,
                 targetPrice: manualPrice ? enteredPrice : automaticPrice,
                 priceMode: manualPrice ? 'manual' : 'auto',
@@ -1907,6 +1922,7 @@
             document.getElementById('quote-description').value = '';
             document.getElementById('quote-deliverables').value = 'Se entrega impreso en hojas de 80g a Color, Editado para una mejor lectura y con las imagenes a Color, espiral plástico Negro o transparente segun stock, tapas laminadas como libro original y el nombre del alumno en la Tapa.';
             document.getElementById('quote-featured').checked = false;
+            document.getElementById('quote-public-cover').checked = false;
             const customPrice = document.getElementById('quote-custom-price');
             customPrice.value = '';
             customPrice.dataset.auto = 'true';
@@ -1928,7 +1944,7 @@
                 format: book.format || 'A5',
                 printMode: book.printMode || 'doble',
                 colorMode: book.colorMode || 'bw',
-                coverImage: null,
+                coverImage: book.publicCover === true ? safeImageSource(book.coverImage) : null,
                 price: Number(metrics.finalSalePrice) || 0,
                 available: true,
                 featured: book.featured === true,
@@ -2483,6 +2499,7 @@
             document.getElementById('quote-description').value = book.description || '';
             document.getElementById('quote-deliverables').value = book.deliverables || '';
             document.getElementById('quote-featured').checked = book.featured === true;
+            document.getElementById('quote-public-cover').checked = book.publicCover === true && Boolean(safeImageSource(book.coverImage));
             const currentBookPrice = calculateCatalogBookMetrics(book).finalSalePrice;
             document.getElementById('quote-custom-price').value = currentBookPrice;
             document.getElementById('quote-custom-price').dataset.auto = book.priceMode === 'manual' ? 'false' : 'true';
