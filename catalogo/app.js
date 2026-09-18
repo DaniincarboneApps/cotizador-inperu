@@ -71,6 +71,13 @@ function getBookTimestamp(book) {
     return 0;
 }
 
+function comparePublicBooks(a, b) {
+    const orderA = Number.isInteger(a.displayOrder) && a.displayOrder >= 1 ? a.displayOrder : Infinity;
+    const orderB = Number.isInteger(b.displayOrder) && b.displayOrder >= 1 ? b.displayOrder : Infinity;
+    if (orderA !== orderB) return orderA - orderB;
+    return String(a.title || '').localeCompare(String(b.title || ''), 'es', { sensitivity: 'base' });
+}
+
 function coverTone(book) {
     const text = String(book.title || book.id || 'INPERU');
     const hash = [...text].reduce((total, char) => total + char.charCodeAt(0), 0);
@@ -111,8 +118,13 @@ function coverMarkup(book, className, altPrefix = 'Portada de') {
 
 function renderHeroCover() {
     const target = document.getElementById('hero-featured-cover');
-    const featured = publicBooks.filter(book => book.featured === true).sort((a, b) => getBookTimestamp(b) - getBookTimestamp(a))[0];
+    const weekly = publicBooks.filter(book => book.heroFeatured === true).sort((a, b) => getBookTimestamp(b) - getBookTimestamp(a))[0];
+    const featured = weekly
+        || publicBooks.filter(book => book.featured === true).sort((a, b) => getBookTimestamp(b) - getBookTimestamp(a))[0];
     target.innerHTML = featured ? coverMarkup(featured, 'hero-cover-image', '') : '<span>CATÁLOGO</span>';
+    document.getElementById('hero-featured-label').textContent = weekly
+        ? `DESTACADO DE LA SEMANA · ${weekly.title || 'Libro'}`
+        : featured ? `SELECCIÓN INPERU · ${featured.title || 'Libro'}` : 'SELECCIÓN INPERU';
 }
 
 function matchesCurrentFilter(book) {
@@ -469,7 +481,7 @@ if (!loadLocalPreview()) {
                 const data = documentSnapshot.data();
                 if (data.available !== false) publicBooks.push({ id: documentSnapshot.id, ...data });
             });
-            publicBooks.sort((a, b) => String(a.title || '').localeCompare(String(b.title || ''), 'es', { sensitivity: 'base' }));
+            publicBooks.sort(comparePublicBooks);
             reconcileCart();
             renderGenreOptions();
             renderCart();

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'inperu-app-v10';
+const CACHE_NAME = 'inperu-app-v11';
 const APP_ASSETS = [
   './',
   './manifest.json',

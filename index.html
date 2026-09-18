@@ -396,6 +396,29 @@
                                     <small class="block text-[10px] text-slate-400 mt-1">Si no se marca, el libro igualmente aparecerá al buscarlo o al abrir el catálogo completo.</small>
                                 </span>
                             </label>
+
+                            <label class="flex items-start gap-3 bg-cyan-950/30 border border-cyan-700/40 rounded-xl p-3 cursor-pointer">
+                                <input type="checkbox" id="quote-public-visible" checked class="mt-0.5 accent-cyan-400 h-4 w-4">
+                                <span>
+                                    <strong class="block text-xs text-cyan-200">Mostrar este libro en la página pública</strong>
+                                    <small class="block text-[10px] text-slate-400 mt-1">Si lo desmarcás, seguirá en el cotizador interno pero desaparecerá de la web pública.</small>
+                                </span>
+                            </label>
+
+                            <label class="flex items-start gap-3 bg-cyan-950/30 border border-cyan-700/40 rounded-xl p-3 cursor-pointer">
+                                <input type="checkbox" id="quote-hero-featured" class="mt-0.5 accent-cyan-400 h-4 w-4" onchange="if (this.checked) document.getElementById('quote-featured').checked = true">
+                                <span>
+                                    <strong class="block text-xs text-cyan-200">Destacado de la semana (tapa grande)</strong>
+                                    <small class="block text-[10px] text-slate-400 mt-1">Solo uno a la vez. Al guardar este libro, reemplaza al destacado de la semana anterior.</small>
+                                </span>
+                            </label>
+
+                            <div>
+                                <label for="quote-display-order" class="block text-xs font-medium text-slate-300 mb-1">Orden de exhibición en los estantes (opcional)</label>
+                                <input type="number" id="quote-display-order" min="1" max="9999" step="1" placeholder="Ej. 1 para mostrarlo primero"
+                                    class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-teal-400">
+                                <small class="block text-[10px] text-slate-400 mt-1">Los libros sin número siguen ordenados alfabéticamente.</small>
+                            </div>
                         </div>
 
                         <div class="border-t border-teal-900/40 pt-4">
@@ -1849,6 +1872,18 @@
                 showToastMessage('Subí una tapa antes de mostrarla en el catálogo público.');
                 return;
             }
+            const publicVisible = document.getElementById('quote-public-visible').checked;
+            const heroFeatured = document.getElementById('quote-hero-featured').checked;
+            if (heroFeatured && !publicVisible) {
+                showToastMessage('El destacado de la semana debe estar visible en la página pública.');
+                return;
+            }
+            const orderInput = document.getElementById('quote-display-order').value.trim();
+            const displayOrder = orderInput === '' ? null : Number(orderInput);
+            if (orderInput !== '' && (!Number.isInteger(displayOrder) || displayOrder < 1 || displayOrder > 9999)) {
+                showToastMessage('El orden de exhibición debe ser un número entero entre 1 y 9999.');
+                return;
+            }
 
             const priceInput = document.getElementById('quote-custom-price');
             const enteredPrice = Number(priceInput.value);
@@ -1872,7 +1907,10 @@
                 deliverables,
                 coverImage: safeCover,
                 publicCover: publishCover,
-                featured: document.getElementById('quote-featured').checked,
+                publicVisible,
+                featured: document.getElementById('quote-featured').checked || heroFeatured,
+                heroFeatured,
+                displayOrder,
                 targetPrice: manualPrice ? enteredPrice : automaticPrice,
                 priceMode: manualPrice ? 'manual' : 'auto',
                 priceAdjustment: manualPrice ? enteredPrice - automaticPrice : 0
@@ -1885,11 +1923,19 @@
             saveLabel.textContent = wasEditing ? 'Actualizando...' : 'Guardando...';
             try {
                 if (canUseCloud()) {
-                    await db.collection('catalog').doc(newBook.id).set(newBook);
+                    const batch = db.batch();
+                    batch.set(db.collection('catalog').doc(newBook.id), newBook);
+                    if (heroFeatured) {
+                        catalog.filter(book => book.id !== newBook.id && book.heroFeatured === true).forEach(book => {
+                            batch.update(db.collection('catalog').doc(book.id), { heroFeatured: false });
+                        });
+                    }
+                    await batch.commit();
                 } else {
                     const existingIndex = catalog.findIndex(book => book.id === newBook.id);
                     if (existingIndex >= 0) catalog[existingIndex] = newBook;
                     else catalog.push(newBook);
+                    if (heroFeatured) catalog.forEach(book => { if (book.id !== newBook.id) book.heroFeatured = false; });
                 }
                 activeEditingBookId = null;
                 saveLabel.textContent = 'Guardar Libro en Catálogo INPERU';
@@ -1922,6 +1968,9 @@
             document.getElementById('quote-description').value = '';
             document.getElementById('quote-deliverables').value = 'Se entrega impreso en hojas de 80g a Color, Editado para una mejor lectura y con las imagenes a Color, espiral plástico Negro o transparente segun stock, tapas laminadas como libro original y el nombre del alumno en la Tapa.';
             document.getElementById('quote-featured').checked = false;
+            document.getElementById('quote-public-visible').checked = true;
+            document.getElementById('quote-hero-featured').checked = false;
+            document.getElementById('quote-display-order').value = '';
             document.getElementById('quote-public-cover').checked = false;
             const customPrice = document.getElementById('quote-custom-price');
             customPrice.value = '';
@@ -1948,6 +1997,8 @@
                 price: Number(metrics.finalSalePrice) || 0,
                 available: true,
                 featured: book.featured === true,
+                heroFeatured: book.heroFeatured === true,
+                displayOrder: Number.isInteger(book.displayOrder) && book.displayOrder >= 1 && book.displayOrder <= 9999 ? book.displayOrder : null,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
         }
@@ -1971,7 +2022,7 @@
             }
             try {
                 const publicSnapshot = await db.collection('publicCatalog').get();
-                const currentIds = new Set(catalog.map(book => book.id));
+                const currentIds = new Set(catalog.filter(book => book.publicVisible !== false).map(book => book.id));
                 const operations = [];
                 catalog.forEach(book => {
                     if (book.priceMode === 'manual' && !(typeof book.priceAdjustment === 'number' && Number.isFinite(book.priceAdjustment))) {
@@ -1980,7 +2031,9 @@
                         book.priceAdjustment = (Number(book.targetPrice) || automatic.suggestedRounded) - automatic.suggestedRounded;
                         operations.push({ type: 'merge', ref: db.collection('catalog').doc(book.id), data: { priceAdjustment: book.priceAdjustment } });
                     }
-                    operations.push({ type: 'set', ref: db.collection('publicCatalog').doc(book.id), data: buildPublicBook(book) });
+                    if (book.publicVisible !== false) {
+                        operations.push({ type: 'set', ref: db.collection('publicCatalog').doc(book.id), data: buildPublicBook(book) });
+                    }
                 });
                 publicSnapshot.forEach(docSnap => {
                     if (!currentIds.has(docSnap.id)) operations.push({ type: 'delete', ref: docSnap.ref });
@@ -2096,6 +2149,8 @@
                                     <p class="text-[10px] text-teal-400 mt-1">${escapeHtml(book.author || 'Autor no informado')}${book.genre ? ` · ${escapeHtml(book.genre)}` : ''}</p>
                                     <p class="text-xs text-slate-400 line-clamp-2 mt-0.5">${escapeHtml(book.description || 'Sin descripción')}</p>
                                     ${book.featured === true ? '<span class="inline-flex mt-2 text-[9px] font-bold text-cyan-300 bg-cyan-950/50 border border-cyan-700/40 rounded-full px-2 py-1"><i class="fa-solid fa-star mr-1"></i>Destacado público</span>' : ''}
+                                    ${book.heroFeatured === true ? '<span class="inline-flex mt-2 text-[9px] font-bold text-amber-300 bg-amber-950/40 border border-amber-700/40 rounded-full px-2 py-1">Tapa grande de la semana</span>' : ''}
+                                    ${book.publicVisible === false ? '<span class="inline-flex mt-2 text-[9px] font-bold text-slate-300 bg-slate-800/60 border border-slate-600/40 rounded-full px-2 py-1">Oculto en la página pública</span>' : ''}
                                     ${book.deliverables ? `
                                         <div class="mt-2 text-[11px] bg-[#061215] p-2 rounded-lg border border-teal-900/60 text-teal-300 font-medium flex items-start gap-1.5">
                                             <i class="fa-solid fa-box-open text-teal-400 mt-0.5 shrink-0"></i>
@@ -2499,6 +2554,9 @@
             document.getElementById('quote-description').value = book.description || '';
             document.getElementById('quote-deliverables').value = book.deliverables || '';
             document.getElementById('quote-featured').checked = book.featured === true;
+            document.getElementById('quote-public-visible').checked = book.publicVisible !== false;
+            document.getElementById('quote-hero-featured').checked = book.heroFeatured === true;
+            document.getElementById('quote-display-order').value = Number.isInteger(book.displayOrder) ? book.displayOrder : '';
             document.getElementById('quote-public-cover').checked = book.publicCover === true && Boolean(safeImageSource(book.coverImage));
             const currentBookPrice = calculateCatalogBookMetrics(book).finalSalePrice;
             document.getElementById('quote-custom-price').value = currentBookPrice;
