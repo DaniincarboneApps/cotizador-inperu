@@ -11,8 +11,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="INPERU">
     <link rel="manifest" href="./manifest.json">
-    <link rel="icon" type="image/png" sizes="48x48" href="./icons/favicon-48.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="./icons/neon-favicon-48.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./icons/neon-apple-touch-180.png">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -76,47 +76,10 @@
     <div id="auth-screen" class="fixed inset-0 z-50 bg-[#061215] flex items-center justify-center p-4">
         <div class="bg-[#0a1a1f] border border-teal-900/50 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl space-y-6 text-center">
             
-            <!-- Logo e Identidad gráfica oficial idéntico a la imagen -->
+            <!-- Logo neón compartido por el cotizador y el catálogo público -->
             <div class="flex flex-col items-center">
                 <div class="w-32 h-32 sm:w-36 sm:h-36 rounded-3xl overflow-hidden border border-teal-500/40 p-1.5 bg-[#061215] shadow-2xl mb-3 relative flex items-center justify-center">
-                    <svg viewBox="0 0 500 500" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Border frame rounded square -->
-                        <rect x="15" y="15" width="470" height="470" rx="70" fill="#ffffff" stroke="#28838d" stroke-width="26"/>
-                        <!-- Main circle background -->
-                        <circle cx="250" cy="210" r="135" fill="#28838d"/>
-                        <!-- White open book on top left of circle -->
-                        <path d="M165 145 C190 130 215 145 215 145 L215 195 C190 180 165 195 165 195 Z" fill="#ffffff"/>
-                        <path d="M215 145 C240 130 265 145 265 145 L265 195 C240 180 215 195 215 195 Z" fill="#ffffff"/>
-                        <line x1="215" y1="145" x2="215" y2="195" stroke="#28838d" stroke-width="4"/>
-                        <!-- QR code motif on top right of circle -->
-                        <rect x="280" y="140" width="16" height="16" fill="#ffffff"/>
-                        <rect x="305" y="140" width="16" height="16" fill="#ffffff"/>
-                        <rect x="330" y="140" width="16" height="16" fill="#ffffff"/>
-                        <rect x="280" y="165" width="16" height="16" fill="#ffffff"/>
-                        <rect x="330" y="165" width="16" height="16" fill="#ffffff"/>
-                        <rect x="280" y="190" width="16" height="16" fill="#ffffff"/>
-                        <rect x="305" y="190" width="16" height="16" fill="#ffffff"/>
-                        <rect x="330" y="190" width="16" height="16" fill="#ffffff"/>
-                        <rect x="310" y="168" width="8" height="8" fill="#ffffff"/>
-                        <!-- Waves inside circle -->
-                        <path d="M125 240 Q250 280 375 240" stroke="#ffffff" stroke-width="12" fill="none" stroke-linecap="round"/>
-                        <path d="M125 265 Q250 305 375 265" stroke="#ffffff" stroke-width="12" fill="none" stroke-linecap="round"/>
-                        <path d="M125 290 Q250 330 375 290" stroke="#ffffff" stroke-width="12" fill="none" stroke-linecap="round"/>
-                        <!-- Printer overlay -->
-                        <rect x="230" y="240" width="170" height="95" rx="20" fill="#0f343a" stroke="#ffffff" stroke-width="8"/>
-                        <rect x="255" y="295" width="120" height="55" rx="8" fill="#ffffff" stroke="#0f343a" stroke-width="6"/>
-                        <line x1="270" y1="312" x2="360" y2="312" stroke="#28838d" stroke-width="5" stroke-linecap="round"/>
-                        <line x1="270" y1="326" x2="360" y2="326" stroke="#28838d" stroke-width="5" stroke-linecap="round"/>
-                        <circle cx="370" cy="265" r="7" fill="#ffffff"/>
-                        <circle cx="385" cy="265" r="7" fill="#ffffff"/>
-                        <!-- Brand Name Text -->
-                        <text x="250" y="380" font-family="'Inter', sans-serif" font-weight="900" font-size="50" fill="#28838d" text-anchor="middle" letter-spacing="4">INPERU</text>
-                        <text x="250" y="412" font-family="'Inter', sans-serif" font-weight="800" font-size="22" fill="#28838d" text-anchor="middle" letter-spacing="6">PRODUCCIONES</text>
-                        <!-- Bottom banner -->
-                        <path d="M100 425 H400 A20 20 0 0 1 420 445 V470 A15 15 0 0 1 405 485 H95 A15 15 0 0 1 80 470 V445 A20 20 0 0 1 100 425 Z" fill="#28838d"/>
-                        <text x="250" y="455" font-family="'Inter', sans-serif" font-weight="800" font-size="16" fill="#ffffff" text-anchor="middle" letter-spacing="2">— COTIZAR IMPRESIONES —</text>
-                        <text x="250" y="475" font-family="'Inter', sans-serif" font-weight="800" font-size="15" fill="#ffffff" text-anchor="middle" letter-spacing="2">Y LIBROS</text>
-                    </svg>
+                    <img src="./icons/neon-icon-512.png" alt="Logo de INPERU Producciones" class="w-full h-full object-contain">
                 </div>
                 <h1 class="text-xl font-black tracking-widest text-[#28838d]">INPERU</h1>
                 <p class="text-xs text-teal-300 font-bold tracking-[0.25em]">PRODUCCIONES</p>
@@ -167,14 +130,7 @@
                 
                 <div class="flex items-center gap-3">
                     <div class="w-11 h-11 rounded-xl overflow-hidden border border-teal-500/30 bg-[#061215] shadow-md flex items-center justify-center p-0.5 shrink-0">
-                        <svg viewBox="0 0 500 500" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="500" height="500" rx="60" fill="#ffffff"/>
-                            <circle cx="250" cy="220" r="140" fill="#28838d"/>
-                            <path d="M165 160 C190 150 215 160 215 160 L215 200 C190 190 165 200 165 200 Z" fill="#ffffff"/>
-                            <path d="M215 160 C240 150 265 160 265 160 L265 200 C240 190 215 200 215 200 Z" fill="#ffffff"/>
-                            <rect x="230" y="240" width="160" height="90" rx="15" fill="#0f343a" stroke="#ffffff" stroke-width="8"/>
-                            <rect x="255" y="290" width="110" height="50" rx="6" fill="#ffffff"/>
-                        </svg>
+                        <img src="./icons/neon-icon-192.png" alt="" class="w-full h-full object-contain">
                     </div>
                     <div class="leading-none flex flex-col">
                         <span class="text-xl sm:text-2xl text-[#28838d] font-black tracking-[0.18em]">INPERU</span>

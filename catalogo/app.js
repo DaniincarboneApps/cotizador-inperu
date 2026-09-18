@@ -497,3 +497,9 @@ if (!loadLocalPreview()) {
         shelves.innerHTML = '<div class="empty-state"><strong>No pudimos iniciar el catálogo</strong><span>Volvé a intentarlo más tarde.</span></div>';
     }
 }
+
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js').catch(error => console.warn('No se pudo registrar el catálogo instalable:', error));
+    });
+}

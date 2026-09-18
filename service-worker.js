@@ -1,12 +1,12 @@
-const CACHE_NAME = 'inperu-app-v11';
+const CACHE_NAME = 'inperu-app-v13';
 const APP_ASSETS = [
   './',
   './manifest.json',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/icon-maskable-512.png',
-  './icons/apple-touch-icon.png',
-  './icons/favicon-48.png'
+  './icons/neon-icon-192.png',
+  './icons/neon-icon-512.png',
+  './icons/neon-maskable-512.png',
+  './icons/neon-apple-touch-180.png',
+  './icons/neon-favicon-48.png'
 ];
 
 self.addEventListener('install', event => {
