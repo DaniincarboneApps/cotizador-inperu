@@ -3,7 +3,7 @@
   "short_name": "INPERU Catálogo",
   "description": "Catálogo público de libros impresos de INPERU Producciones.",
   "lang": "es-AR",
-  "id": "./",
+  "id": "/inperu-producciones-catalogo",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

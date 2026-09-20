@@ -3,7 +3,7 @@
   "short_name": "INPERU",
   "description": "Sistema de cotización, catálogo y ventas de INPERU Producciones.",
   "lang": "es-AR",
-  "id": "./",
+  "id": "/inperu-producciones-cotizador",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

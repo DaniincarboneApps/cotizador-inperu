@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="INPERU">
-    <link rel="manifest" href="./manifest.json">
+    <link rel="manifest" href="./manifest.json?v=15">
     <link rel="icon" type="image/png" sizes="48x48" href="./icons/neon-favicon-48.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icons/neon-apple-touch-180.png">
     
@@ -2867,7 +2867,7 @@
 
         if ('serviceWorker' in navigator && location.protocol !== 'file:') {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js').catch(error => console.warn('No se pudo registrar el modo instalable:', error));
+                navigator.serviceWorker.register('./service-worker.js?v=15').catch(error => console.warn('No se pudo registrar el modo instalable:', error));
             });
         }
     </script>
