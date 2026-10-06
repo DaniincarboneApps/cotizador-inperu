@@ -500,6 +500,6 @@ if (!loadLocalPreview()) {
 
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js?v=16').catch(error => console.warn('No se pudo registrar el catálogo instalable:', error));
+        navigator.serviceWorker.register('./service-worker.js?v=17').catch(error => console.warn('No se pudo registrar el catálogo instalable:', error));
     });
 }

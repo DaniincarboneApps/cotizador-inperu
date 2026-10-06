@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="INPERU">
-    <link rel="manifest" href="./manifest.json?v=16">
+    <link rel="manifest" href="./manifest.json?v=18">
     <link rel="icon" type="image/png" sizes="48x48" href="./icons/neon-favicon-48.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icons/neon-apple-touch-180.png">
     
@@ -293,20 +293,15 @@
                                 </div>
                                 <div>
                                     <label class="block text-xs font-medium text-slate-300 mb-1">Género</label>
-                                    <input type="text" id="quote-genre" maxlength="80" list="book-genre-options" placeholder="Ej. Medicina"
-                                        class="w-full bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-teal-400">
-                                    <datalist id="book-genre-options">
-                                        <option value="Medicina y Salud"></option>
-                                        <option value="Educación"></option>
-                                        <option value="Derecho"></option>
-                                        <option value="Psicología"></option>
-                                        <option value="Administración y Economía"></option>
-                                        <option value="Ciencias"></option>
-                                        <option value="Tecnología"></option>
-                                        <option value="Arquitectura y Diseño"></option>
-                                        <option value="Literatura"></option>
-                                        <option value="Otros"></option>
-                                    </datalist>
+                                    <div class="flex gap-2">
+                                        <input type="text" id="quote-genre" maxlength="80" list="book-genre-options" placeholder="Ej. Medicina"
+                                            class="min-w-0 flex-1 bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-teal-400">
+                                        <button type="button" onclick="openGenreManager()" title="Administrar géneros" aria-label="Administrar géneros"
+                                            class="shrink-0 w-9 rounded-xl bg-teal-950/70 hover:bg-teal-900 text-teal-300 border border-teal-700/50 transition-colors">
+                                            <i class="fa-solid fa-tags"></i>
+                                        </button>
+                                    </div>
+                                    <datalist id="book-genre-options"></datalist>
                                 </div>
                             </div>
                              
@@ -548,6 +543,8 @@
                             <i class="fa-solid fa-sliders text-teal-400"></i> Configuración de Costos e Insumos Base
                         </h2>
                         <p class="text-xs text-teal-200/60">Los cambios se guardan y sincronizan en la nube para ambos usuarios.</p>
+                        <p id="cost-save-status" role="status" aria-live="polite" class="text-xs text-teal-300 mt-2">Cargando costos guardados…</p>
+                        <button type="button" onclick="saveMasterConfigFromUI()" class="text-xs text-teal-200 underline mt-1">Reintentar guardado</button>
                     </div>
                     <div class="flex items-center gap-2">
                         <button onclick="resetMasterConfigToDefaults()" class="text-xs bg-teal-600/30 hover:bg-teal-600/50 text-teal-200 px-3.5 py-2 rounded-xl transition-colors border border-teal-500/40 flex items-center gap-1.5 font-semibold">
@@ -572,12 +569,12 @@
                                 <div class="grid grid-cols-2 gap-2 text-[11px]">
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Precio Paquete ($)</label>
-                                        <input type="number" id="cfg-paper-price" oninput="onMasterConfigInput()"
+                                        <input type="number" id="cfg-paper-price" oninput="onMasterConfigInput(event)"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
                                     </div>
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Cant. Hojas Paquete</label>
-                                        <input type="number" id="cfg-paper-packsheets" oninput="onMasterConfigInput()"
+                                        <input type="number" id="cfg-paper-packsheets" oninput="onMasterConfigInput(event)"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
                                     </div>
                                 </div>
@@ -591,17 +588,17 @@
                                 <div class="grid grid-cols-3 gap-2 text-[11px]">
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Precio Juego ($)</label>
-                                        <input type="number" id="cfg-ink-standard-price" oninput="onMasterConfigInput()"
+                                        <input type="number" id="cfg-ink-standard-price" oninput="onMasterConfigInput(event)"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
                                     </div>
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Divisor Botellas</label>
-                                        <input type="number" id="cfg-ink-standard-bottles" oninput="onMasterConfigInput()"
+                                        <input type="number" id="cfg-ink-standard-bottles" oninput="onMasterConfigInput(event)"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
                                     </div>
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Rendimiento Págs</label>
-                                        <input type="number" id="cfg-ink-standard-yield" oninput="onMasterConfigInput()"
+                                        <input type="number" id="cfg-ink-standard-yield" oninput="onMasterConfigInput(event)"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
                                     </div>
                                 </div>
@@ -615,17 +612,17 @@
                                 <div class="grid grid-cols-3 gap-2 text-[11px]">
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Precio Juego ($)</label>
-                                        <input type="number" id="cfg-ink-eternity-price" oninput="onMasterConfigInput()"
+                                        <input type="number" id="cfg-ink-eternity-price" oninput="onMasterConfigInput(event)"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
                                     </div>
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Divisor Botellas</label>
-                                        <input type="number" id="cfg-ink-eternity-bottles" oninput="onMasterConfigInput()"
+                                        <input type="number" id="cfg-ink-eternity-bottles" oninput="onMasterConfigInput(event)"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
                                     </div>
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Rendimiento Págs</label>
-                                        <input type="number" id="cfg-ink-eternity-yield" oninput="onMasterConfigInput()"
+                                        <input type="number" id="cfg-ink-eternity-yield" oninput="onMasterConfigInput(event)"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
                                     </div>
                                 </div>
@@ -639,12 +636,12 @@
                                 <div class="grid grid-cols-2 gap-2 text-[11px]">
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Precio Paquete ($)</label>
-                                        <input type="number" id="cfg-tapas-price" oninput="onMasterConfigInput()"
+                                        <input type="number" id="cfg-tapas-price" oninput="onMasterConfigInput(event)"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
                                     </div>
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Cant. Unidades Paquete</label>
-                                        <input type="number" id="cfg-tapas-packqty" oninput="onMasterConfigInput()"
+                                        <input type="number" id="cfg-tapas-packqty" oninput="onMasterConfigInput(event)"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
                                     </div>
                                 </div>
@@ -658,12 +655,12 @@
                                 <div class="grid grid-cols-2 gap-2 text-[11px]">
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Precio Paquete ($)</label>
-                                        <input type="number" id="cfg-photo-price" oninput="onMasterConfigInput()"
+                                        <input type="number" id="cfg-photo-price" oninput="onMasterConfigInput(event)"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-white font-semibold focus:outline-none">
                                     </div>
                                     <div>
                                         <label class="text-slate-400 block mb-0.5">Cant. Hojas Paquete</label>
-                                        <input type="number" id="cfg-photo-packqty" oninput="onMasterConfigInput()"
+                                        <input type="number" id="cfg-photo-packqty" oninput="onMasterConfigInput(event)"
                                             class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-teal-300 font-semibold focus:outline-none">
                                     </div>
                                 </div>
@@ -676,7 +673,7 @@
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <span class="text-slate-400">$</span>
-                                    <input type="number" id="cfg-laminate-price" oninput="onMasterConfigInput()"
+                                    <input type="number" id="cfg-laminate-price" oninput="onMasterConfigInput(event)"
                                         class="w-24 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-1 text-right text-emerald-400 font-bold focus:outline-none">
                                 </div>
                             </div>
@@ -722,7 +719,7 @@
                                 <div class="flex justify-between items-center">
                                     <span class="text-slate-400">Velocidad:</span>
                                     <div class="flex items-center gap-1">
-                                        <input type="number" step="0.01" id="cfg-printer-canon-speed" oninput="onMasterConfigInput()"
+                                        <input type="number" step="0.01" id="cfg-printer-canon-speed" oninput="onMasterConfigInput(event)"
                                             class="w-16 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-bold text-white">
                                         <span class="text-slate-500">min/hoja</span>
                                     </div>
@@ -736,12 +733,12 @@
                                     <div class="grid grid-cols-2 gap-2 text-[11px]">
                                         <div>
                                             <label class="text-slate-500 block">Costo ($)</label>
-                                            <input type="number" id="cfg-canon-machine-cost" oninput="onMasterConfigInput()"
+                                            <input type="number" id="cfg-canon-machine-cost" oninput="onMasterConfigInput(event)"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
                                         </div>
                                         <div>
                                             <label class="text-slate-500 block">Min. Totales</label>
-                                            <input type="number" id="cfg-canon-machine-minutes" oninput="onMasterConfigInput()"
+                                            <input type="number" id="cfg-canon-machine-minutes" oninput="onMasterConfigInput(event)"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
                                         </div>
                                     </div>
@@ -755,12 +752,12 @@
                                     <div class="grid grid-cols-2 gap-2 text-[11px]">
                                         <div>
                                             <label class="text-slate-500 block">Costo ($)</label>
-                                            <input type="number" id="cfg-canon-head-cost" oninput="onMasterConfigInput()"
+                                            <input type="number" id="cfg-canon-head-cost" oninput="onMasterConfigInput(event)"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
                                         </div>
                                         <div>
                                             <label class="text-slate-500 block">Min. Totales</label>
-                                            <input type="number" id="cfg-canon-head-minutes" oninput="onMasterConfigInput()"
+                                            <input type="number" id="cfg-canon-head-minutes" oninput="onMasterConfigInput(event)"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
                                         </div>
                                     </div>
@@ -774,12 +771,12 @@
                                     <div class="grid grid-cols-2 gap-2 text-[11px]">
                                         <div>
                                             <label class="text-slate-500 block">Costo ($)</label>
-                                            <input type="number" id="cfg-canon-pads-cost" oninput="onMasterConfigInput()"
+                                            <input type="number" id="cfg-canon-pads-cost" oninput="onMasterConfigInput(event)"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
                                         </div>
                                         <div>
                                             <label class="text-slate-500 block">Min. Totales</label>
-                                            <input type="number" id="cfg-canon-pads-minutes" oninput="onMasterConfigInput()"
+                                            <input type="number" id="cfg-canon-pads-minutes" oninput="onMasterConfigInput(event)"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
                                         </div>
                                     </div>
@@ -792,7 +789,7 @@
                                 <div class="flex justify-between items-center">
                                     <span class="text-slate-400">Velocidad:</span>
                                     <div class="flex items-center gap-1">
-                                        <input type="number" step="0.01" id="cfg-printer-epson-speed" oninput="onMasterConfigInput()"
+                                        <input type="number" step="0.01" id="cfg-printer-epson-speed" oninput="onMasterConfigInput(event)"
                                             class="w-16 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-bold text-white">
                                         <span class="text-slate-500">min/hoja</span>
                                     </div>
@@ -806,12 +803,12 @@
                                     <div class="grid grid-cols-2 gap-2 text-[11px]">
                                         <div>
                                             <label class="text-slate-500 block">Costo ($)</label>
-                                            <input type="number" id="cfg-epson-machine-cost" oninput="onMasterConfigInput()"
+                                            <input type="number" id="cfg-epson-machine-cost" oninput="onMasterConfigInput(event)"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
                                         </div>
                                         <div>
                                             <label class="text-slate-500 block">Min. Totales</label>
-                                            <input type="number" id="cfg-epson-machine-minutes" oninput="onMasterConfigInput()"
+                                            <input type="number" id="cfg-epson-machine-minutes" oninput="onMasterConfigInput(event)"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
                                         </div>
                                     </div>
@@ -825,12 +822,12 @@
                                     <div class="grid grid-cols-2 gap-2 text-[11px]">
                                         <div>
                                             <label class="text-slate-500 block">Costo ($)</label>
-                                            <input type="number" id="cfg-epson-chip-cost" oninput="onMasterConfigInput()"
+                                            <input type="number" id="cfg-epson-chip-cost" oninput="onMasterConfigInput(event)"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
                                         </div>
                                         <div>
                                             <label class="text-slate-500 block">Min. Totales</label>
-                                            <input type="number" id="cfg-epson-chip-minutes" oninput="onMasterConfigInput()"
+                                            <input type="number" id="cfg-epson-chip-minutes" oninput="onMasterConfigInput(event)"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
                                         </div>
                                     </div>
@@ -848,12 +845,12 @@
                                     <div class="grid grid-cols-2 gap-2 text-[11px]">
                                         <div>
                                             <label class="text-slate-500 block">Factura Mensual ($)</label>
-                                            <input type="number" id="cfg-luz-monthly" oninput="onMasterConfigInput()"
+                                            <input type="number" id="cfg-luz-monthly" oninput="onMasterConfigInput(event)"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-white">
                                         </div>
                                         <div>
                                             <label class="text-slate-500 block">Minutos Mes</label>
-                                            <input type="number" id="cfg-luz-minutes" oninput="onMasterConfigInput()"
+                                            <input type="number" id="cfg-luz-minutes" oninput="onMasterConfigInput(event)"
                                                 class="w-full bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-mono text-teal-300">
                                         </div>
                                     </div>
@@ -866,7 +863,7 @@
                                     </div>
                                     <div class="flex items-center justify-between">
                                         <span class="text-slate-400 text-xs">Precio por Hora ($):</span>
-                                        <input type="number" id="cfg-labor-print-hourly" oninput="onMasterConfigInput()"
+                                        <input type="number" id="cfg-labor-print-hourly" oninput="onMasterConfigInput(event)"
                                             class="w-28 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-right font-bold text-emerald-400">
                                     </div>
                                 </div>
@@ -875,7 +872,7 @@
                                     <div class="flex items-center justify-between">
                                         <span class="text-amber-300 text-xs font-bold">% Imprevistos Base:</span>
                                         <div class="flex items-center gap-1">
-                                            <input type="number" id="cfg-contingency-default-pct" oninput="onMasterConfigInput()"
+                                            <input type="number" id="cfg-contingency-default-pct" oninput="onMasterConfigInput(event)"
                                                 class="w-20 bg-[#0a1a1f] border border-teal-800/60 rounded px-2 py-0.5 text-center font-bold text-amber-300">
                                             <span class="text-amber-400">%</span>
                                         </div>
@@ -883,6 +880,18 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="lg:col-span-12 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div>
+                            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-tags text-cyan-400"></i> Géneros de Libros
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1">Creá, renombrá o quitá opciones que se sincronizan entre todos los dispositivos.</p>
+                        </div>
+                        <button type="button" onclick="openGenreManager()" class="text-xs bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-200 border border-cyan-500/40 px-3.5 py-2 rounded-xl transition-colors font-semibold">
+                            <i class="fa-solid fa-pen-to-square mr-1"></i>Administrar géneros
+                        </button>
                     </div>
 
                 </div>
@@ -1054,6 +1063,23 @@
             </form>
         </div>
 
+        <div id="genre-manager-modal" class="fixed inset-0 bg-[#061215]/90 backdrop-blur-sm z-[80] flex items-center justify-center p-4 hidden">
+            <div class="bg-[#0a1a1f] border border-teal-800/60 rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-4 relative">
+                <button type="button" onclick="closeGenreManager()" class="absolute top-4 right-4 text-slate-400 hover:text-white" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
+                <div>
+                    <h3 class="text-base font-bold text-white"><i class="fa-solid fa-tags text-cyan-400 mr-2"></i>Administrar Géneros</h3>
+                    <p class="text-xs text-slate-400 mt-1">Las opciones quedan guardadas en Firebase y aparecen al cargar libros.</p>
+                </div>
+                <form onsubmit="addGenreOption(event)" class="flex gap-2">
+                    <input id="new-genre-name" type="text" maxlength="80" placeholder="Nuevo género" autocomplete="off"
+                        class="min-w-0 flex-1 bg-[#061215] border border-teal-800/60 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-teal-400">
+                    <button type="submit" class="shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-teal-600 hover:bg-teal-500"><i class="fa-solid fa-plus mr-1"></i>Agregar</button>
+                </form>
+                <div id="genre-manager-list" class="max-h-[50vh] overflow-y-auto space-y-2 pr-1"></div>
+                <p class="text-[10px] text-slate-500">Al eliminar una opción, los libros que ya la usan conservan su género. Al renombrarla podés actualizar todos esos libros de una vez.</p>
+            </div>
+        </div>
+
         <div id="delete-modal" class="fixed inset-0 bg-[#061215]/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
             <div class="bg-[#0a1a1f] border border-rose-900/60 rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4">
                 <div class="flex items-center gap-3">
@@ -1157,7 +1183,13 @@
             }
         };
 
+        const DEFAULT_GENRES = [
+            'Administración y Economía', 'Arquitectura y Diseño', 'Ciencias', 'Derecho',
+            'Educación', 'Literatura', 'Medicina y Salud', 'Otros', 'Psicología', 'Tecnología'
+        ];
+
         let masterConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+        let genreOptions = [...DEFAULT_GENRES];
         let catalog = [];
         let sales = [];
         let currentCoverBase64 = null;
@@ -1267,6 +1299,10 @@
         }
 
         async function handleLogout() {
+            if (Object.keys(costEdits).length || costSaveRunning) {
+                showToastMessage('Esperá a que los costos indiquen guardados antes de salir.');
+                return;
+            }
             if (localPreviewActive) {
                 localPreviewActive = false;
                 document.getElementById('auth-screen').classList.remove('hidden');
@@ -1292,23 +1328,50 @@
             configReadyForPublicSync = false;
             catalogReadyForPublicSync = false;
 
+            setCostStatus('Cargando costos guardados…');
+            updateCostControls();
+            const currentCostSession = costSession;
             firebaseUnsubscribers.push(db.collection('config').doc('master').onSnapshot({ includeMetadataChanges: true }, docSnap => {
+                if (currentCostSession !== costSession) return;
+                if (!docSnap.exists && docSnap.metadata.fromCache) return;
                 if (docSnap.exists) {
                     masterConfig = mergeWithDefaults(DEFAULT_CONFIG, docSnap.data());
-                } else {
-                    db.collection('config').doc('master').set(DEFAULT_CONFIG).catch(error => {
-                        console.warn('Error creando la configuración inicial:', error);
-                        showToastMessage('No se pudo crear la configuración inicial en Firebase.');
-                    });
+                    Object.entries(costEdits).forEach(([path, value]) => setCostPath(masterConfig, path, value));
+                }
+                if (!docSnap.metadata.fromCache && !docSnap.metadata.hasPendingWrites) masterConfigLoaded = true;
+                updateCostControls();
+                if (!Object.keys(costEdits).length && !costSaveRunning) {
+                    setCostStatus(!docSnap.exists ? 'Sin costos guardados: inicializá con Restablecer Datos Originales.'
+                        : masterConfigLoaded ? 'Costos guardados en la nube' : 'Verificando costos con la nube…');
                 }
                 renderConfigToUI({ preserveFocusedInput: true });
                 calculateQuote();
                 renderCatalog();
-                configReadyForPublicSync = docSnap.exists && !docSnap.metadata.fromCache && !docSnap.metadata.hasPendingWrites;
+                configReadyForPublicSync = docSnap.exists && !docSnap.metadata.fromCache && !docSnap.metadata.hasPendingWrites && !Object.keys(costEdits).length;
                 schedulePublicCatalogSync();
             }, err => {
-                console.warn("Error leyendo config de Firebase:", err);
+                console.warn('Error leyendo config de Firebase:', err);
+                masterConfigLoaded = false;
+                updateCostControls();
+                setCostStatus('No se pudieron cargar los costos. Revisá la conexión.');
                 showToastMessage('No se pudieron cargar los Costos Base desde Firebase.');
+            }));
+
+            firebaseUnsubscribers.push(db.collection('config').doc('genres').onSnapshot(docSnap => {
+                if (docSnap.exists) {
+                    genreOptions = sanitizeGenreList(docSnap.data().items);
+                } else {
+                    genreOptions = [...DEFAULT_GENRES];
+                    db.collection('config').doc('genres').set({
+                        items: genreOptions,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }).catch(error => console.warn('Error creando la lista inicial de géneros:', error));
+                }
+                renderGenreOptions();
+                renderGenreManager();
+            }, error => {
+                console.warn('Error leyendo géneros desde Firebase:', error);
+                showToastMessage('No se pudieron cargar los géneros desde Firebase.');
             }));
 
             firebaseUnsubscribers.push(db.collection('catalog').onSnapshot({ includeMetadataChanges: true }, snapshot => {
@@ -1345,7 +1408,148 @@
             return Boolean(db && auth?.currentUser && !localPreviewActive);
         }
 
+        function genreKey(value) {
+            return String(value || '').trim().replace(/\s+/g, ' ').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es');
+        }
+
+        function sanitizeGenreList(items) {
+            const unique = new Map();
+            (Array.isArray(items) ? items : []).forEach(item => {
+                const name = String(item || '').trim().replace(/\s+/g, ' ').slice(0, 80);
+                const key = genreKey(name);
+                if (key && !unique.has(key)) unique.set(key, name);
+            });
+            return [...unique.values()].sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
+        }
+
+        function allGenreSuggestions() {
+            return sanitizeGenreList([...genreOptions, ...catalog.map(book => book.genre)]);
+        }
+
+        function renderGenreOptions() {
+            const datalist = document.getElementById('book-genre-options');
+            if (!datalist) return;
+            datalist.innerHTML = allGenreSuggestions().map(name => `<option value="${escapeHtml(name)}"></option>`).join('');
+        }
+
+        function renderGenreManager() {
+            const list = document.getElementById('genre-manager-list');
+            if (!list) return;
+            if (!genreOptions.length) {
+                list.innerHTML = '<div class="text-center text-xs text-slate-500 border border-dashed border-teal-900/60 rounded-xl p-5">Todavía no hay géneros guardados.</div>';
+                return;
+            }
+            list.innerHTML = genreOptions.map((name, index) => `
+                <div class="flex items-center gap-2 bg-[#061215] border border-teal-900/60 rounded-xl p-2">
+                    <input id="genre-row-${index}" type="text" maxlength="80" value="${escapeHtml(name)}"
+                        class="min-w-0 flex-1 bg-[#0a1a1f] border border-teal-900/70 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none focus:border-teal-400">
+                    <button type="button" onclick="renameGenreOption(${index})" title="Guardar cambio" class="w-8 h-8 rounded-lg text-cyan-300 hover:bg-cyan-950/60"><i class="fa-solid fa-floppy-disk"></i></button>
+                    <button type="button" onclick="removeGenreOption(${index})" title="Quitar de la lista" class="w-8 h-8 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-950/30"><i class="fa-solid fa-trash"></i></button>
+                </div>`).join('');
+        }
+
+        function openGenreManager() {
+            renderGenreManager();
+            document.getElementById('genre-manager-modal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('new-genre-name')?.focus(), 0);
+        }
+
+        function closeGenreManager() {
+            document.getElementById('genre-manager-modal').classList.add('hidden');
+        }
+
+        async function persistGenreOptions() {
+            genreOptions = sanitizeGenreList(genreOptions);
+            renderGenreOptions();
+            renderGenreManager();
+            if (!canUseCloud()) return;
+            await db.collection('config').doc('genres').set({
+                items: genreOptions,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        }
+
+        async function ensureGenreOptionSaved(value, { silent = false } = {}) {
+            const name = String(value || '').trim().replace(/\s+/g, ' ');
+            if (!name || genreOptions.some(item => genreKey(item) === genreKey(name))) return;
+            genreOptions.push(name.slice(0, 80));
+            try {
+                await persistGenreOptions();
+                if (!silent) showToastMessage(`Género “${name}” guardado.`);
+            } catch (error) {
+                console.error('Error guardando género:', error);
+                if (!silent) showToastMessage('No se pudo guardar el género en Firebase.');
+            }
+        }
+
+        async function addGenreOption(event) {
+            event.preventDefault();
+            const input = document.getElementById('new-genre-name');
+            const name = input.value.trim().replace(/\s+/g, ' ');
+            if (!name) return showToastMessage('Escribí un nombre para el género.');
+            if (genreOptions.some(item => genreKey(item) === genreKey(name))) return showToastMessage('Ese género ya existe.');
+            genreOptions.push(name.slice(0, 80));
+            try {
+                await persistGenreOptions();
+                input.value = '';
+                showToastMessage('Género agregado correctamente.');
+            } catch (error) {
+                console.error('Error agregando género:', error);
+                showToastMessage('No se pudo guardar el género.');
+            }
+        }
+
+        async function renameGenreOption(index) {
+            const oldName = genreOptions[index];
+            const input = document.getElementById(`genre-row-${index}`);
+            const newName = String(input?.value || '').trim().replace(/\s+/g, ' ');
+            if (!newName) return showToastMessage('El género no puede quedar vacío.');
+            if (newName.length > 80) return showToastMessage('El género no puede superar los 80 caracteres.');
+            if (genreOptions.some((item, itemIndex) => itemIndex !== index && genreKey(item) === genreKey(newName))) return showToastMessage('Ese género ya existe.');
+            if (newName === oldName) return showToastMessage('No hay cambios para guardar.');
+            const affected = catalog.filter(book => genreKey(book.genre) === genreKey(oldName));
+            if (affected.length && !confirm(`¿Renombrar también el género en ${affected.length} libro${affected.length === 1 ? '' : 's'}?`)) {
+                input.value = oldName;
+                return;
+            }
+            try {
+                if (canUseCloud() && affected.length) {
+                    const batch = db.batch();
+                    affected.forEach(book => batch.update(db.collection('catalog').doc(book.id), { genre: newName }));
+                    await batch.commit();
+                } else if (affected.length) {
+                    affected.forEach(book => { book.genre = newName; });
+                }
+                genreOptions[index] = newName;
+                await persistGenreOptions();
+                renderCatalog();
+                showToastMessage('Género renombrado correctamente.');
+            } catch (error) {
+                console.error('Error renombrando género:', error);
+                showToastMessage('No se pudo renombrar el género.');
+            }
+        }
+
+        async function removeGenreOption(index) {
+            const name = genreOptions[index];
+            const usedCount = catalog.filter(book => genreKey(book.genre) === genreKey(name)).length;
+            const detail = usedCount ? ` ${usedCount} libro${usedCount === 1 ? '' : 's'} conservará${usedCount === 1 ? '' : 'n'} este género.` : '';
+            if (!confirm(`¿Quitar “${name}” de la lista de opciones?${detail}`)) return;
+            genreOptions.splice(index, 1);
+            try {
+                await persistGenreOptions();
+                showToastMessage('Género quitado de la lista.');
+            } catch (error) {
+                console.error('Error eliminando género:', error);
+                showToastMessage('No se pudo quitar el género.');
+            }
+        }
+
         function stopFirebaseRealtimeSync() {
+            clearTimeout(masterConfigSaveTimer);
+            costSession++;
+            masterConfigLoaded = false;
+            costEdits = {};
             firebaseUnsubscribers.forEach(unsubscribe => {
                 try { unsubscribe(); } catch (error) { console.warn('Error cerrando una sincronización:', error); }
             });
@@ -1893,6 +2097,7 @@
                     else catalog.push(newBook);
                     if (heroFeatured) catalog.forEach(book => { if (book.id !== newBook.id) book.heroFeatured = false; });
                 }
+                await ensureGenreOptionSaved(genre, { silent: true });
                 activeEditingBookId = null;
                 saveLabel.textContent = 'Guardar Libro en Catálogo INPERU';
                 switchTab('catalog');
@@ -2582,6 +2787,7 @@
         function renderConfigToUI({ preserveFocusedInput = false } = {}) {
             if (!document.getElementById('cfg-paper-price')) return;
             if (preserveFocusedInput && document.activeElement?.matches('#tab-config input[type="number"]')) return;
+            updateCostControls();
             const setConfigValue = (id, value) => {
                 const input = document.getElementById(id);
                 if (input && !(preserveFocusedInput && document.activeElement === input)) input.value = value;
@@ -2631,6 +2837,9 @@
             renderUnitLabelsInConfig();
             const spiralsTable = document.getElementById('config-spirals-tbody');
             if (!(preserveFocusedInput && spiralsTable?.contains(document.activeElement))) renderSpiralsTableUI();
+            updateCostControls();
+            renderGenreOptions();
+            renderGenreManager();
         }
 
         function renderUnitLabelsInConfig() {
@@ -2695,9 +2904,79 @@
             }).join('');
         }
 
+        const COST_INPUT_PATHS = {
+    "cfg-paper-price": "paper.packPrice",
+    "cfg-paper-packsheets": "paper.packSheets",
+    "cfg-ink-standard-price": "inkStandard.packPrice",
+    "cfg-ink-standard-bottles": "inkStandard.bottlesQty",
+    "cfg-ink-standard-yield": "inkStandard.pageYield",
+    "cfg-ink-eternity-price": "inkEternity.packPrice",
+    "cfg-ink-eternity-bottles": "inkEternity.bottlesQty",
+    "cfg-ink-eternity-yield": "inkEternity.pageYield",
+    "cfg-tapas-price": "tapas.packPrice",
+    "cfg-tapas-packqty": "tapas.packQty",
+    "cfg-photo-price": "photoPaper.packPrice",
+    "cfg-photo-packqty": "photoPaper.packQty",
+    "cfg-laminate-price": "laminado.unitPrice",
+    "cfg-printer-canon-speed": "printers.canon.speedMinPerPage",
+    "cfg-canon-machine-cost": "printers.canon.machineCost",
+    "cfg-canon-machine-minutes": "printers.canon.machineMinutes",
+    "cfg-canon-head-cost": "printers.canon.headCost",
+    "cfg-canon-head-minutes": "printers.canon.headMinutes",
+    "cfg-canon-pads-cost": "printers.canon.padsCost",
+    "cfg-canon-pads-minutes": "printers.canon.padsMinutes",
+    "cfg-printer-epson-speed": "printers.epson.speedMinPerPage",
+    "cfg-epson-machine-cost": "printers.epson.machineCost",
+    "cfg-epson-machine-minutes": "printers.epson.machineMinutes",
+    "cfg-epson-chip-cost": "printers.epson.chipCost",
+    "cfg-epson-chip-minutes": "printers.epson.chipMinutes",
+    "cfg-luz-monthly": "services.luzMonthly",
+    "cfg-luz-minutes": "services.luzMinutes",
+    "cfg-labor-print-hourly": "labor.hourlyRatePrint",
+    "cfg-contingency-default-pct": "contingencyPercent"
+};
+        let masterConfigLoaded = false;
+        let costSession = 0;
+        let costEdits = {};
+        let costSaveRunning = false;
+
+        function setCostPath(target, path, value) {
+            const parts = path.split('.');
+            const last = parts.pop();
+            let object = target;
+            parts.forEach(key => { object = object[key] || (object[key] = {}); });
+            object[last] = value;
+        }
+
+        function setCostStatus(message) {
+            const status = document.getElementById('cost-save-status');
+            if (status) status.textContent = message;
+        }
+
+        function updateCostControls() {
+            document.querySelectorAll('#tab-config input[type="number"], #tab-config button[onclick*="Spiral"], #tab-config button[onclick*="resetMaster"]').forEach(control => {
+                control.disabled = !localPreviewActive && !masterConfigLoaded;
+            });
+        }
+
+        function recordCostEdit(path, value) {
+            if (!localPreviewActive && !masterConfigLoaded) {
+                showToastMessage('Esperá a que se carguen los Costos Base guardados.');
+                return false;
+            }
+            const copy = JSON.parse(JSON.stringify(value));
+            setCostPath(masterConfig, path, copy);
+            costEdits[path] = copy;
+            setCostStatus(localPreviewActive ? 'Modo prueba: cambios temporales' : 'Cambios pendientes de guardar…');
+            return true;
+        }
+
         function updateSpiralRow(idx, field, value) {
-            const parsed = parseFloat(value);
-            if (Number.isFinite(parsed)) masterConfig.spirals[idx][field] = parsed;
+            const parsed = Number(value);
+            if (value.trim() === '' || !Number.isFinite(parsed) || parsed < 0 || !masterConfig.spirals[idx]) return;
+            const next = masterConfig.spirals.map(sp => ({ ...sp }));
+            next[idx][field] = parsed;
+            if (!recordCostEdit('spirals', next)) return;
             clearTimeout(masterConfigSaveTimer);
             masterConfigSaveTimer = setTimeout(saveMasterConfigFromUI, 350);
             calculateQuote();
@@ -2705,98 +2984,108 @@
         }
 
         function addNewSpiralRow() {
-            masterConfig.spirals.push({ mm: 10, maxSheets: 60, unitPrice: 180 });
+            if (!recordCostEdit('spirals', [...masterConfig.spirals, { mm: 10, maxSheets: 60, unitPrice: 180 }])) return;
             renderSpiralsTableUI();
             saveMasterConfigToStorageAndRecalc();
         }
 
         function removeSpiralRow(idx) {
-            masterConfig.spirals.splice(idx, 1);
+            if (!recordCostEdit('spirals', masterConfig.spirals.filter((_, index) => index !== idx))) return;
             renderSpiralsTableUI();
             saveMasterConfigToStorageAndRecalc();
         }
 
         function saveMasterConfigFromUI() {
-            const readNumber = (id, currentValue, integer = false) => {
-                const raw = document.getElementById(id)?.value;
-                if (raw === undefined || raw === '' || raw === '-' || raw === '.') return currentValue;
-                const parsed = integer ? parseInt(raw, 10) : parseFloat(raw);
-                return Number.isFinite(parsed) ? parsed : currentValue;
-            };
-            masterConfig.paper.packPrice = readNumber('cfg-paper-price', masterConfig.paper.packPrice);
-            masterConfig.paper.packSheets = readNumber('cfg-paper-packsheets', masterConfig.paper.packSheets, true);
-
-            masterConfig.inkStandard.packPrice = readNumber('cfg-ink-standard-price', masterConfig.inkStandard.packPrice);
-            masterConfig.inkStandard.bottlesQty = readNumber('cfg-ink-standard-bottles', masterConfig.inkStandard.bottlesQty);
-            masterConfig.inkStandard.pageYield = readNumber('cfg-ink-standard-yield', masterConfig.inkStandard.pageYield);
-
-            masterConfig.inkEternity.packPrice = readNumber('cfg-ink-eternity-price', masterConfig.inkEternity.packPrice);
-            masterConfig.inkEternity.bottlesQty = readNumber('cfg-ink-eternity-bottles', masterConfig.inkEternity.bottlesQty);
-            masterConfig.inkEternity.pageYield = readNumber('cfg-ink-eternity-yield', masterConfig.inkEternity.pageYield);
-
-            masterConfig.tapas.packPrice = readNumber('cfg-tapas-price', masterConfig.tapas.packPrice);
-            masterConfig.tapas.packQty = readNumber('cfg-tapas-packqty', masterConfig.tapas.packQty, true);
-
-            masterConfig.photoPaper.packPrice = readNumber('cfg-photo-price', masterConfig.photoPaper.packPrice);
-            masterConfig.photoPaper.packQty = readNumber('cfg-photo-packqty', masterConfig.photoPaper.packQty, true);
-
-            masterConfig.laminado.unitPrice = readNumber('cfg-laminate-price', masterConfig.laminado.unitPrice);
-
-            if (masterConfig.printers.canon) {
-                masterConfig.printers.canon.speedMinPerPage = readNumber('cfg-printer-canon-speed', masterConfig.printers.canon.speedMinPerPage);
-                masterConfig.printers.canon.machineCost = readNumber('cfg-canon-machine-cost', masterConfig.printers.canon.machineCost);
-                masterConfig.printers.canon.machineMinutes = readNumber('cfg-canon-machine-minutes', masterConfig.printers.canon.machineMinutes);
-                masterConfig.printers.canon.headCost = readNumber('cfg-canon-head-cost', masterConfig.printers.canon.headCost);
-                masterConfig.printers.canon.headMinutes = readNumber('cfg-canon-head-minutes', masterConfig.printers.canon.headMinutes);
-                masterConfig.printers.canon.padsCost = readNumber('cfg-canon-pads-cost', masterConfig.printers.canon.padsCost);
-                masterConfig.printers.canon.padsMinutes = readNumber('cfg-canon-pads-minutes', masterConfig.printers.canon.padsMinutes);
-            }
-
-            if (masterConfig.printers.epson) {
-                masterConfig.printers.epson.speedMinPerPage = readNumber('cfg-printer-epson-speed', masterConfig.printers.epson.speedMinPerPage);
-                masterConfig.printers.epson.machineCost = readNumber('cfg-epson-machine-cost', masterConfig.printers.epson.machineCost);
-                masterConfig.printers.epson.machineMinutes = readNumber('cfg-epson-machine-minutes', masterConfig.printers.epson.machineMinutes);
-                masterConfig.printers.epson.chipCost = readNumber('cfg-epson-chip-cost', masterConfig.printers.epson.chipCost);
-                masterConfig.printers.epson.chipMinutes = readNumber('cfg-epson-chip-minutes', masterConfig.printers.epson.chipMinutes);
-            }
-
-            masterConfig.services.luzMonthly = readNumber('cfg-luz-monthly', masterConfig.services.luzMonthly);
-            masterConfig.services.luzMinutes = readNumber('cfg-luz-minutes', masterConfig.services.luzMinutes);
-            masterConfig.labor.hourlyRatePrint = readNumber('cfg-labor-print-hourly', masterConfig.labor.hourlyRatePrint);
-            masterConfig.contingencyPercent = readNumber('cfg-contingency-default-pct', masterConfig.contingencyPercent);
-
-            const quoterContingencyInput = document.getElementById('quote-contingency-pct');
-            if (quoterContingencyInput) quoterContingencyInput.value = masterConfig.contingencyPercent;
-
+            // Guardar solo ediciones explícitas, sin releer valores antiguos del formulario.
             renderUnitLabelsInConfig();
-            saveMasterConfigToStorageAndRecalc();
+            return saveMasterConfigToStorageAndRecalc();
         }
 
-        function onMasterConfigInput() {
+        function onMasterConfigInput(event) {
+            const input = event?.target;
+            const path = COST_INPUT_PATHS[input?.id];
+            if (!path || input.value.trim() === '') return;
+            const value = Number(input.value);
+            if (!Number.isFinite(value) || value < 0) return;
+            if (!recordCostEdit(path, value)) return;
+            if (path === 'contingencyPercent') document.getElementById('quote-contingency-pct').value = value;
+            renderUnitLabelsInConfig();
+            calculateQuote();
+            renderCatalog();
             clearTimeout(masterConfigSaveTimer);
             masterConfigSaveTimer = setTimeout(saveMasterConfigFromUI, 350);
         }
 
-        function saveMasterConfigToStorageAndRecalc() {
-            if (canUseCloud()) {
-                db.collection('config').doc('master').set(masterConfig).catch(error => {
-                    console.warn("Error guardando en Firestore:", error);
-                    const now = Date.now();
-                    if (now - lastConfigSaveErrorAt > 5000) {
-                        lastConfigSaveErrorAt = now;
-                        showToastMessage('No se pudieron guardar los Costos Base en Firebase.');
-                    }
-                });
-            }
+        async function saveMasterConfigToStorageAndRecalc() {
             calculateQuote();
             renderCatalog();
+            if (localPreviewActive) {
+                costEdits = {};
+                setCostStatus('Modo prueba: cambios temporales');
+                return;
+            }
+            if (!canUseCloud() || !masterConfigLoaded || costSaveRunning || !Object.keys(costEdits).length) return;
+            costSaveRunning = true;
+            const session = costSession;
+            const uid = auth.currentUser.uid;
+            const patch = JSON.parse(JSON.stringify(costEdits));
+            let succeeded = false;
+            setCostStatus('Guardando cambios…');
+            try {
+                const ref = db.collection('config').doc('master');
+                const backup = db.collection('config').doc('costBackup');
+                await db.runTransaction(async transaction => {
+                    const snapshot = await transaction.get(ref);
+                    if (session !== costSession || auth?.currentUser?.uid !== uid) throw new Error('La sesión cambió durante el guardado.');
+                    if (!snapshot.exists && !(Object.values(COST_INPUT_PATHS).every(path => path in patch) && 'spirals' in patch)) {
+                        throw new Error('Inicializá los costos explícitamente con Restablecer Datos Originales.');
+                    }
+                    if (snapshot.exists) {
+                        transaction.set(backup, {
+                            previous: snapshot.data(), changedFields: Object.keys(patch), changedBy: uid,
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        transaction.update(ref, patch);
+                    } else {
+                        const initial = {};
+                        Object.entries(patch).forEach(([path, value]) => setCostPath(initial, path, value));
+                        transaction.set(ref, initial);
+                    }
+                });
+                if (session !== costSession) return;
+                succeeded = true;
+                Object.entries(patch).forEach(([path, value]) => {
+                    if (JSON.stringify(costEdits[path]) === JSON.stringify(value)) delete costEdits[path];
+                });
+                setCostStatus(Object.keys(costEdits).length ? 'Cambios pendientes de guardar…' : 'Costos guardados en la nube');
+                configReadyForPublicSync = !Object.keys(costEdits).length;
+                schedulePublicCatalogSync();
+            } catch (error) {
+                console.warn('Error guardando Costos Base:', error);
+                if (session === costSession) {
+                    setCostStatus('Cambios sin guardar. Revisá la conexión y pulsá Reintentar.');
+                    showToastMessage('Los cambios de costos todavía no se guardaron.');
+                }
+            } finally {
+                costSaveRunning = false;
+            }
+            if (succeeded && session === costSession && Object.keys(costEdits).length) return saveMasterConfigToStorageAndRecalc();
         }
 
-        function resetMasterConfigToDefaults() {
-            masterConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
-            saveMasterConfigToStorageAndRecalc();
+        async function resetMasterConfigToDefaults() {
+            if (!localPreviewActive && !masterConfigLoaded) return showToastMessage('Esperá a que se carguen los costos.');
+            if (!confirm('¿Reemplazar todos los Costos Base por los valores originales? Esta acción cambia tus costos guardados.')) return;
+            clearTimeout(masterConfigSaveTimer);
+            const flatten = (object, prefix = '') => {
+                Object.entries(object).forEach(([key, value]) => {
+                    const path = prefix ? prefix + '.' + key : key;
+                    if (value && typeof value === 'object' && !Array.isArray(value)) flatten(value, path);
+                    else recordCostEdit(path, value);
+                });
+            };
+            flatten(DEFAULT_CONFIG);
             renderConfigToUI();
-            showToastMessage('Valores restablecidos a los de tus planillas.');
+            await saveMasterConfigToStorageAndRecalc();
         }
 
         function switchTab(tabName) {
@@ -2834,12 +3123,19 @@
 
         window.onload = function() {
             renderConfigToUI();
+            renderGenreOptions();
             calculateQuote();
             renderCatalog();
             renderSales();
         };
 
         let deferredInstallPrompt = null;
+        window.addEventListener('beforeunload', event => {
+            if (!localPreviewActive && (Object.keys(costEdits).length || costSaveRunning)) {
+                event.preventDefault();
+                event.returnValue = '';
+            }
+        });
         window.addEventListener('beforeinstallprompt', event => {
             event.preventDefault();
             deferredInstallPrompt = event;
@@ -2867,7 +3163,7 @@
 
         if ('serviceWorker' in navigator && location.protocol !== 'file:') {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=16').catch(error => console.warn('No se pudo registrar el modo instalable:', error));
+                navigator.serviceWorker.register('./service-worker.js?v=18').catch(error => console.warn('No se pudo registrar el modo instalable:', error));
             });
         }
     </script>
