@@ -155,12 +155,13 @@
     }
     function newDraft(record = null, duplicate = false) {
         if (!allowed() || !canLeave()) return;
+        if (record?.saleId && !duplicate) { msg('Este presupuesto ya tiene pedido. Editá el trabajo desde Ventas o duplicá el presupuesto para un nuevo acuerdo.'); return; }
         draft = record ? copy(record) : {
             id:createRecordId('quote'), clientId:'', customer:{name:'',phone:'',email:'',address:''},
             date:today(), validUntil:today(7), status:'Borrador', items:[], discount:0, delivery:0, deposit:0,
             payment:'', deadline:'', contact:publicSettings.whatsapp || '', notes:'', revision:0
         };
-        if (duplicate) { draft.id=createRecordId('quote'); delete draft.number; delete draft.createdAt; draft.revision=0; draft.date=today(); draft.validUntil=today(7); draft.status='Borrador'; draft.deposit=0; }
+        if (duplicate) { draft.id=createRecordId('quote'); delete draft.number; delete draft.createdAt; delete draft.saleId; delete draft.convertedAt; draft.revision=0; draft.date=today(); draft.validUntil=today(7); draft.status='Borrador'; draft.deposit=0; }
         $('pq-number').textContent=draft.number || 'Número automático al guardar';
         const fields = {date:'pq-date', validUntil:'pq-valid',status:'pq-state',discount:'pq-discount',delivery:'pq-delivery',deposit:'pq-deposit',payment:'pq-payment',deadline:'pq-deadline',contact:'pq-contact',notes:'pq-notes'};
         Object.entries(fields).forEach(([key,id])=>$(id).value=draft[key] ?? '');
@@ -274,6 +275,7 @@
                     if(currentSession!==session || auth?.currentUser?.uid!==uid) throw Error('La sesión cambió. Volvé a ingresar.');
                     const ref=db.collection('quotes').doc(record.id);
                     const current=await transaction.get(ref);
+                    if (current.exists && current.data().saleId) throw Error('Este presupuesto ya fue convertido en pedido. Editá el pedido desde Ventas.');
                     // Existing quote updates are optimistic: never silently overwrite another device.
                     if(current.exists && Number(current.data().revision || 0)!==Number(record.revision || 0)) throw Error('Otro dispositivo modificó este presupuesto. Cerrá el editor y volvé a abrirlo antes de guardar.');
                     if(!current.exists && record.number) throw Error('Este presupuesto ya no existe en la nube. Duplicalo como uno nuevo.');
@@ -307,7 +309,62 @@
     function renderList() {
         const query=($('pq-search')?.value||'').toLocaleLowerCase('es');
         const list=[...quotes].sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt))).filter(q=>`${q.number} ${q.customer.name} ${q.customer.phone} ${q.items.map(i=>i.description).join(' ')}`.toLocaleLowerCase('es').includes(query));
-        $('pq-list').innerHTML=list.length ? list.map(q=>`<article class="pq-record"><div><strong>${esc(q.number)}</strong><span class="pq-status">${esc(status(q))}</span><p style="margin-top:7px">${esc(q.customer.name)}</p><p class="pq-muted">${esc(q.customer.phone)} · ${esc(dateLabel(q.date))} · ${q.items.length} producto(s)</p><p class="amount" style="margin-top:7px">${money(q.total)}</p></div><div class="pq-actions">${[['edit','Editar'],['duplicate','Duplicar'],['pdf','Descargar PDF'],['whatsapp','WhatsApp']].map(([action,label])=>`<button type="button" class="pq-button" data-action="${action}" data-id="${esc(q.id)}">${label}</button>`).join('')}</div></article>`).join('') : '<p class="pq-muted">No hay presupuestos para mostrar.</p>';
+        $('pq-list').innerHTML=list.length ? list.map(q=> {
+            const actions=[...(q.saleId?[]:[['edit','Editar']]),['duplicate','Duplicar'],['pdf','Descargar PDF'],['whatsapp','WhatsApp']];
+            if(q.saleId || q.status==='Aceptado') actions.push(['convert',q.saleId?'Ver pedido en Ventas':'Convertir en pedido']);
+            return `<article class="pq-record"><div><strong>${esc(q.number)}</strong><span class="pq-status">${esc(status(q))}</span><p style="margin-top:7px">${esc(q.customer.name)}</p><p class="pq-muted">${esc(q.customer.phone)} · ${esc(dateLabel(q.date))} · ${q.items.length} producto(s)</p>${q.saleId?'<p class="pq-muted">Pedido creado · Acuerdo conservado sin cambios</p>':''}<p class="amount" style="margin-top:7px">${money(q.total)}</p></div><div class="pq-actions">${actions.map(([action,label])=>`<button type="button" class="pq-button" data-action="${action}" data-id="${esc(q.id)}">${label}</button>`).join('')}</div></article>`;
+        }).join('') : '<p class="pq-muted">No hay presupuestos para mostrar.</p>';
+    }
+    async function convert(record) {
+        if(!allowed() || busy || productBusy) return;
+        if(dirty) { msg('Guardá o cerrá el presupuesto que estás editando antes de convertir otro.',true); return; }
+        if(!window.INPERUOrders) { msg('Falta cargar pedidos.js. Revisá que hayas subido public completo.',true); return; }
+        if(!record.saleId && record.status!=='Aceptado') { msg('Primero marcá el presupuesto como Aceptado y guardalo.',true); return; }
+        if(!record.saleId && !confirm(`¿Crear en Ventas el pedido de ${record.number} por ${money(record.total)}? Se mantendrán todos los productos, precios y seña. Entrará como Pendiente. El presupuesto quedará como referencia y el trabajo se editará desde Ventas.`)) return;
+        const local=localPreviewActive, currentSession=session, uid=auth?.currentUser?.uid;
+        setBusy(true); msg('Verificando presupuesto y creando pedido…');
+        let result=null;
+        const warning=setTimeout(()=>msg('La nube está demorando. Esperá la confirmación; no vuelvas a crear el pedido.'),12000);
+        try {
+            if(local) {
+                const fresh=quotes.find(q=>q.id===record.id);
+                if(!fresh) throw Error('El presupuesto ya no existe.');
+                const saleId=fresh.saleId || `order-from-${fresh.id}`;
+                const existing=sales.find(s=>s.id===saleId);
+                if(fresh.saleId && !existing) throw Error('El pedido vinculado no se encuentra. No se creará otro para evitar duplicados.');
+                if(existing) result={quote:fresh,order:existing,created:false};
+                else {
+                    const now=new Date().toISOString();
+                    const order=window.INPERUOrders.buildFromQuote(fresh,saleId,now);
+                    result={quote:{...fresh,saleId,convertedAt:now,updatedAt:now,revision:Number(fresh.revision)+1},order,created:true};
+                }
+            } else result=await db.runTransaction(async transaction=> {
+                if(currentSession!==session || auth?.currentUser?.uid!==uid) throw Error('La sesión cambió. Volvé a ingresar.');
+                const quoteRef=db.collection('quotes').doc(record.id), quoteDoc=await transaction.get(quoteRef);
+                if(!quoteDoc.exists) throw Error('El presupuesto ya no existe.');
+                const fresh={...quoteDoc.data(),id:record.id};
+                const saleId=fresh.saleId || `order-from-${fresh.id}`, saleRef=db.collection('sales').doc(saleId);
+                const saleDoc=await transaction.get(saleRef);
+                if(fresh.saleId) {
+                    if(!saleDoc.exists || saleDoc.data().quoteId!==fresh.id || saleDoc.data().kind!=='quote-order') throw Error('El pedido vinculado no se encuentra o no coincide. No se creará otro.');
+                    return {quote:fresh,order:{...saleDoc.data(),id:saleId},created:false};
+                }
+                if(saleDoc.exists) throw Error('Ya existe un pedido con esta referencia. Revisá Ventas antes de continuar.');
+                if(Number(fresh.revision)!==Number(record.revision)) throw Error('Otro dispositivo modificó el presupuesto. Volvé a cargarlo y revisalo antes de convertir.');
+                const now=new Date().toISOString(), order=window.INPERUOrders.buildFromQuote(fresh,saleId,now);
+                const linked={...fresh,saleId,convertedAt:now,updatedAt:now,revision:Number(fresh.revision)+1};
+                transaction.set(saleRef,order); transaction.set(quoteRef,linked);
+                return {quote:linked,order,created:true};
+            });
+            if(currentSession!==session) { result=null; return; }
+            quotes=quotes.filter(q=>q.id!==record.id); quotes.push(result.quote);
+            window.INPERUOrders.publish(result.order);
+            if(draft?.id===record.id) { draft=null; dirty=false; $('pq-editor').hidden=true; }
+            renderList();
+        } catch(error) {
+            result=null; msg(error.code==='permission-denied'?'No se convirtió: publicá las reglas Firestore v20.':`No se convirtió: ${error.message}`,true);
+        } finally { clearTimeout(warning); setBusy(false); }
+        if(result) { switchTab('sales'); showToastMessage(result.created?'Pedido creado en Ventas. El presupuesto se conserva.':'Este presupuesto ya tenía pedido. No se creó otro.'); }
     }
     function renderProducts() {
         $('pq-products').innerHTML=products.map(p=>`<div class="pq-record"><div><strong>${esc(p.name)}</strong><p class="pq-muted">${esc(p.description)}</p><span class="amount">${money(p.unitPrice)}</span></div><button class="pq-button" type="button" data-action="product-edit" data-id="${esc(p.id)}">Editar</button></div>`).join('');
@@ -357,6 +414,7 @@
         else if(action==='remove-row' && draft) { draft=collect(); draft.items.splice(Number(button.dataset.index),1); dirty=true; drawItems(); preview(); }
         else if(action==='pdf' && record) downloadPdf(record);
         else if(action==='whatsapp' && record) whatsapp(record);
+        else if(action==='convert' && record) convert(record);
         else if(action==='product-cancel') clearProduct();
         else if(action==='product-edit') {
             const product=products.find(p=>p.id===button.dataset.id); if(!product) return;

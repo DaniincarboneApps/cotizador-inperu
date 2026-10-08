@@ -10,8 +10,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="INPERU">
-    <link rel="manifest" href="./manifest.json?v=19">
-    <link rel="stylesheet" href="./presupuestos.css?v=19">
+    <link rel="manifest" href="./manifest.json?v=21">
+    <link rel="stylesheet" href="./presupuestos.css?v=20">
     <link rel="icon" type="image/png" sizes="48x48" href="./icons/neon-favicon-48.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./icons/neon-apple-touch-180.png">
     
@@ -513,21 +513,32 @@
             <!-- Pestaña Ventas -->
             <section id="tab-sales" class="space-y-6 hidden">
                 <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-5 shadow-lg">
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
                         <div>
                             <h2 class="text-base font-bold text-white flex items-center gap-2">
                                 <i class="fa-solid fa-cash-register text-teal-400"></i> Control de Ventas
                             </h2>
-                            <p class="text-xs text-teal-200/60">Registra pedidos del catálogo y controla su cobro y entrega.</p>
+                            <p class="text-xs text-teal-200/60">Pedidos del catálogo y presupuestos aceptados. Controlá su cobro y entrega.</p>
                         </div>
-                        <input type="text" id="sales-search" placeholder="Buscar cliente, celular o libro..." oninput="renderSales()"
-                            class="bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-teal-400 w-full sm:w-72">
+                        <div class="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
+                            <input type="text" id="sales-search" aria-label="Buscar ventas" placeholder="Buscar cliente, celular, producto o presupuesto..." oninput="renderSales()"
+                                class="bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-teal-400 w-full sm:w-72">
+                            <select id="sales-status-filter" aria-label="Filtrar ventas por estado" onchange="renderSales()"
+                                class="bg-[#061215] border border-teal-800/60 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-teal-400 w-full sm:w-auto">
+                                <option value="">Todos los estados</option>
+                                <option value="Pendiente">Pendientes</option>
+                                <option value="Pagado sin entregar">Pagados sin entregar</option>
+                                <option value="Finalizado">Finalizados / Entregados</option>
+                            </select>
+                        </div>
                     </div>
+                    <p id="sales-filter-count" class="text-xs text-teal-200/60 mt-3" aria-live="polite"></p>
+                    <p class="text-[11px] text-slate-500 mt-1">El filtro cambia la lista. El resumen de abajo corresponde a todas las ventas activas.</p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-4">
-                        <span class="text-[10px] uppercase text-slate-500 font-bold">Ejemplares vendidos</span>
+                        <span class="text-[10px] uppercase text-slate-500 font-bold">Unidades registradas</span>
                         <div id="sales-total-units" class="text-2xl font-black text-teal-300 mt-1">0</div>
                     </div>
                     <div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-4">
@@ -1308,6 +1319,7 @@
         }
 
         async function handleLogout() {
+            if (window.INPERUOrders && !window.INPERUOrders.canLeave()) return;
             if (window.INPERUQuotes && !window.INPERUQuotes.canLeave()) return;
             if (Object.keys(costEdits).length || costSaveRunning) {
                 showToastMessage('Esperá a que los costos indiquen guardados antes de salir.');
@@ -1558,6 +1570,7 @@
         }
 
         function stopFirebaseRealtimeSync() {
+            window.INPERUOrders?.reset();
             window.INPERUQuotes?.stopSync();
             clearTimeout(masterConfigSaveTimer);
             costSession++;
@@ -2494,6 +2507,7 @@
         function openEditSaleModal(id) {
             const sale = sales.find(item => item.id === id);
             if (!sale) return;
+            if (window.INPERUOrders?.isOrder(sale)) { window.INPERUOrders.edit(sale); return; }
             activeSaleId = id;
             activeSaleBookId = sale.bookId;
             document.getElementById('sale-book-title').textContent = `Editando: ${sale.bookTitle}`;
@@ -2579,6 +2593,7 @@
         async function updateSaleStatus(id, status) {
             const sale = sales.find(item => item.id === id);
             if (!sale) return;
+            if (window.INPERUOrders?.isOrder(sale)) { await window.INPERUOrders.updateStatus(sale, status); return; }
             const previousStatus = sale.status;
             sale.status = status;
             renderSales();
@@ -2593,6 +2608,8 @@
         }
 
         async function deleteSale(id) {
+            const record = sales.find(item => item.id === id);
+            if (window.INPERUOrders?.isOrder(record)) { await window.INPERUOrders.cancel(record); return; }
             if (!confirm('¿Eliminar este registro de venta?')) return;
             try {
                 if (canUseCloud()) {
@@ -2620,6 +2637,7 @@
         function openReadyWhatsApp(id) {
             const sale = sales.find(item => item.id === id);
             if (!sale) return;
+            if (window.INPERUOrders?.isOrder(sale)) { window.INPERUOrders.whatsapp(sale); return; }
             let phone = String(sale.phone || '').replace(/\D/g, '');
             if (!phone) {
                 showToastMessage('Este pedido no tiene un celular cargado.');
@@ -2635,25 +2653,34 @@
             window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
         }
 
+        function normalizeSaleStatus(status) {
+            return status === 'Entregado' ? 'Finalizado' : status === 'Pagado' ? 'Pagado sin entregar' : (status || 'Pendiente');
+        }
+
         function renderSales() {
             const list = document.getElementById('sales-list');
             if (!list) return;
-            const query = (document.getElementById('sales-search')?.value || '').toLowerCase();
+            const query = (document.getElementById('sales-search')?.value || '').trim().toLowerCase();
+            const statusFilter = document.getElementById('sales-status-filter')?.value || '';
             const ordered = [...sales].sort((a, b) => String(b.date || b.createdAt || '').localeCompare(String(a.date || a.createdAt || '')));
-            const filtered = ordered.filter(sale => `${sale.customer || ''} ${sale.phone || ''} ${sale.bookTitle || ''}`.toLowerCase().includes(query));
-            const totalUnits = sales.reduce((sum, sale) => sum + (Number(sale.qty) || 0), 0);
-            const totalRevenue = sales.reduce((sum, sale) => sum + (Number(sale.total) || 0), 0);
-            const pending = sales.filter(sale => sale.status !== 'Finalizado' && sale.status !== 'Entregado').length;
+            const filtered = ordered.filter(sale => (!statusFilter || normalizeSaleStatus(sale.status) === statusFilter)
+                && `${sale.customer || ''} ${sale.phone || ''} ${sale.bookTitle || ''} ${sale.quoteNumber || ''} ${(sale.items || []).map(item => item.description).join(' ')}`.toLowerCase().includes(query));
+            const activeSales = sales.filter(sale => sale.status !== 'Anulado');
+            const totalUnits = activeSales.reduce((sum, sale) => sum + (Number(sale.qty) || 0), 0);
+            const totalRevenue = activeSales.reduce((sum, sale) => sum + (Number(sale.total) || 0), 0);
+            const pending = activeSales.filter(sale => sale.status !== 'Finalizado' && sale.status !== 'Entregado').length;
             document.getElementById('sales-count').textContent = sales.length;
             document.getElementById('sales-total-units').textContent = totalUnits.toLocaleString('es-AR');
             document.getElementById('sales-total-revenue').textContent = formatMoney(totalRevenue);
             document.getElementById('sales-pending-count').textContent = pending;
+            document.getElementById('sales-filter-count').textContent = `${filtered.length} de ${sales.length} pedidos`;
             if (!filtered.length) {
-                list.innerHTML = `<div class="text-center py-12 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl"><i class="fa-solid fa-receipt text-4xl text-teal-800/40 mb-3 block"></i><p class="text-sm text-slate-400">Todavía no hay ventas registradas.</p><p class="text-xs text-slate-600 mt-1">Usa “Registrar Venta” desde un libro del catálogo.</p></div>`;
+                list.innerHTML = `<div class="text-center py-12 bg-[#0a1a1f] border border-teal-900/40 rounded-2xl"><i class="fa-solid fa-receipt text-4xl text-teal-800/40 mb-3 block"></i><p class="text-sm text-slate-400">${sales.length ? 'No hay ventas que coincidan con estos filtros.' : 'No hay ventas para mostrar.'}</p><p class="text-xs text-slate-600 mt-1">${sales.length ? 'Probá otro estado o borrá la búsqueda para ver más pedidos.' : 'Registrá una venta del catálogo o convertí un presupuesto aceptado en pedido.'}</p></div>`;
                 return;
             }
             list.innerHTML = filtered.map(sale => {
-                const normalizedStatus = sale.status === 'Entregado' ? 'Finalizado' : sale.status === 'Pagado' ? 'Pagado sin entregar' : (sale.status || 'Pendiente');
+                if (window.INPERUOrders?.isOrder(sale)) return window.INPERUOrders.renderCard(sale);
+                const normalizedStatus = normalizeSaleStatus(sale.status);
                 const statusColor = normalizedStatus === 'Finalizado' ? 'text-emerald-300 border-emerald-700/50' : normalizedStatus === 'Pagado sin entregar' ? 'text-teal-300 border-teal-700/50' : 'text-amber-300 border-amber-700/50';
                 const actionSaleId = encodeURIComponent(String(sale.id)).replace(/'/g, '%27');
                 return `<div class="bg-[#0a1a1f] border border-teal-900/40 rounded-2xl p-4 grid grid-cols-1 lg:grid-cols-12 gap-3 items-center">
@@ -3102,6 +3129,7 @@
         }
 
         function switchTab(tabName) {
+            if (window.INPERUOrders && !window.INPERUOrders.canLeave()) return;
             if (tabName !== 'budgets' && window.INPERUQuotes && !window.INPERUQuotes.canLeave()) return;
             ['quoter', 'catalog', 'sales', 'budgets', 'config'].forEach(t => {
                 const sec = document.getElementById(`tab-${t}`);
@@ -3178,12 +3206,13 @@
 
         if ('serviceWorker' in navigator && location.protocol !== 'file:') {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=19').catch(error => console.warn('No se pudo registrar el modo instalable:', error));
+                navigator.serviceWorker.register('./service-worker.js?v=21').catch(error => console.warn('No se pudo registrar el modo instalable:', error));
             });
         }
     </script>
     <script src="./vendor/jspdf.umd.min.js"></script>
-    <script src="./presupuestos.js?v=19"></script>
+    <script src="./presupuestos.js?v=20"></script>
+    <script src="./pedidos.js?v=20"></script>
 </body>
 </html>
 

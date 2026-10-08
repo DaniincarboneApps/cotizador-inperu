@@ -1,9 +1,10 @@
-const CACHE_NAME = 'inperu-app-v19';
+const CACHE_NAME = 'inperu-app-v21';
 const APP_ASSETS = [
   './',
   './manifest.json',
-  './presupuestos.js?v=19',
-  './presupuestos.css?v=19',
+  './presupuestos.js?v=20',
+  './presupuestos.css?v=20',
+  './pedidos.js?v=20',
   './vendor/jspdf.umd.min.js',
   './icons/neon-icon-192.png',
   './icons/neon-icon-512.png',
